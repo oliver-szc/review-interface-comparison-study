@@ -6,7 +6,7 @@ export default function SurveyPage({
   params: { type: string };
 }) {
   return (
-    <StudyLayout task="DEMOGRAPHICS">
+    <StudyLayout task="CONSENT">
       <div className="">
       </div>
     </StudyLayout>

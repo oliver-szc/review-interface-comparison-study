@@ -1,24 +1,14 @@
 'use client'
 
-import earbudsImage from '@/app/earbuds.jpg'
-import { ChatbotPanel } from '@/components/interfaces/chatbot/ChatbotPanel'
-import { DashboardPanel } from '@/components/interfaces/dashboard/DashboardPanel'
 import { StudyLayout } from '@/components/layouts/StudyLayout'
 import { WebshopLayout } from '@/components/layouts/WebshopLayout'
 import { ProductPanel } from '@/components/ui/ProductPanel'
 import { ReviewListPanel } from '@/components/ui/ReviewListPanel'
-import { useParams } from 'next/navigation'
+import { DashboardPanel } from '@/components/interfaces/dashboard/DashboardPanel'
+import earbudsImage from '@/app/earbuds.jpg'
 
-type Condition = 'unassisted' | 'dashboard' | 'chatbot'
-
-export default function StudyConditionPage() {
-  const params = useParams<{ condition: string }>()
-  const rawCondition = params?.condition ?? 'unassisted'
-  const condition: Condition =
-    rawCondition === 'dashboard' || rawCondition === 'chatbot'
-      ? rawCondition
-      : 'unassisted'
-
+export default function DashboardPage() {
+  // Mock data - same as unassisted
   const productData = {
     title: 'Premium Wireless Earbuds with Active Noise Cancellation',
     image: earbudsImage,
@@ -100,30 +90,20 @@ export default function StudyConditionPage() {
     { stars: 1, count: 47 },
   ]
 
-  const taskByCondition: Record<Condition, string> = {
-    unassisted:
-      'Based on the customer reviews, identify the three most frequently mentioned positive aspects of this product.',
-    dashboard:
-      'Using the dashboard insights, identify the three most frequently mentioned positive aspects of this product.',
-    chatbot:
-      'Ask the AI assistant to help you identify the three most frequently mentioned positive aspects of this product.',
-  }
-
   return (
-    <StudyLayout task={taskByCondition[condition]}>
+    <StudyLayout task="Using the dashboard insights, identify the three most frequently mentioned positive aspects of this product.">
       <WebshopLayout
         topContent={<ProductPanel productData={productData} />}
         leftContent={null}
         middleContent={
           <>
-            {condition === 'dashboard' ? <DashboardPanel /> : null}
+            <DashboardPanel />
             <ReviewListPanel
               reviews={reviews}
               starDistribution={starDistribution}
               averageRating={productData.avgRating}
               totalCount={productData.totalReviews}
             />
-            {condition === 'chatbot' ? <ChatbotPanel /> : null}
           </>
         }
       />
