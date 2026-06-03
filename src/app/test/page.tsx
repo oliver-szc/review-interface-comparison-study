@@ -309,7 +309,7 @@ export default function LayoutPreview() {
   const [condition, setCondition] = useState<Condition>('dashboard')
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-full bg-white">
       {/* Top Banner */}
       <InformationNeedBanner
         task="You work in product development. Identify three frequently requested features that are currently missing, and determine the feature with the highest priority."

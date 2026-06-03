@@ -6,9 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed": "npx tsx src/db/seed.ts"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.4.0",
     "@neondatabase/serverless": "^1.0.2",
     "@vercel/postgres": "^0.10.0",
     "clsx": "^2.1.1",
@@ -24,6 +26,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@tailwindcss/typography": "^0.5.19",
     "@types/node": "^20.19.33",
     "@types/react": "^19",
     "@types/react-dom": "^19",

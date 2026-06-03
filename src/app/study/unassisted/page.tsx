@@ -2,7 +2,7 @@
 
 import { StudyLayout } from '@/components/layouts/StudyLayout'
 import { WebshopLayout } from '@/components/layouts/WebshopLayout'
-import { ProductPanel } from '@/components/ui/ProductPanel'
+import { ProductImage, ProductDetails } from '@/components/ui/ProductPanel'
 import { ReviewListPanel } from '@/components/ui/ReviewListPanel'
 import earbudsImage from '@/app/earbuds.jpg'
 
@@ -92,7 +92,8 @@ export default function UnassistedPage() {
   return (
     <StudyLayout task="Based on the customer reviews, identify the three most frequently mentioned positive aspects of this product.">
       <WebshopLayout
-        topContent={<ProductPanel productData={productData} />}
+        productImage={<ProductImage productData={productData} />}
+        topContent={<ProductDetails productData={productData} />}
         leftContent={null}
         middleContent={
           <ReviewListPanel

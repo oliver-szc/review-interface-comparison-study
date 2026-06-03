@@ -33,7 +33,12 @@ export function ReviewListPanel({
   totalCount,
 }: ReviewListPanelProps) {
   const [activeStarFilter, setActiveStarFilter] = useState<number | null>(null)
-  const [filters, setFilters] = useState<SortFilters>({} as SortFilters)
+  const [filters, setFilters] = useState<SortFilters>({
+    sort: 'none',
+    stars: 'all',
+    sentiment: 'all',
+    search: '',
+  })
 
   // Convert { stars, count } → { star, percentage } for StarHistogram
   const distribution = starDistribution.map(({ stars, count }) => ({

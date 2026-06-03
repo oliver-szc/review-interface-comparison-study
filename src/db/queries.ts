@@ -1,5 +1,5 @@
 import { db, sql } from './client';
-import { trackingEvents, type NewTrackingEvent, reviews, type Review, testTable, products, type Product } from './schema';
+import { trackingEvents, type NewTrackingEvent, reviews, type Review, products, type Product, participants, sequencePool, type Participant } from './schema';
 import { and, eq, inArray, desc, asc } from 'drizzle-orm';
 
 // Function to insert a test record into the test_connection table
@@ -83,26 +83,115 @@ export async function testComplexReviewFiltering(productId: string) {
 }
 
 // TEST: Atomic insert for tracking events
-export async function testTrackingEventInsert(sessionId: string) {
+export async function testTrackingEventInsert(participantId: string) {
   // Insert single event
   await createTrackingEvent({
-    sessionId,
-    condition: 'dashboard',
+    participantId,
+    conditionType: 'DASHBOARD',
     eventType: 'CLICK',
     eventData: { test: 'single' },
   });
-  const single = await db.select().from(trackingEvents).where(eq(trackingEvents.sessionId, sessionId));
+  const single = await db.select().from(trackingEvents).where(eq(trackingEvents.participantId, participantId));
   console.log('Single event:', single);
 
   // Batch insert 10 events
   const batch = Array.from({ length: 10 }).map((_, i) => ({
-    sessionId,
-    condition: 'dashboard',
+    participantId,
+    conditionType: 'DASHBOARD' as const,
     eventType: 'CLICK',
     eventData: { test: 'batch', idx: i },
   }));
   await bulkInsertTrackingEvents(batch);
-  const all = await db.select().from(trackingEvents).where(eq(trackingEvents.sessionId, sessionId));
+  const all = await db.select().from(trackingEvents).where(eq(trackingEvents.participantId, participantId));
   console.log('All events after batch insert:', all.length);
   return all;
+}
+
+// Transaction: Assign next available sequence to a new participant
+export async function createParticipantWithSequence(externalId?: string): Promise<Participant | null> {
+  return await db.transaction(async (tx) => {
+    // 1. Find the first available sequence and lock it
+    const availableSequence = await tx
+      .select()
+      .from(sequencePool)
+      .where(eq(sequencePool.isAvailable, true))
+      .orderBy(asc(sequencePool.sequenceId))
+      .limit(1)
+      // FOR UPDATE locks the row so concurrent requests don't grab the same one
+      .for('update');
+
+    if (availableSequence.length === 0) {
+      // No sequences available (pool exhausted)
+      return null;
+    }
+
+    const sequence = availableSequence[0];
+
+    // 2. Create the participant
+    const newParticipant = await tx
+      .insert(participants)
+      .values({
+        externalId: externalId ?? null,
+        vpId: sequence.sequenceId,
+        currentPage: '/study/demographics',
+      })
+      .returning();
+
+    const participant = newParticipant[0];
+
+    // 3. Mark the sequence as unavailable and reserved by this participant
+    await tx
+      .update(sequencePool)
+      .set({
+        isAvailable: false,
+        reservedByParticipantId: participant.id,
+        reservedAt: new Date(),
+      })
+      .where(eq(sequencePool.sequenceId, sequence.sequenceId));
+
+    return participant;
+  });
+}
+
+// Transaction: Release sequence if participant screens out
+export async function releaseSequenceFromParticipant(participantId: string, reason: string): Promise<void> {
+  if (participantId === 'debug-participant') {
+    return;
+  }
+
+  await db.transaction(async (tx) => {
+    // 1. Get participant's current vpId
+    const p = await tx
+      .select({ vpId: participants.vpId })
+      .from(participants)
+      .where(eq(participants.id, participantId))
+      .limit(1)
+      .for('update');
+
+    if (p.length === 0 || !p[0].vpId) {
+      return; // Participant not found or has no vpId
+    }
+
+    const vpId = p[0].vpId;
+
+    // 2. Update participant: clear vpId, set screenedOutReason
+    await tx
+      .update(participants)
+      .set({
+        vpId: null,
+        screenedOutReason: reason,
+        updatedAt: new Date(),
+      })
+      .where(eq(participants.id, participantId));
+
+    // 3. Release sequence back to pool
+    await tx
+      .update(sequencePool)
+      .set({
+        isAvailable: true,
+        reservedByParticipantId: null,
+        reservedAt: null,
+      })
+      .where(eq(sequencePool.sequenceId, vpId));
+  });
 }

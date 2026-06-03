@@ -1,8 +1,9 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 :root {
   --background: #ffffff;
-  --foreground: #ffffff;
+  --foreground: #0f172a;
 }
 
 @theme inline {
@@ -10,10 +11,10 @@
   --color-foreground: var(--foreground);
 
   /* Amazon palette */
-  --color-amazon:       #FF9900;
-  --color-amazon-dark:  #146EB4;
+  --color-amazon: #FF9900;
+  --color-amazon-dark: #146EB4;
   --color-amazon-light: #F3A847;
-  --color-amazon-bg:    #EAEDED;
+  --color-amazon-bg: #EAEDED;
 
   /* Star ratings */
   --color-star-filled: #FF9900;
@@ -21,7 +22,12 @@
   /* Sentiment tokens */
   --color-sentiment-positive: #10b981;
   --color-sentiment-negative: #ef4444;
-  --color-sentiment-neutral:  #6b7280;
+  --color-sentiment-neutral: #6b7280;
+
+  /* Global Button Overrides (Deep Blue matching Note Text) */
+  --color-blue-400: rgba(30, 58, 138, 0.6);
+  --color-blue-600: #1e3a8a;
+  --color-blue-700: #172554;
 
   /* Typography */
   --font-sans: 'Inter', sans-serif;
@@ -31,7 +37,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #ffffff;
-    --foreground: #ffffff;
+    --foreground: #0f172a;
   }
 }
 
@@ -39,4 +45,13 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.4s ease-out forwards;
 }

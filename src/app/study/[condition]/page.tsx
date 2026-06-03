@@ -5,7 +5,7 @@ import { ChatbotPanel } from '@/components/interfaces/chatbot/ChatbotPanel'
 import { DashboardPanel } from '@/components/interfaces/dashboard/DashboardPanel'
 import { StudyLayout } from '@/components/layouts/StudyLayout'
 import { WebshopLayout } from '@/components/layouts/WebshopLayout'
-import { ProductPanel } from '@/components/ui/ProductPanel'
+import { ProductImage, ProductDetails } from '@/components/ui/ProductPanel'
 import { ReviewListPanel } from '@/components/ui/ReviewListPanel'
 import { useParams } from 'next/navigation'
 
@@ -112,8 +112,10 @@ export default function StudyConditionPage() {
   return (
     <StudyLayout task={taskByCondition[condition]}>
       <WebshopLayout
-        topContent={<ProductPanel productData={productData} />}
-        leftContent={null}
+        condition={condition}
+        productImage={<ProductImage productData={productData} />}
+        topContent={<ProductDetails productData={productData} />}
+        leftContent={condition === 'chatbot' ? <ChatbotPanel /> : null}
         middleContent={
           <>
             {condition === 'dashboard' ? <DashboardPanel /> : null}
@@ -123,7 +125,6 @@ export default function StudyConditionPage() {
               averageRating={productData.avgRating}
               totalCount={productData.totalReviews}
             />
-            {condition === 'chatbot' ? <ChatbotPanel /> : null}
           </>
         }
       />
