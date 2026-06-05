@@ -25,17 +25,20 @@ export default async function BlockPrefacePage({ params }: { params: Promise<{ b
   const productDisplay = context.productId.toLowerCase();
 
   let conditionDisplay = "without assistance";
+  let systemText = "use the provided system";
   if (context.conditionType === 'CHATBOT') {
     conditionDisplay = "using an AI chatbot";
+    systemText = "use the chatbot assistance";
   } else if (context.conditionType === 'DASHBOARD') {
     conditionDisplay = "using an interactive dashboard";
+    systemText = "use the dashboard assistance";
   }
 
   return (
     <main className="min-h-full bg-slate-50 flex flex-col items-center">
-      <div className="w-full max-w-3xl px-4 pt-12 pb-12">
-        <div className="w-full bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200">
-          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-6">
+      <div className="w-full py-12 my-auto px-0 max-w-none">
+        <div className="w-[33.333%] mx-auto bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200">
+          <h1 className="text-2xl font-bold text-slate-900 mb-6">
             Task {blockIndex} of 3
           </h1>
 
@@ -47,10 +50,10 @@ export default async function BlockPrefacePage({ params }: { params: Promise<{ b
               </i>
             </p>
             <p>
-              <strong>The scenario:</strong> You are interested in buying this {productDisplay} and want to find out if the claims you heard about it are actually true.
+              <strong>The scenario:</strong> You are interested in buying this <span className="font-semibold">{productDisplay}</span> and want to find out if the claims you heard about it are actually true.
             </p>
             <p>
-              <strong>Your task:</strong> Please use the provided system to explore the online reviews and verify whether the experiences of actual buyers support these claims. You have to find out, wether a claim is <i>true</i>, <i>false</i> or <i>cannot be decided based on the available information</i> in the reviews. For each claim, you have to select one answer.
+              <strong>Your task:</strong> Please <span className="font-semibold">{systemText}</span> to explore the online reviews and verify whether the experiences of actual buyers support these claims. You have to find out, wether a claim is <span className="font-semibold italic">true</span>, <span className="font-semibold italic">false</span> or <span className="font-semibold italic">cannot be decided based on the available information</span> in the reviews. For each claim, you have to select one answer.
             </p>
           </div>
           <PrefaceClient blockIndex={blockIndex} />

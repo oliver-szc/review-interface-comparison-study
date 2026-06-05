@@ -54,7 +54,7 @@ export function ProgressBar({ currentStep, totalSteps, showLabels = true, steps,
       </div>
 
       {showLabels ? (
-        <div className="overflow-x-auto text-[10px] font-medium uppercase tracking-wide text-slate-500 w-full">
+        <div className="overflow-x-auto text-xxs font-medium uppercase tracking-wide text-slate-500 w-full">
           <div className="inline-flex flex-nowrap items-stretch gap-1 pr-1 w-full">
             {stepsToRender.map((step, index) => {
               const isActive = index + 1 === clampedCurrent;

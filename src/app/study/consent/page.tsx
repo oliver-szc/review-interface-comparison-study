@@ -37,10 +37,10 @@ export default function ConsentPage() {
   };
 
   return (
-    <main className="min-h-full bg-slate-50 flex flex-col items-center">
-      <div className="w-full max-w-3xl px-4 pt-12 pb-12">
-        <div className="w-full bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200">
-          <h1 className="text-3xl font-bold text-slate-900 mb-6">Informed Consent</h1>
+    <main className="min-h-screen bg-slate-50 flex flex-col items-center">
+      <div className="w-full py-12 my-auto px-0 max-w-none">
+        <div className="w-[33.333%] mx-auto bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200">
+          <h1 className="text-2xl font-bold text-slate-900 mb-6">Informed Consent</h1>
 
           <div className="prose prose-slate max-w-none text-slate-700 leading-relaxed mb-10">
 
@@ -52,7 +52,7 @@ export default function ConsentPage() {
             </p>
 
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-6 mb-6">
-              <h3 className="text-md font-bold text-slate-900 mt-0 mb-3">Key Points:</h3>
+              <h3 className="text-base font-bold text-slate-900 mt-0 mb-3">Key Points:</h3>
               <ul className="list-disc pl-5 space-y-2 text-slate-700 mt-0 mb-0">
                 <li><strong>Participation is voluntary:</strong> You may stop at any time without penalty or withdraw your consent.</li>
                 <li><strong>Age Requirement:</strong> Participation requires that you are at least 18 years of age.</li>
@@ -138,7 +138,7 @@ export default function ConsentPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-slate-50 border border-slate-200 rounded-xl">
                 <div>
-                  <h4 className="text-md font-bold text-slate-900 mb-2 mt-0">Research Team</h4>
+                  <h4 className="text-base font-bold text-slate-900 mb-2 mt-0">Research Team</h4>
                   <p className="text-sm text-slate-700 mb-1">
                     <strong>Oliver Szczygiel</strong>
                   </p>
@@ -151,7 +151,7 @@ export default function ConsentPage() {
                 </div>
 
                 <div className="border-t md:border-t-0 md:border-l border-slate-200 pt-4 md:pt-0 md:pl-6">
-                  <h4 className="text-md font-bold text-slate-900 mb-2 mt-0">Principal Investigator</h4>
+                  <h4 className="text-base font-bold text-slate-900 mb-2 mt-0">Principal Investigator</h4>
                   <p className="text-sm text-slate-700 mb-1">
                     <strong>Nils Constantin Hellwig</strong>
                   </p>
@@ -178,9 +178,9 @@ export default function ConsentPage() {
             <button
               onClick={handleConsent}
               disabled={isSubmitting}
-              className="px-8 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold rounded-lg shadow-sm transition-colors text-lg"
+              className="px-6 py-3 bg-sky-800 hover:bg-sky-900 disabled:bg-sky-800/200 text-white font-semibold rounded-lg shadow-sm transition-colors text-base"
             >
-              {isSubmitting ? 'Processing...' : 'I agree – Continue'}
+              {isSubmitting ? 'Processing...' : 'I Agree – Continue'}
             </button>
           </div>
         </div>

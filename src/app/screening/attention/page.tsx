@@ -31,9 +31,9 @@ export default async function AttentionScreeningOutPage() {
   }
 
   return (
-    <main className="min-h-full bg-slate-50 flex flex-col items-center justify-center p-4">
+    <main className="h-screen w-full bg-slate-50 flex flex-col items-center justify-center p-4 overflow-hidden">
       <div className="w-full max-w-3xl bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200 text-center">
-        <h1 className="text-xl font-bold text-slate-900 mb-4">
+        <h1 className="text-2xl font-bold text-slate-900 mb-4">
           Thank you for your interest in this study.
         </h1>
 
@@ -45,20 +45,20 @@ export default async function AttentionScreeningOutPage() {
             We still greatly appreciate your participation and the time you’ve invested!
           </p>
 
-          <div className="bg-blue-50 border border-blue-100 rounded-lg p-6 mt-8 text-center text-blue-900">
-            <h2 className="text-xl font-semibold text-blue-950 mb-4">Claiming Your Participant Hours (VP-Stunden)</h2>
+          <div className="bg--50 border border-sky-100 bg-sky-50 rounded-lg p-6 mt-8 text-center text--900">
+            <h2 className="text-xl font-semibold text-slate-900 mb-4">Claiming Your Participant Hours (VP-Stunden)</h2>
             <p className="mb-6 text-sm">
               To receive your VP hours, please send a brief email including your personal completion code:
             </p>
 
-            <h4 className="font-bold text-blue-950 mb-2">Your personal completion code:</h4>
+            <h4 className="font-bold text--950 mb-2">Your personal completion code:</h4>
             <CompletionCodeButton code={code} />
 
-            <h4 className="font-bold text-blue-950 mb-2 mt-8">Send the completion code to:</h4>
+            <h4 className="font-bold text--950 mb-2 mt-8">Send the completion code to:</h4>
             <p className="mb-2">
               <a
                 href={`mailto:oliver.szczygiel@stud.uni-regensburg.de?subject=Study Completion Code: ${code}`}
-                className="font-mono bg-white hover:bg-blue-50/50 border border-blue-200 hover:border-blue-300 rounded px-4 py-2 inline-block text-blue-600 hover:text-blue-800 transition-all shadow-sm"
+                className="font-mono bg-white hover:bg--50/50 border border--200 hover:border--300 rounded px-4 py-2 inline-block text--600 hover:text--800 transition-all shadow-sm"
               >
                 oliver.szczygiel@stud.uni-regensburg.de
               </a>

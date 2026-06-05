@@ -15,26 +15,26 @@ export function DashboardPanel() {
   const [active, setActive] = useState('Sound quality')
 
   return (
-    <div className="bg-sky-50 rounded-xl border border-slate-200 p-4 space-y-3 mx-auto max-w-4xl w-full">
+    <div className="bg-sky-50 rounded-xl border border-sky-400 p-4 space-y-3 mx-auto max-w-4xl w-full">
       {/* Header */}
-      <h2 className="text-sm font-semibold text-slate-900">
+      <h2 className="text-xl font-semibold text-slate-900">
         What customers say
       </h2>
 
       {/* AI Summary */}
-      <p className="text-xs text-slate-600">
+      <p className="text-md text-slate-600">
         Customers like the sound quality, price, and quality of the headphones.
         They mention they&apos;re clear, crisp, and good for gaming. Customers
         also like the fit, saying the earbuds stay in place and fit securely in
         their ears. However, some customers have mixed opinions on connectivity
         and functionality.
       </p>
-      <p className="text-xs text-slate-400">
+      <p className="text-xs text-slate-500">
         *AI-generated from customer reviews
       </p>
 
       {/* Aspect Selection */}
-      <p className="text-xs font-semibold text-slate-900">
+      <p className="text-base font-semibold text-slate-900">
         Select to learn more:
       </p>
       <div className="flex flex-wrap gap-2">

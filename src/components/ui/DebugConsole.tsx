@@ -121,7 +121,7 @@ export function DebugConsole() {
         <span className="text-slate-400 shrink-0">Quick Jump:</span>
         <select
           id="debug-quick-jump"
-          className="flex-1 bg-slate-800 border border-slate-600 rounded px-2 py-0.5 text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="flex-1 bg-slate-800 border border-slate-600 rounded px-2 py-0.5 text-white focus:outline-none focus:ring-1 focus:ring--500"
           onChange={(e) => { if (e.target.value) handleJump(e.target.value); }}
           value=""
         >

@@ -23,12 +23,12 @@ export function CompletionCodeButton({ code }: CompletionCodeButtonProps) {
     <div className="flex flex-col items-center">
       <button
         onClick={handleCopy}
-        className="font-mono bg-white hover:bg-blue-50/50 active:bg-blue-100 border border-blue-200 hover:border-blue-300 rounded px-4 py-2 text-blue-700 hover:text-blue-900 font-bold tracking-wider transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+        className="font-mono bg-white hover:bg--50/50 active:bg--100 border border--200 hover:border--300 rounded px-4 py-2 text--700 hover:text--900 font-bold tracking-wider transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring--300"
         title="Click to copy completion code"
       >
         {code}
       </button>
-      <p className={`text-xs mt-2 italic transition-colors duration-200 ${copied ? 'text-green-600 font-semibold' : 'text-blue-600'}`}>
+      <p className={`text-xs mt-2 italic transition-colors duration-200 ${copied ? 'text-green-600 font-semibold' : 'text--600'}`}>
         {copied ? '✓ Copied to clipboard' : 'Click to copy the code'}
       </p>
     </div>

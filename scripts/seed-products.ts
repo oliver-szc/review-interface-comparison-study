@@ -1,5 +1,6 @@
 import { db } from '../src/db/client';
 import { products, type NewProduct } from '../src/db/schema';
+import { sql } from 'drizzle-orm';
 
 const seedProducts: NewProduct[] = [
   {
@@ -19,7 +20,7 @@ const seedProducts: NewProduct[] = [
       { label: 'Wattage', value: '1500 watts' },
       { label: 'Material', value: 'Stainless Steel' },
       { label: 'Color', value: 'Silver' },
-      { label: 'Special Feature', value: 'Automatic Shut-Off, Boil Dry Protection, Cordless' }
+      { label: 'Special Feature', value: 'Automatic Shut-Off, Boil Dry Protection' }
     ],
     aboutItemSource: 'Amazon.com',
     aboutItem: [
@@ -89,7 +90,28 @@ const seedProducts: NewProduct[] = [
 ];
 
 async function seed() {
-  await db.insert(products).values(seedProducts);
+  console.log('Upserting products...');
+  for (const product of seedProducts) {
+    await db.insert(products)
+      .values(product)
+      .onConflictDoUpdate({
+        target: products.productId,
+        set: {
+          domain: product.domain,
+          asin: product.asin,
+          title: product.title,
+          price: product.price,
+          priceSource: product.priceSource,
+          averageRating: product.averageRating,
+          reviewCount: product.reviewCount,
+          imageUrl: product.imageUrl,
+          bulletPointsSource: product.bulletPointsSource,
+          bulletPoints: product.bulletPoints,
+          aboutItemSource: product.aboutItemSource,
+          aboutItem: product.aboutItem,
+        }
+      });
+  }
   console.log('✅ Seeded 3 products');
 }
 

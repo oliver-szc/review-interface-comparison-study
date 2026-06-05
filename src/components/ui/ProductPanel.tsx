@@ -26,14 +26,21 @@ interface ProductPanelProps {
 
 export function ProductImage({ productData }: ProductPanelProps) {
   const { title, image } = productData
+  
+  // Check if this product is the earbuds by title or image string
+  const isEarbuds = 
+    title.toLowerCase().includes('earbud') || 
+    (typeof image === 'string' && image.toLowerCase().includes('earbud')) ||
+    (image && typeof image === 'object' && 'src' in image && typeof image.src === 'string' && image.src.toLowerCase().includes('earbud'));
+
   return (
-    <div className="bg-white rounded-xl p-4 flex items-center justify-center w-full h-full">
+    <div className="bg-white rounded-xl p-4 flex items-center justify-center w-full h-full overflow-hidden">
       <Image
         src={image}
         alt={title}
         width={500}
         height={500}
-        className="w-100 h-100 rounded-lg object-contain"
+        className={`w-100 h-100 rounded-lg object-contain transition-transform duration-300 ${isEarbuds ? 'scale-150' : ''}`}
       />
     </div>
   )
@@ -64,11 +71,11 @@ export function ProductDetails({ productData }: ProductPanelProps) {
       <hr className="border-slate-100 mb-2" />
 
       {bulletPoints && bulletPoints.length > 0 && (
-        <table className="w-full text-xs md:text-sm text-slate-600 border-none border-collapse">
+        <table className="w-110 text-xs md:text-sm text-slate-600 border-none border-collapse">
           <tbody>
             {bulletPoints.map((item) => (
               <tr key={item.label} className="border-none align-top">
-                <td className="font-semibold text-slate-700 pr-6 pb-2 border-none select-none whitespace-nowrap">
+                <td className="font-semibold text-slate-700 pb-2 border-none select-none whitespace-nowrap">
                   {item.label}
                 </td>
                 <td className="text-slate-600 pb-2 border-none">

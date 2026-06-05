@@ -23,7 +23,7 @@ interface VerticalRadioGroupProps {
 
 export const VerticalRadioGroup = forwardRef<HTMLInputElement, VerticalRadioGroupProps>(
   ({ options, registration, className, required = true }, ref) => {
-    
+
     // We omit ref from registration because we pass it directly via forwardRef
     const { ref: formRef, ...restRegistration } = registration;
 
@@ -32,10 +32,10 @@ export const VerticalRadioGroup = forwardRef<HTMLInputElement, VerticalRadioGrou
         {options.map((option, index) => {
           const id = `${registration.name}-${option.value}`;
           return (
-            <label 
-              key={id} 
+            <label
+              key={id}
               htmlFor={id}
-              className="flex items-start gap-3 py-2.5 px-3 rounded-md border border-slate-200 hover:bg-blue-50/30 hover:border-blue-600 has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50/30 cursor-pointer transition-colors focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2"
+              className="flex items-start gap-3 py-2.5 px-3 rounded-md border border-slate-200 hover:bg--50/30 hover:border--600 has-[:checked]:border--600 has-[:checked]:bg--50/30 cursor-pointer transition-colors focus-within:ring-2 focus-within:ring--500 focus-within:ring-offset-2"
             >
               <div className="flex h-6 items-center">
                 <input
@@ -51,7 +51,7 @@ export const VerticalRadioGroup = forwardRef<HTMLInputElement, VerticalRadioGrou
                     if (typeof ref === 'function') ref(e);
                     else if (ref) (ref as any).current = e;
                   }}
-                  className="h-4 w-4 shrink-0 rounded-full border-slate-300 text-blue-600 focus:ring-blue-600 user-invalid:border-red-500 user-invalid:ring-red-500 cursor-pointer"
+                  className="h-4 w-4 shrink-0 rounded-full border-slate-300 text--600 focus:ring--600 user-invalid:border-red-500 user-invalid:ring-red-500 cursor-pointer"
                 />
               </div>
               <div className="text-sm leading-6">

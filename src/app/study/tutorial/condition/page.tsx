@@ -26,15 +26,14 @@ export default function TutorialConditionPage() {
   };
 
   return (
-    <main className="min-h-full bg-slate-50 flex flex-col items-center p-4">
-      <div className="w-full max-w-3xl my-auto py-12">
-        <div className="w-full bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200 min-h-[450px] flex flex-col justify-between space-y-4">
+    <main className="relative h-full w-full bg-slate-50 flex flex-col items-center justify-center p-4 overflow-hidden">
+      <div className="w-full max-w-3xl z-20">
+        <div className="w-full bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200 flex flex-col space-y-8">
           <div className="prose prose-slate max-w-none space-y-4">
             {/* Step 0: 2. The Claims */}
             {visibleStep === 0 && (
               <div>
-                <h1 className="text-3xl font-bold text-slate-900 mb-6">Tutorial</h1>
-                <h3 className="text-lg font-bold text-slate-800 mb-3">2. The Claims</h3>
+                <h1 className="text-2xl font-bold text-slate-900 mb-6">The Claims:</h1>
                 <p className="text-slate-700 leading-relaxed">
                   In each task, you will be asked to verify <strong>three specific claims</strong> about a product. These claims will be visible at the top bar at all times and the answer form is accessible via a button in the top right corner. Your goal is to find out if the experiences of actual customers support or contradict these claims.
                 </p>
@@ -44,8 +43,7 @@ export default function TutorialConditionPage() {
             {/* Step 1: 3. Using the Systems */}
             {visibleStep === 1 && (
               <div>
-                <h1 className="text-3xl font-bold text-slate-900 mb-6">Tutorial</h1>
-                <h3 className="text-lg font-bold text-slate-800 mb-3">3. Using the Systems</h3>
+                <h1 className="text-2xl font-bold text-slate-900 mb-6">Using the System:</h1>
                 <p className="text-slate-700 leading-relaxed mb-4">
                   The interface simulates a typical product page with user reviews. Throughout the study, you will explore these reviews using different systems:
                 </p>
@@ -63,8 +61,7 @@ export default function TutorialConditionPage() {
             {/* Step 2: 4. Submitting Your Answers */}
             {visibleStep === 2 && (
               <div>
-                <h1 className="text-3xl font-bold text-slate-900 mb-6">Tutorial</h1>
-                <h3 className="text-lg font-bold text-slate-800 mb-3">4. Submitting Your Answers</h3>
+                <h1 className="text-2xl font-bold text-slate-900 mb-6">Submitting Your Answers:</h1>
                 <p className="text-slate-700 leading-relaxed mb-4">
                   Once you have gathered enough information, click the <strong>"Open Answer Form"</strong> button in the top right corner. For each of the three claims, you must select whether it is:
                 </p>
@@ -73,7 +70,7 @@ export default function TutorialConditionPage() {
                   <li><strong>False</strong> (contradicted by the reviews)</li>
                   <li><strong>Not mentioned in the reviews</strong> (not enough evidence in the reviews)</li>
                 </ul>
-                <p className="text-slate-700 leading-relaxed">
+                <p className="text-slate-750 font-semibold leading-relaxed">
                   Once you have selected an option for all three claims, click <strong>"Submit Answers"</strong> to finish the task.
                 </p>
               </div>
@@ -82,8 +79,7 @@ export default function TutorialConditionPage() {
             {/* Step 3: 5. Follow-Up Questionnaire */}
             {visibleStep === 3 && (
               <div>
-                <h1 className="text-3xl font-bold text-slate-900 mb-6">Tutorial</h1>
-                <h3 className="text-lg font-bold text-slate-800 mb-3">5. Follow-Up Questionnaire</h3>
+                <h1 className="text-2xl font-bold text-slate-900 mb-6">Follow-Up Questionnaire:</h1>
                 <p className="text-slate-700 leading-relaxed">
                   After submitting your answers, you will be briefly redirected to a short questionnaire. Here, we will ask about your experience with the system you just used, before the next task begins.
                 </p>
@@ -93,8 +89,7 @@ export default function TutorialConditionPage() {
             {/* Step 4: 6. Golden Rules */}
             {visibleStep === 4 && (
               <div>
-                <h1 className="text-3xl font-bold text-slate-900 mb-6">Tutorial</h1>
-                <h3 className="text-lg font-bold text-slate-850 mb-3">6. Golden Rules:</h3>
+                <h1 className="text-2xl font-bold text-slate-900 mb-6">Golden Rules:</h1>
                 <p className="text-slate-750 font-medium mb-4">
                   To ensure accurate scientific results, please follow these rules:
                 </p>
@@ -113,7 +108,7 @@ export default function TutorialConditionPage() {
               <button
                 type="button"
                 onClick={() => nextStep(visibleStep)}
-                className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-sm transition-colors text-lg"
+                className="px-6 py-3 bg-sky-800 hover:bg-sky-900 text-white font-semibold rounded-lg shadow-sm transition-colors text-base"
               >
                 Continue
               </button>
@@ -121,7 +116,7 @@ export default function TutorialConditionPage() {
               <button
                 onClick={handleContinue}
                 disabled={isSubmitting}
-                className="px-8 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold rounded-lg shadow-sm transition-colors text-lg"
+                className="px-6 py-3 bg-sky-800 hover:bg-sky-900 disabled:bg-sky-800/200 text-white font-semibold rounded-lg shadow-sm transition-colors text-base"
               >
                 {isSubmitting ? 'Loading...' : 'Continue'}
               </button>

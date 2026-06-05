@@ -50,17 +50,19 @@ function LandingPageInner() {
 
   return (
     <main className="min-h-full bg-slate-50 flex flex-col items-center">
-      <div className="w-full max-w-3xl px-4 pt-12 pb-12">
-        <div className="w-full bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200">
-          <h1 className="text-xl md:text-2xl font-bold text-slate-900 mb-6 leading-tight">
-            Welcome to the study <br />
-            <span className="text-blue-900 italic font-semibold">User Assistance in Exploring Online Reviews</span>
+      <div className="w-full py-12 my-auto px-0 max-w-none">
+        <div className="w-[33.333%] mx-auto bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200">
+          <h1 className="text-2xl font-bold text-slate-900 mb-3">
+            Welcome to the study:
+          </h1>
+          <h1 className="text-3xl text-slate-900 italic font-bold mb-6">
+            User Assistance in Exploring Online Reviews
           </h1>
 
           {/* Show a notice if the user has already completed the study */}
           {alreadyCompleted ? (
             <div className="bg-amber-50 border border-amber-300 rounded-lg p-6 text-amber-900 mt-4">
-              <h2 className="text-lg font-semibold mb-2">You have already participated.</h2>
+              <h2 className="text-xl font-semibold text-slate-900 mb-2">You have already participated.</h2>
               <p className="text-sm">
                 Our system indicates that you have already accessed this study. To ensure scientific validity, each participant may only complete the tasks once.
               </p>
@@ -83,13 +85,13 @@ function LandingPageInner() {
                   In this study, we investigate how different types of user assistance influence the experience of exploring online product reviews. You will complete a series of short tasks using these tools and share your impressions along the way.
                 </p>
 
-                <div className="bg-blue-50 border border-blue-100 p-4 rounded-lg text-blue-900 text-sm">
+                <div className="bg-slate-50 border border-slate-200 p-4 rounded-lg text-slate-900 text-sm">
                   <p>
                     <strong>Note:</strong> The study will be conducted entirely in English. A basic knowledge of English is required to complete the tasks. The study includes quality assurance measures to ensure the integrity of the collected data.
                   </p>
                 </div>
 
-                <h2 className="text-lg font-semibold text-slate-900 mt-6 mb-3">What to expect:</h2>
+                <h2 className="text-xl font-semibold text-slate-900 mt-10 mb-3">What to expect:</h2>
                 <ul className="list-disc pl-6 space-y-1.5 text-slate-700 text-base">
                   <li><strong>Demographics:</strong> First, you will answer a few questions about yourself.</li>
                   <li><strong>Tutorial:</strong> Next, you will familiarize yourself with the web interface and the task format.</li>
@@ -98,12 +100,12 @@ function LandingPageInner() {
                   <li><strong>Estimated total duration:</strong> approx. 40 minutes</li>
                 </ul>
 
-                <h2 className="text-lg font-semibold text-slate-900 mt-6 mb-3">VP (Versuchspersonenstunden):</h2>
+                <h2 className="text-xl font-semibold text-slate-900 mt-10 mb-3">VP (Versuchspersonenstunden) for UR-students:</h2>
                 <p>
-                  You will receive <strong>0.75 VP</strong> for your participation. After completing the study, a personal code will be displayed. Please send this code informally via email to receive your VP.
+                  You will receive <strong>1 VP</strong> for your participation. After completing the study, a personal code will be displayed. Please send this code informally via email to receive your VP.
                 </p>
 
-                <div className="bg-amber-50 border border-amber-200 p-4 rounded-lg text-amber-900 text-sm font-medium mt-5">
+                <div className="bg-amber-50 border border-amber-200 p-4 rounded-lg text-amber-800 text-sm font-medium mt-10">
                   Please ensure you are in a quiet environment and can complete the study in one sitting without interruptions.
                 </div>
               </div>
@@ -112,7 +114,7 @@ function LandingPageInner() {
                 <Link
                   id="start-study-link"
                   href="/study/consent"
-                  className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-sm transition-colors text-base"
+                  className="px-6 py-2.5 bg-sky-800 hover:bg-sky-900 text-white font-semibold rounded-lg shadow-sm transition-colors text-base"
                 >
                   Continue to the consent form
                 </Link>

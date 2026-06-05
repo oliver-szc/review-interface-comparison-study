@@ -63,29 +63,30 @@ export default function PreferencesPage() {
         onSubmit={onSubmit}
         submitLabel="Complete Study"
         hideFooter={true}
+        className="max-w-none w-full px-0"
       >
-        <div className="w-full max-w-3xl bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200 space-y-8">
+        <div className="w-[33.333%] mx-auto bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200 space-y-8">
           <div>
             <h1 className="text-2xl font-bold text-slate-900">System Preferences & Feedback</h1>
             <p className="text-slate-600 mt-2">
-              You have completed all tasks! Finally, please evaluate the different ways of exploring the reviews.
+              You have completed all tasks! Before you finish, take a moment to reflect on the different ways of exploring reviews
             </p>
           </div>
 
           <div className="!mt-20">
-            <h2 className="text-xl font-semibold text-slate-800">System Preferences</h2>
+            <h2 className="text-xl font-semibold text-slate-900">System Preferences</h2>
             <p className="text-slate-600 mt-3 text-sm leading-relaxed">
-              Please indicate your agreement with the following statements.
+              Please indicate the degree to which you agree/disagree with the following statements.
             </p>
           </div>
 
           <QuestionCard
-            question="I consider the AI chatbot a preferable way to explore product reviews."
+            question="I consider the chatbot assistance a preferable way to explore product reviews."
             error={errors.pref_chatbot}
             required={false}
             className="shadow-none border-none p-0 bg-transparent"
           >
-            <LikertScale scaleLength={7} labels={PREF_LABELS} registration={register('pref_chatbot')} />
+            <LikertScale scaleLength={7} labels={PREF_LABELS} registration={register('pref_chatbot')} textLabelsAtBottom={true} />
           </QuestionCard>
 
           <QuestionCard
@@ -94,7 +95,7 @@ export default function PreferencesPage() {
             required={false}
             className="shadow-none border-none p-0 bg-transparent"
           >
-            <LikertScale scaleLength={7} labels={PREF_LABELS} registration={register('pref_dashboard')} />
+            <LikertScale scaleLength={7} labels={PREF_LABELS} registration={register('pref_dashboard')} textLabelsAtBottom={true} />
           </QuestionCard>
 
           <QuestionCard
@@ -103,7 +104,7 @@ export default function PreferencesPage() {
             required={false}
             className="shadow-none border-none p-0 bg-transparent"
           >
-            <LikertScale scaleLength={7} labels={PREF_LABELS} registration={register('pref_baseline')} />
+            <LikertScale scaleLength={7} labels={PREF_LABELS} registration={register('pref_baseline')} textLabelsAtBottom={true} />
           </QuestionCard>
 
           <QuestionCard
@@ -119,7 +120,7 @@ export default function PreferencesPage() {
             <TextArea
               registration={register('pref_comment')}
               placeholder="Your feedback... (optional)"
-              className="p-6 bg-slate-50/30 rounded-xl border border-slate-200 text-base focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+              className="p-6 bg-slate-50/30 rounded-xl border border-slate-200 text-base focus:bg-white focus:border--500 focus:ring-1 focus:ring--500 transition-colors"
             />
           </QuestionCard>
 
@@ -127,7 +128,7 @@ export default function PreferencesPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-8 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold rounded-lg shadow-sm transition-colors text-lg"
+              className="px-6 py-3 bg-sky-800 hover:bg-sky-900 disabled:bg-sky-800/200 text-white font-semibold rounded-lg shadow-sm transition-colors text-base"
             >
               {isSubmitting ? 'Processing...' : 'Complete Study'}
             </button>

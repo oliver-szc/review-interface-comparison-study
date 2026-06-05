@@ -17,7 +17,7 @@ interface TextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement
 
 export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
   ({ registration, className, rows = 4, ...props }, ref) => {
-    
+
     const { ref: formRef, ...restRegistration } = registration;
 
     return (
@@ -25,7 +25,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
         rows={rows}
         className={cn(
           "w-full rounded-md border border-slate-300 p-3 text-sm shadow-sm",
-          "focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none",
+          "focus:border--500 focus:ring-1 focus:ring--500 focus:outline-none",
           "user-invalid:border-red-500 user-invalid:ring-red-500 user-invalid:ring-1",
           className
         )}

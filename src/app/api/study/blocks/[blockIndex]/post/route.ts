@@ -27,7 +27,9 @@ export async function POST(
     const body = await req.json();
 
     const tlxMd = Number(body.tlx_md);
+    const tlxPd = Number(body.tlx_pd);
     const tlxTd = Number(body.tlx_td);
+    const tlxPerformance = Number(body.tlx_performance);
     const tlxEffort = Number(body.tlx_effort);
     const tlxFrustration = Number(body.tlx_frustration);
     
@@ -85,7 +87,9 @@ export async function POST(
       await tx.update(blockSubmissions)
         .set({
           tlxMd,
+          tlxPd,
           tlxTd,
+          tlxPerformance,
           tlxEffort,
           tlxFrustration,
           pu1,

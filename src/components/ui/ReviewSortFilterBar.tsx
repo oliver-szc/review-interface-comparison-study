@@ -49,7 +49,7 @@ export function ReviewSortFilterBar({ filters, onChange }: ReviewSortFilterBarPr
 
         {/* Sort by */}
         <div className="space-y-1">
-          <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500">Sort by</p>
+          <p className="text-xxs font-bold uppercase tracking-wide text-slate-500">Sort by</p>
           <select
             value={filters.sort}
             onChange={(e) => update({ sort: e.target.value as SortOption })}
@@ -64,7 +64,7 @@ export function ReviewSortFilterBar({ filters, onChange }: ReviewSortFilterBarPr
 
         {/* Filter by — star rating */}
         <div className="space-y-1">
-          <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500">Filter by</p>
+          <p className="text-xxs font-bold uppercase tracking-wide text-slate-500">Filter by</p>
           <div className="flex flex-wrap gap-2">
             <select
               value={filters.stars}
@@ -94,24 +94,24 @@ export function ReviewSortFilterBar({ filters, onChange }: ReviewSortFilterBarPr
       {/* Active filter badge */}
       {(filters.stars !== 'all' || filters.search) && (
         <div className="flex items-center gap-2 flex-wrap pt-1">
-          <span className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">
+          <span className="text-xxs font-semibold uppercase tracking-wide text-slate-400">
             Active filters:
           </span>
           {filters.stars !== 'all' && (
-            <span className="text-[10px] bg-amazon/10 text-amazon border border-amazon/20 px-2 py-0.5 rounded-full">
+            <span className="text-xxs bg-amazon/10 text-amazon border border-amazon/20 px-2 py-0.5 rounded-full">
               {filters.stars} ★
             </span>
           )}
           {filters.search && (
-            <span className="text-[10px] bg-amazon/10 text-amazon border border-amazon/20 px-2 py-0.5 rounded-full">
+            <span className="text-xxs bg-amazon/10 text-amazon border border-amazon/20 px-2 py-0.5 rounded-full">
               "{filters.search}"
             </span>
           )}
           <button
             onClick={() => onChange({ sort: 'helpful', stars: 'all', sentiment: 'all', search: '' })}
-            className="text-[10px] text-slate-400 underline hover:text-slate-600"
+            className="text-xxs text-slate-400 underline hover:text-slate-600"
           >
-            Clear all
+            Clear All
           </button>
         </div>
       )}

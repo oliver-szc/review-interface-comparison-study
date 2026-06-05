@@ -171,7 +171,7 @@ export default function TaskClientView({ blockIndex, conditionType, productId, c
         <div className="w-full overflow-hidden rounded-xl border border-slate-100 bg-white shadow-sm">
           <table className="w-full border-collapse text-left text-xs md:text-sm">
             <thead>
-              <tr className="border-b border-slate-200 bg-slate-50 text-[11px] font-semibold text-slate-900">
+              <tr className="border-b border-slate-200 bg-slate-50 text-xxs-11 font-semibold text-slate-900">
                 <th scope="col" className="px-6 py-3.5 font-bold">Claim</th>
                 <th scope="col" className="px-4 py-3.5 text-center font-bold w-24">True</th>
                 <th scope="col" className="px-4 py-3.5 text-center font-bold w-24">False</th>
@@ -194,7 +194,7 @@ export default function TaskClientView({ blockIndex, conditionType, productId, c
                         “{claim.claimText}”
                       </span>
                       {hasError && (
-                        <span role="alert" className="mt-1.5 text-[11px] text-red-600 font-medium flex items-center gap-1.5">
+                        <span role="alert" className="mt-1.5 text-xxs-11 text-red-600 font-medium flex items-center gap-1.5">
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 shrink-0" aria-hidden="true">
                             <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
                           </svg>
@@ -223,7 +223,7 @@ export default function TaskClientView({ blockIndex, conditionType, productId, c
                                 ref={(e) => {
                                   formRef(e);
                                 }}
-                                className="h-4 w-4 shrink-0 rounded-full border-slate-300 text-blue-600 focus:ring-blue-600 cursor-pointer"
+                                className="h-4 w-4 shrink-0 rounded-full border-slate-300 text-sky-600 focus:ring-sky-600 cursor-pointer"
                               />
                             </label>
                           </div>
@@ -242,7 +242,7 @@ export default function TaskClientView({ blockIndex, conditionType, productId, c
           <button
             type="submit"
             disabled={form.formState.isSubmitting}
-            className="px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs md:text-sm rounded-lg border border-slate-800 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-98"
+            className="px-6 py-3 bg-sky-800 hover:bg-sky-900 disabled:bg-sky-800/200 text-white font-semibold rounded-lg shadow-sm transition-colors text-base"
           >
             {form.formState.isSubmitting ? 'Submitting...' : 'Submit Answers'}
           </button>

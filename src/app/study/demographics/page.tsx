@@ -64,15 +64,16 @@ export default function DemographicsPage() {
         onSubmit={onSubmit}
         submitLabel="Continue"
         hideFooter={true}
+        className="max-w-none w-full px-0"
       >
-        <div className="w-full max-w-3xl bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200 space-y-16">
+        <div className="w-[33.333%] mx-auto bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200 space-y-16">
           <div>
             <h1 className="text-2xl font-bold text-slate-900">Demographics</h1>
             <p className="text-slate-600 mt-2">Please answer a few questions about yourself.</p>
           </div>
 
           <QuestionCard
-            question="1. How old are you?"
+            question="How old are you?"
             error={errors.demo_age}
             required={false}
             className="shadow-none border-none p-0 bg-transparent"
@@ -82,13 +83,13 @@ export default function DemographicsPage() {
               min={18}
               max={40}
               placeholder="e.g. 25"
-              className="mt-4 w-full sm:w-32 p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-slate-900 bg-white"
+              className="w-full sm:w-32 py-2.5 px-3 border border-slate-300 rounded-md focus:ring-2 focus:ring--500 focus:border--500 outline-none text-slate-900 bg-white text-sm"
               {...register('demo_age')}
             />
           </QuestionCard>
 
           <QuestionCard
-            question="2. What is your gender?"
+            question="What is your gender?"
             error={errors.demo_gender}
             required={false}
             className="shadow-none border-none p-0 bg-transparent !mt-16"
@@ -105,7 +106,7 @@ export default function DemographicsPage() {
           </QuestionCard>
 
           <QuestionCard
-            question="3. What is your current academic standing?"
+            question="What is your current academic standing?"
             error={errors.demo_studystatus}
             required={false}
             className="shadow-none border-none p-0 bg-transparent !mt-16"
@@ -122,7 +123,7 @@ export default function DemographicsPage() {
           </QuestionCard>
 
           <QuestionCard
-            question="4. What is your field of study?"
+            question="What is your field of study?"
             error={errors.demo_field}
             required={false}
             className="shadow-none border-none p-0 bg-transparent !mt-16"
@@ -142,7 +143,7 @@ export default function DemographicsPage() {
           </QuestionCard>
 
           <QuestionCard
-            question="5. What is your level of English proficiency (Englischkenntnisse)?"
+            question="çWhat is your level of English proficiency (Englischkenntnisse)?"
             error={errors.scr_english}
             required={false}
             className="shadow-none border-none p-0 bg-transparent !mt-16"
@@ -163,7 +164,7 @@ export default function DemographicsPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-8 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold rounded-lg shadow-sm transition-colors text-lg"
+              className="px-6 py-3 bg-sky-800 hover:bg-sky-900 disabled:bg-sky-800/200 text-white font-semibold rounded-lg shadow-sm transition-colors text-base"
             >
               {isSubmitting ? 'Processing...' : 'Continue'}
             </button>

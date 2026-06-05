@@ -2,9 +2,9 @@
 
 export default function EnglishScreeningOutPage() {
   return (
-    <main className="min-h-full bg-slate-50 flex flex-col items-center justify-center p-4">
+    <main className="h-screen w-full bg-slate-50 flex flex-col items-center justify-center p-4 overflow-hidden">
       <div className="w-full max-w-3xl bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200 text-center">
-        <h1 className="text-xl md:text-2xl font-bold text-slate-900 mb-6">
+        <h1 className="text-2xl font-bold text-slate-900 mb-6">
           Thank you for your interest in this study.
         </h1>
 

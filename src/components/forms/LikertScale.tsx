@@ -15,34 +15,54 @@ interface LikertScaleProps {
   registration: UseFormRegisterReturn;
   className?: string;
   required?: boolean;
+  showNumbers?: boolean;
+  textLabelsAtBottom?: boolean;
 }
 
 export const LikertScale = forwardRef<HTMLInputElement, LikertScaleProps>(
-  ({ scaleLength, labels, registration, className, required = true }, ref) => {
-    
+  ({ scaleLength, labels, registration, className, required = true, showNumbers = true, textLabelsAtBottom = false }, ref) => {
+
     const { ref: formRef, ...restRegistration } = registration;
 
     // Create array of values from 1 to scaleLength
     const options = Array.from({ length: scaleLength }, (_, i) => i + 1);
 
     return (
-      <div className={cn("w-full overflow-x-auto px-6 pt-2 pb-5 bg-slate-50/30 rounded-xl border border-slate-200 transition-colors", className)}>
-        <div className="min-w-[600px] flex justify-between items-end gap-2">
+      <div className={cn(
+        "w-full overflow-x-auto px-6 pb-5 bg-slate-50/30 rounded-xl border border-slate-200 transition-colors",
+        textLabelsAtBottom ? "pt-5" : "pt-2",
+        className
+      )}>
+        <div className={cn(
+          "min-w-[600px] flex justify-between gap-2",
+          textLabelsAtBottom ? "items-start" : "items-end"
+        )}>
           {options.map((value) => {
             const id = `${registration.name}-${value}`;
             // Find if there's a specific text label for this value
             const matchingLabel = labels.find(l => l.value === value)?.label;
 
             return (
-              <label 
+              <label
                 key={id}
                 htmlFor={id}
                 className="flex flex-col items-center gap-3 cursor-pointer group flex-1"
               >
-                <div className="h-8 flex items-end text-xs text-center text-slate-500 px-1 leading-tight">
-                  {matchingLabel}
-                </div>
-                
+                {!textLabelsAtBottom && (
+                  <div className="h-10 flex items-end justify-center text-xs text-center text-slate-500 px-1 leading-tight">
+                    {matchingLabel ? (
+                      <span>
+                        {matchingLabel.split(' ').map((word, idx, arr) => (
+                          <span key={idx}>
+                            {word}
+                            {idx < arr.length - 1 && <br />}
+                          </span>
+                        ))}
+                      </span>
+                    ) : null}
+                  </div>
+                )}
+
                 <div className="relative flex flex-col items-center w-full">
                   {/* Connecting line behind radio buttons */}
                   {value > 1 && (
@@ -51,8 +71,8 @@ export const LikertScale = forwardRef<HTMLInputElement, LikertScaleProps>(
                   {value < scaleLength && (
                     <div className="absolute top-1/2 left-1/2 -right-[50%] h-[2px] bg-slate-200 -z-10 -translate-y-1/2"></div>
                   )}
-                  
-                  <div className="bg-white rounded-full p-1 flex items-center justify-center aspect-square group-focus-within:ring-2 group-focus-within:ring-blue-500 group-focus-within:ring-offset-2">
+
+                  <div className="bg-white rounded-full p-1 flex items-center justify-center aspect-square group-focus-within:ring-2 group-focus-within:ring--500 group-focus-within:ring-offset-2">
                     <input
                       id={id}
                       type="radio"
@@ -64,13 +84,18 @@ export const LikertScale = forwardRef<HTMLInputElement, LikertScaleProps>(
                         if (typeof ref === 'function') ref(e);
                         else if (ref) (ref as any).current = e;
                       }}
-                      className="h-5 w-5 shrink-0 rounded-full border-slate-300 text-blue-600 focus:ring-0 focus:outline-none user-invalid:border-red-500 user-invalid:ring-red-500 cursor-pointer"
+                      className="h-5 w-5 shrink-0 rounded-full border-slate-300 text--600 focus:ring-0 focus:outline-none user-invalid:border-red-500 user-invalid:ring-red-500 cursor-pointer"
                     />
                   </div>
                 </div>
-                <div className="text-sm font-medium text-slate-500">
-                  {value}
-                </div>
+                {showNumbers && (
+                  <div className={cn(
+                    "text-sm font-medium whitespace-nowrap",
+                    textLabelsAtBottom ? "text-slate-900" : "text-slate-500"
+                  )}>
+                    {textLabelsAtBottom ? (matchingLabel || '') : value}
+                  </div>
+                )}
               </label>
             );
           })}

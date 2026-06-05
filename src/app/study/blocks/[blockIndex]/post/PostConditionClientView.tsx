@@ -16,7 +16,9 @@ interface PostConditionProps {
 
 const PostConditionSchema = z.object({
   tlx_md: z.string().min(1, "Please answer this question."),
+  tlx_pd: z.string().min(1, "Please answer this question."),
   tlx_td: z.string().min(1, "Please answer this question."),
+  tlx_performance: z.string().min(1, "Please answer this question."),
   tlx_effort: z.string().min(1, "Please answer this question."),
   tlx_frustration: z.string().min(1, "Please answer this question."),
 
@@ -40,6 +42,11 @@ const TLX_LABELS = [
 
 const PU_LABELS = [
   { value: 1, label: "strongly disagree" },
+  { value: 2, label: "moderately disagree" },
+  { value: 3, label: "somewhat disagree" },
+  { value: 4, label: "neutral" },
+  { value: 5, label: "somewhat agree" },
+  { value: 6, label: "moderately agree" },
   { value: 7, label: "strongly agree" }
 ];
 
@@ -112,8 +119,9 @@ export default function PostConditionClientView({ blockIndex, conditionType }: P
         onSubmit={onSubmit}
         submitLabel="Continue"
         hideFooter={true}
+        className="max-w-none w-full px-0"
       >
-        <div className="w-full max-w-3xl bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200 space-y-8">
+        <div className="w-[33.333%] mx-auto bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200 space-y-8">
           <div>
             <h1 className="text-2xl font-bold text-slate-900">Post-Task Evaluation ({blockIndex}/3)</h1>
             <p className="text-slate-600 mt-2">
@@ -123,7 +131,7 @@ export default function PostConditionClientView({ blockIndex, conditionType }: P
 
           {/* --- NASA-TLX --- */}
           <div className="!mt-24">
-            <h2 className="text-xl font-semibold text-slate-800">Task Load</h2>
+            <h2 className="text-xl font-semibold text-slate-900">Task Load</h2>
           </div>
 
           <QuestionCard
@@ -132,7 +140,16 @@ export default function PostConditionClientView({ blockIndex, conditionType }: P
             required={false}
             className="shadow-none border-none p-0 bg-transparent"
           >
-            <LikertScale scaleLength={7} labels={TLX_LABELS} registration={register('tlx_md')} />
+            <LikertScale scaleLength={7} labels={TLX_LABELS} registration={register('tlx_md')} textLabelsAtBottom={true} />
+          </QuestionCard>
+
+          <QuestionCard
+            question="How physically demanding was the task?"
+            error={errors.tlx_pd}
+            required={false}
+            className="shadow-none border-none p-0 bg-transparent"
+          >
+            <LikertScale scaleLength={7} labels={TLX_LABELS} registration={register('tlx_pd')} textLabelsAtBottom={true} />
           </QuestionCard>
 
           <QuestionCard
@@ -141,7 +158,16 @@ export default function PostConditionClientView({ blockIndex, conditionType }: P
             required={false}
             className="shadow-none border-none p-0 bg-transparent"
           >
-            <LikertScale scaleLength={7} labels={TLX_LABELS} registration={register('tlx_td')} />
+            <LikertScale scaleLength={7} labels={TLX_LABELS} registration={register('tlx_td')} textLabelsAtBottom={true} />
+          </QuestionCard>
+
+          <QuestionCard
+            question="How successful were you in accomplishing what you were asked to do?"
+            error={errors.tlx_performance}
+            required={false}
+            className="shadow-none border-none p-0 bg-transparent"
+          >
+            <LikertScale scaleLength={7} labels={TLX_LABELS} registration={register('tlx_performance')} textLabelsAtBottom={true} />
           </QuestionCard>
 
           <QuestionCard
@@ -150,7 +176,7 @@ export default function PostConditionClientView({ blockIndex, conditionType }: P
             required={false}
             className="shadow-none border-none p-0 bg-transparent"
           >
-            <LikertScale scaleLength={7} labels={TLX_LABELS} registration={register('tlx_effort')} />
+            <LikertScale scaleLength={7} labels={TLX_LABELS} registration={register('tlx_effort')} textLabelsAtBottom={true} />
           </QuestionCard>
 
           <QuestionCard
@@ -159,40 +185,102 @@ export default function PostConditionClientView({ blockIndex, conditionType }: P
             required={false}
             className="shadow-none border-none p-0 bg-transparent"
           >
-            <LikertScale scaleLength={7} labels={TLX_LABELS} registration={register('tlx_frustration')} />
+            <LikertScale scaleLength={7} labels={TLX_LABELS} registration={register('tlx_frustration')} textLabelsAtBottom={true} />
           </QuestionCard>
 
           {/* --- TAM-PU --- */}
           <div className="!mt-24">
-            <h2 className="text-xl font-semibold text-slate-800">System Evaluation</h2>
+            <h2 className="text-xl font-semibold text-slate-900">Perceived Usefulness</h2>
           </div>
 
-          <QuestionCard
-            question={`Using ${systemName} improves my performance when finding information.`}
-            error={errors.pu_1}
-            required={false}
-            className="shadow-none border-none p-0 bg-transparent"
-          >
-            <LikertScale scaleLength={7} labels={PU_LABELS} registration={register('pu_1')} />
-          </QuestionCard>
+          <div className="overflow-x-auto w-full mt-8 mb-8 border border-slate-200 rounded-xl bg-white shadow-sm">
+            <table className="w-full border-collapse text-left text-xs md:text-sm table-fixed">
+              <colgroup>
+                <col className="w-4/12" />
+                <col className="w-[8.5%]" />
+                <col className="w-[8.5%]" />
+                <col className="w-[8.5%]" />
+                <col className="w-[8.5%]" />
+                <col className="w-[8.5%]" />
+                <col className="w-[8.5%]" />
+                <col className="w-[8.5%]" />
+              </colgroup>
+              <thead>
+                <tr className="border-b border-slate-200 bg-slate-50 text-xs font-semibold text-slate-500 uppercase tracking-wide">
+                  <th scope="col" className="px-3 md:px-6 py-6 font-semibold text-slate-500 leading-relaxed align-bottom normal-case tracking-normal">
+                    Please indicate the degree to which you agree/disagree with the following statements.
+                  </th>
+                  {PU_LABELS.map((opt) => {
+                    const firstWord = opt.label ? opt.label.split(' ')[0] : '';
+                    const restWords = opt.label ? opt.label.split(' ').slice(1).join(' ') : '';
+                    return (
+                      <th key={opt.value} scope="col" className="px-0.5 sm:px-1 py-6 text-center font-semibold text-slate-500 relative align-bottom">
+                        {opt.label && (
+                          <div className="absolute bottom-2 left-1/2 w-36 h-8 transform -rotate-90 origin-bottom-left translate-x-4 flex flex-col justify-center text-left text-xs text-slate-500 lowercase leading-tight">
+                            {firstWord}
+                            {restWords && <br />}
+                            {restWords}
+                          </div>
+                        )}
+                      </th>
+                    );
+                  })}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 bg-white">
+                {[
+                  { name: 'pu_1', text: `Using ${systemName} improves my performance in finding relevant information in the reviews.` },
+                  { name: 'pu_3', text: `Using ${systemName} enhances my effectiveness in finding relevant information in the reviews.` },
+                  { name: 'pu_4', text: `I find ${systemName} to be useful for finding relevant information in the reviews.` },
+                ].map((item) => {
+                  const hasError = !!errors[item.name as keyof typeof errors];
+                  const registration = register(item.name as 'pu_1' | 'pu_3' | 'pu_4');
+                  const { ref: formRef, ...restRegistration } = registration;
 
-          <QuestionCard
-            question={`Using ${systemName} enhances my effectiveness when finding information.`}
-            error={errors.pu_3}
-            required={false}
-            className="shadow-none border-none p-0 bg-transparent"
-          >
-            <LikertScale scaleLength={7} labels={PU_LABELS} registration={register('pu_3')} />
-          </QuestionCard>
-
-          <QuestionCard
-            question={`I find ${systemName} to be useful.`}
-            error={errors.pu_4}
-            required={false}
-            className="shadow-none border-none p-0 bg-transparent"
-          >
-            <LikertScale scaleLength={7} labels={PU_LABELS} registration={register('pu_4')} />
-          </QuestionCard>
+                  return (
+                    <tr
+                      key={item.name}
+                      className={`hover:bg-slate-50/40 transition-colors ${hasError ? 'bg-red-50/20 hover:bg-red-50/30' : ''
+                        }`}
+                    >
+                      <td className="px-3 md:px-6 py-4 font-medium text-slate-800 leading-relaxed">
+                        {item.text}
+                        {hasError && (
+                          <span className="block text-xs text-red-600 font-medium mt-1">
+                            Please answer this question.
+                          </span>
+                        )}
+                      </td>
+                      {[1, 2, 3, 4, 5, 6, 7].map((value) => {
+                        const inputId = `${item.name}-${value}`;
+                        return (
+                          <td key={value} className="px-0.5 sm:px-1.5 py-4 text-center">
+                            <div className="flex items-center justify-center">
+                              <label
+                                htmlFor={inputId}
+                                className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full cursor-pointer hover:bg-slate-100/50 transition-colors active:scale-95 focus-within:ring-2 focus-within:ring-slate-300"
+                              >
+                                <input
+                                  id={inputId}
+                                  type="radio"
+                                  value={value}
+                                  {...restRegistration}
+                                  ref={(e) => {
+                                    formRef(e);
+                                  }}
+                                  className="h-5 w-5 shrink-0 rounded-full border-slate-300 text-sky-600 focus:ring-0 focus:outline-none cursor-pointer"
+                                />
+                              </label>
+                            </div>
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
 
           {/* --- Manipulation Check (Nur Assistenz-Conditions) --- */}
           {conditionType !== 'BASELINE' && (
@@ -222,7 +310,7 @@ export default function PostConditionClientView({ blockIndex, conditionType }: P
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-8 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold rounded-lg shadow-sm transition-colors text-lg"
+              className="px-6 py-3 bg-sky-800 hover:bg-sky-900 disabled:bg-sky-800/200 text-white font-semibold rounded-lg shadow-sm transition-colors text-base"
             >
               {isSubmitting ? 'Processing...' : 'Continue'}
             </button>

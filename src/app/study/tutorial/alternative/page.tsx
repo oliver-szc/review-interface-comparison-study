@@ -26,13 +26,12 @@ export default function TutorialAlternativePage() {
       setIsSubmitting(false);
     }
   };
-
   return (
-    <main className="min-h-full bg-slate-50 flex flex-col items-center p-4">
-      <div className="w-full max-w-3xl my-auto py-12">
+    <main className="relative h-full w-full bg-slate-50 flex flex-col items-center justify-center p-4 overflow-hidden">
+      <div className="w-full max-w-3xl z-20">
         <div className="w-full bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200">
           <div className="mb-10">
-            <h1 className="text-3xl font-bold text-slate-900 mb-6">Tutorial</h1>
+            <h1 className="text-2xl font-bold text-slate-900 mb-6">Tutorial</h1>
 
             <p className="text-lg font-bold text-slate-900 mb-4">
               Let’s look at it from a more practical side:
@@ -65,23 +64,23 @@ export default function TutorialAlternativePage() {
               </ul>
             </div>
 
-            <h2 className="text-xl text-slate-700 text-center">Are you ready to start the tasks now?</h2>
+            <h2 className="text-xl font-semibold text-slate-900 text-center">Are you ready to start the tasks now?</h2>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-16 w-full">
             <button
               onClick={() => handleSelection(1)}
               disabled={isSubmitting}
-              className="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold rounded-lg shadow-sm transition-colors text-base"
+              className="flex-1 px-6 py-3 bg-sky-800 hover:bg-sky-900 disabled:bg-sky-800/200 text-white font-semibold rounded-lg shadow-sm transition-colors text-base"
             >
-              No, I still do not understand the task
+              No, I Still Do Not Understand the Task
             </button>
             <button
               onClick={() => handleSelection(2)}
               disabled={isSubmitting}
-              className="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold rounded-lg shadow-sm transition-colors text-base"
+              className="flex-1 px-6 py-3 bg-sky-800 hover:bg-sky-900 disabled:bg-sky-800/200 text-white font-semibold rounded-lg shadow-sm transition-colors text-base"
             >
-              Yes, I understand the task now – continue
+              Yes, I Understand the Task Now – Continue
             </button>
           </div>
         </div>

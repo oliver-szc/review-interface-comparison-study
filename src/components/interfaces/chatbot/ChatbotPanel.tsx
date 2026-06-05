@@ -44,10 +44,10 @@ export function ChatbotPanel() {
   }
 
   return (
-    <div className="h-full flex flex-col bg-sky-50 rounded-xl border border-slate-200 shadow-sm">
+    <div className="h-full flex flex-col bg-sky-50 rounded-xl border border-sky-400 shadow-sm">
       {/* Header */}
       <div className="px-4 py-3 border-b border-slate-200">
-        <h3 className="text-sm font-semibold text-slate-900">
+        <h3 className="text-sm text-center font-semibold text-slate-900">
           AI Shopping Assistant
         </h3>
       </div>

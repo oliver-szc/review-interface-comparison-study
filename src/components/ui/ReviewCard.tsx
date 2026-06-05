@@ -35,13 +35,13 @@ export function ReviewCard({ name, stars, date, text }: ReviewCardProps) {
 
       <p className="text-sm text-slate-600 leading-relaxed">{text}</p>
 
-      <div className="text-xs text-slate-400 mt-2">
+      {/* <div className="text-xs text-slate-400 mt-2">
         {(() => {
           const count = Math.max(0, (text.length % 17) + Math.floor(stars / 1))
           return `${count} ${count === 1 ? 'person' : 'people'} found this helpful`
         })()}
-      </div>
-      <hr className="border-slate-100" />
+      </div> */}
+      <hr className="border-slate-100 mt-9" />
     </div>
   )
 }
