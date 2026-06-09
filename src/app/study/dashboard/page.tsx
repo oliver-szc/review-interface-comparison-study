@@ -98,7 +98,7 @@ export default function DashboardPage() {
         leftContent={null}
         middleContent={
           <>
-            <DashboardPanel />
+            <DashboardPanel aspectData={[]} />
             <ReviewListPanel
               reviews={reviews}
               starDistribution={starDistribution}

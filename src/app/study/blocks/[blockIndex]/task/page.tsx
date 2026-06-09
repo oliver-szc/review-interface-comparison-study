@@ -1,9 +1,10 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { db } from '@/db/client';
-import { claimSeeds } from '@/db/schema';
-import { eq, asc } from 'drizzle-orm';
+import { claimSeeds, reviews } from '@/db/schema';
+import { eq, asc, desc } from 'drizzle-orm';
 import { getBlockContext } from '@/lib/utils/blockContext';
+import { getAspectData } from '@/lib/queries/absa';
 import TaskClientView from './TaskClientView';
 
 export default async function BlockTaskPage({ params }: { params: Promise<{ blockIndex: string }> }) {
@@ -47,6 +48,39 @@ export default async function BlockTaskPage({ params }: { params: Promise<{ bloc
     throw new Error(`Product info not found for product ${context.productId}`);
   }
 
+  // Fetch reviews for the product
+  const productReviews = await db
+    .select()
+    .from(reviews)
+    .where(eq(reviews.productId, productInfo.id))
+    .orderBy(desc(reviews.reviewDate));
+
+  // Use precalculated star distribution from the product info
+  const distributionMap = (productInfo.ratingDistribution as Record<number, number>) || { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+  
+  const starDistribution = Object.entries(distributionMap)
+    .map(([stars, count]) => ({
+      stars: Number(stars),
+      count: Number(count),
+    }))
+    .sort((a, b) => b.stars - a.stars);
+
+  const mappedReviews = productReviews.map((r) => ({
+    name: r.userName || 'Anonymous',
+    stars: r.starRating,
+    date: r.reviewDate ? r.reviewDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Unknown Date',
+    timestamp: r.reviewDate ? r.reviewDate.getTime() : 0,
+    helpfulVotes: r.helpfulVote || 0,
+    text: r.reviewText,
+    title: r.reviewTitle,
+    absaAspects: r.absaAspects ?? [],
+  }));
+
+  // Fetch ABSA aspect data only for the DASHBOARD condition
+  const aspectData = context.conditionType === 'DASHBOARD'
+    ? await getAspectData(productInfo.id)
+    : [];
+
   return (
     <TaskClientView 
       blockIndex={blockIndex} 
@@ -54,6 +88,9 @@ export default async function BlockTaskPage({ params }: { params: Promise<{ bloc
       productId={context.productId}
       claims={rawClaims}
       productData={productInfo as any}
+      reviews={mappedReviews}
+      starDistribution={starDistribution}
+      aspectData={aspectData}
     />
   );
 }

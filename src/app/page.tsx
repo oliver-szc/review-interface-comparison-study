@@ -18,7 +18,7 @@ function LandingPageInner() {
 
     if (debugParam === 'true') {
       localStorage.setItem('STUDY_DEBUG_MODE', 'true');
-      // Inform the server to set the debug cookie (so API routes and middleware know)
+      // Inform the server to set the debug cookie (so API routes and proxy know)
       fetch('/api/debug/activate', { method: 'POST' }).catch(console.error);
     } else if (debugParam === 'false') {
       localStorage.removeItem('STUDY_DEBUG_MODE');
@@ -52,10 +52,10 @@ function LandingPageInner() {
     <main className="min-h-full bg-slate-50 flex flex-col items-center">
       <div className="w-full py-12 my-auto px-0 max-w-none">
         <div className="w-[33.333%] mx-auto bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200">
-          <h1 className="text-2xl font-bold text-slate-900 mb-3">
+          <h1 className="text-xl font-bold text-slate-900 mb-3">
             Welcome to the study:
           </h1>
-          <h1 className="text-3xl text-slate-900 italic font-bold mb-6">
+          <h1 className="text-3xl text-slate-900 font-bold mb-6">
             User Assistance in Exploring Online Reviews
           </h1>
 
@@ -79,10 +79,8 @@ function LandingPageInner() {
           ) : (
             <>
               <div className="space-y-5 text-slate-700 text-base leading-relaxed">
-                <p>Thank you for your interest in participating!</p>
-
                 <p>
-                  In this study, we investigate how different types of user assistance influence the experience of exploring online product reviews. You will complete a series of short tasks using these tools and share your impressions along the way.
+                  Thank you for your interest in participating! In this study, we investigate how different types of user assistance influence the experience of exploring online product reviews. You will complete a series of short tasks using these tools and share your impressions along the way.
                 </p>
 
                 <div className="bg-slate-50 border border-slate-200 p-4 rounded-lg text-slate-900 text-sm">

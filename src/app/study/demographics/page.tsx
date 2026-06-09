@@ -143,7 +143,7 @@ export default function DemographicsPage() {
           </QuestionCard>
 
           <QuestionCard
-            question="çWhat is your level of English proficiency (Englischkenntnisse)?"
+            question="What is your level of English proficiency (Englischkenntnisse)?"
             error={errors.scr_english}
             required={false}
             className="shadow-none border-none p-0 bg-transparent !mt-16"

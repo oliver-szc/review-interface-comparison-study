@@ -26,7 +26,7 @@ export default function ConsentPage() {
       }
 
       if (data.redirectUrl) {
-        // Use window.location.replace to ensure middleware cookie is read correctly
+        // Use window.location.replace to ensure proxy cookie is read correctly
         // on the next page load without adding to the history stack.
         window.location.replace(data.redirectUrl);
       }

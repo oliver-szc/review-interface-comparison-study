@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { DebugConsole } from "@/components/ui/DebugConsole";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +25,8 @@ export default function RootLayout({
         </div>
         {/* Debug console is rendered here and is only visible when STUDY_DEBUG_MODE is set in localStorage */}
         <DebugConsole />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

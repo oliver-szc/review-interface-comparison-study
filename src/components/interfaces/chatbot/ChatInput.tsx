@@ -5,9 +5,11 @@ import { useState, KeyboardEvent } from 'react'
 interface ChatInputProps {
   onSend: (message: string) => void
   disabled?: boolean
+  /** Show a loading spinner in the send button */
+  isLoading?: boolean
 }
 
-export function ChatInput({ onSend, disabled = false }: ChatInputProps) {
+export function ChatInput({ onSend, disabled = false, isLoading = false }: ChatInputProps) {
   const [input, setInput] = useState('')
 
   const handleSend = () => {
@@ -17,7 +19,7 @@ export function ChatInput({ onSend, disabled = false }: ChatInputProps) {
     }
   }
 
-  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       handleSend()
@@ -25,23 +27,45 @@ export function ChatInput({ onSend, disabled = false }: ChatInputProps) {
   }
 
   return (
-    <div className="flex gap-2">
-      <input
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyPress={handleKeyPress}
-        disabled={disabled}
-        placeholder="Ask about this product..."
-        className="flex-1 px-3 py-2 text-sm text-black border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 bg-white disabled: disabled:cursor-not-allowed"
-      />
-      <button
-        onClick={handleSend}
-        disabled={disabled || !input.trim()}
-        className="px-4 py-2 text-sm font-medium text-white bg-sky-600 rounded-lg hover:bg-sky-700 disabled:bg-slate-300 disabled:cursor-not-allowed transition"
-      >
-        Send
-      </button>
+    <div className="flex items-center gap-2 w-full">
+      <div className="flex-1 min-w-0">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          disabled={disabled}
+          placeholder="Ask about this product..."
+          className="w-full px-3 py-2 text-sm text-black bg-white border border-slate-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 disabled:cursor-not-allowed disabled:opacity-60"
+        />
+      </div>
+      <div className="shrink-0">
+        <button
+          type="button"
+          onClick={handleSend}
+          disabled={disabled || !input.trim()}
+          className="px-4 py-2 text-sm font-medium text-white bg-sky-600 rounded-lg hover:bg-sky-700 disabled:bg-slate-300 transition flex items-center gap-2"
+        >
+          {isLoading ? (
+            <>
+              {/* Spinning loader SVG */}
+              <svg
+                className="animate-spin h-4 w-4 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              </svg>
+              <span>Thinking…</span>
+            </>
+          ) : (
+            'Send'
+          )}
+        </button>
+      </div>
     </div>
   )
 }

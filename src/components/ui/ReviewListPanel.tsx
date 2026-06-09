@@ -4,12 +4,19 @@ import { useState, useEffect, type ComponentProps } from 'react'
 import { ReviewCard } from './ReviewCard'
 import { StarHistogram } from './StarHistogram'
 import { ReviewSortFilterBar } from './ReviewSortFilterBar'
+import { useDashboardFilterStore } from '@/stores/dashboardFilterStore'
+import type { ABSAQuadruple } from '@/db/schema'
+import { formatAspectLabel } from '@/lib/utils/formatAspect'
 
 interface Review {
   name: string
   stars: number
   date: string
   text: string
+  title?: string | null
+  timestamp?: number
+  helpfulVotes?: number
+  absaAspects?: ABSAQuadruple[]
 }
 
 interface StarCount {
@@ -32,7 +39,7 @@ export function ReviewListPanel({
   averageRating,
   totalCount,
 }: ReviewListPanelProps) {
-  const [activeStarFilter, setActiveStarFilter] = useState<number | null>(null)
+
   const [filters, setFilters] = useState<SortFilters>({
     sort: 'none',
     stars: 'all',
@@ -40,21 +47,73 @@ export function ReviewListPanel({
     search: '',
   })
 
+  const { activeAspect, setActiveAspect } = useDashboardFilterStore()
+
   // Convert { stars, count } → { star, percentage } for StarHistogram
   const distribution = starDistribution.map(({ stars, count }) => ({
     star: stars,
     percentage: totalCount > 0 ? Math.round((count / totalCount) * 100) : 0,
   }))
 
-  const visibleReviews = activeStarFilter
-    ? reviews.filter((r) => r.stars === activeStarFilter)
-    : reviews
+  let visibleReviews = reviews
+
+  // Filter: Aspect category (from DashboardPanel via Zustand)
+  if (activeAspect) {
+    visibleReviews = visibleReviews.filter((r) =>
+      (r.absaAspects ?? []).some(
+        (q) => q.aspect_category === activeAspect
+      )
+    )
+  }
+
+  // Filter: Search phrase
+  if (filters.search) {
+    const q = filters.search.toLowerCase()
+    visibleReviews = visibleReviews.filter((r) =>
+      r.text.toLowerCase().includes(q)
+    )
+  }
+
+  // Filter: Stars (dropdown)
+  if (filters.stars !== 'all') {
+    if (filters.stars === 'positive') {
+      visibleReviews = visibleReviews.filter((r) => r.stars >= 4)
+    } else if (filters.stars === 'critical') {
+      visibleReviews = visibleReviews.filter((r) => r.stars <= 3)
+    } else {
+      const targetStars = parseInt(filters.stars, 10)
+      visibleReviews = visibleReviews.filter((r) => r.stars === targetStars)
+    }
+  }
+
+  // Sort
+  if (filters.sort !== 'none') {
+    visibleReviews = [...visibleReviews].sort((a, b) => {
+      const timeA = a.timestamp || new Date(a.date).getTime() || 0;
+      const timeB = b.timestamp || new Date(b.date).getTime() || 0;
+      const timeDiff = timeB - timeA;
+
+      if (filters.sort === 'helpful') {
+        const diff = (Number(b.helpfulVotes) || 0) - (Number(a.helpfulVotes) || 0)
+        return diff === 0 ? timeDiff : diff;
+      } else if (filters.sort === 'recent') {
+        return timeDiff;
+      } else if (filters.sort === 'rating_asc') {
+        const diff = Number(a.stars) - Number(b.stars);
+        return diff === 0 ? timeDiff : diff;
+      } else if (filters.sort === 'rating_desc') {
+        const diff = Number(b.stars) - Number(a.stars);
+        return diff === 0 ? timeDiff : diff;
+      }
+      return 0
+    })
+  }
 
   const [loadedCount, setLoadedCount] = useState(20)
 
   useEffect(() => {
     setLoadedCount(20)
-  }, [activeStarFilter, filters])
+  }, [filters, activeAspect])
 
   const paginatedReviews = visibleReviews.slice(0, loadedCount)
   const currentlyShown = paginatedReviews.length
@@ -63,7 +122,7 @@ export function ReviewListPanel({
 
   return (
     <div className="bg-white rounded-xl p-4 mx-auto max-w-4xl w-full">
-      <h2 className="text-xl font-semibold text-slate-900">Customer Reviews</h2>
+      <h2 className="text-2xl font-bold text-slate-900">Customer reviews</h2>
 
       {/* Star Histogram */}
       <div className="mb-4">
@@ -72,18 +131,39 @@ export function ReviewListPanel({
             averageRating={averageRating}
             totalCount={totalCount}
             distribution={distribution}
-            activeFilter={activeStarFilter}
-            onStarFilter={(star) =>
-              setActiveStarFilter(star === activeStarFilter ? null : star)
+            activeFilter={
+              ['5', '4', '3', '2', '1'].includes(filters.stars)
+                ? parseInt(filters.stars, 10)
+                : null
             }
+            onStarFilter={(star) => {
+              const newStars = filters.stars === String(star) ? 'all' : String(star) as any
+              setFilters({ ...filters, stars: newStars })
+            }}
           />
         </div>
       </div>
 
       <hr className="border-slate-200 mb-4" />
 
+      {/* Dashboard aspect filter badge */}
+      {activeAspect && (
+        <div className="flex items-center gap-2 mb-3 text-xs">
+          <span className="text-slate-500 font-semibold uppercase tracking-wide">Dashboard filter:</span>
+          <span className="bg-sky-100 text-sky-700 border border-sky-200 px-2 py-0.5 rounded-full font-medium">
+            {formatAspectLabel(activeAspect)}
+          </span>
+          <button
+            onClick={() => setActiveAspect(null)}
+            className="text-slate-400 hover:text-slate-600 underline transition-colors"
+          >
+            Clear
+          </button>
+        </div>
+      )}
+
       {/* Sort / Filter Bar */}
-      <div className="mb-4 w-1/2">
+      <div className="mb-4 w-full">
         <ReviewSortFilterBar
           filters={filters}
           onChange={(f) => setFilters(f)}
@@ -101,6 +181,8 @@ export function ReviewListPanel({
             stars={review.stars}
             date={review.date}
             text={review.text}
+            title={review.title}
+            searchQuery={filters.search}
           />
         ))}
       </div>

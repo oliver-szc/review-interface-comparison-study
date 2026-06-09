@@ -15,7 +15,7 @@ export default async function StudyLayout({
   const participantId = cookieStore.get('participantId')?.value;
 
   if (!participantId) {
-    // Middleware should already handle this, but double check
+    // Proxy should already handle this, but double check
     redirect('/');
   }
 

@@ -45,8 +45,15 @@ export default async function BlockPrefacePage({ params }: { params: Promise<{ b
           <div className="prose prose-slate max-w-none text-slate-700 text-lg leading-relaxed mb-6">
             <p>
               <i>
-                In the upcoming task, you will evaluate claims about an online product ({productDisplay}) <strong>{conditionDisplay}</strong>.
-                Please read the instructions carefully and proceed when you are ready to begin.
+                In the upcoming task, you will evaluate claims about an online product ({productDisplay}){' '}
+                {context.conditionType === 'CHATBOT' || context.conditionType === 'DASHBOARD' ? (
+                  <span className="rounded-xl ml-1 mr-1 px-1 border-2 border-sky-400">
+                    <strong>{conditionDisplay}</strong>
+                  </span>
+                ) : (
+                  <strong>{conditionDisplay}</strong>
+                )}
+                . Please read the instructions carefully and proceed when you are ready to begin.
               </i>
             </p>
             <p>

@@ -95,9 +95,10 @@ export default function ChatbotPage() {
       <WebshopLayout
         productImage={<ProductImage productData={productData} />}
         topContent={<ProductDetails productData={productData} />}
-        leftContent={<ChatbotPanel />}
+        leftContent={null}
         middleContent={
           <>
+            <ChatbotPanel productId="EARBUDS" />
             <ReviewListPanel
               reviews={reviews}
               starDistribution={starDistribution}

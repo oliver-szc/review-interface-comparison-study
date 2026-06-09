@@ -71,7 +71,7 @@ export function InformationNeedBanner({
       <div className="fixed top-0 left-0 right-0 z-50 bg-slate-100 border-b border-slate-200 rounded-b-xl shadow-sm flex flex-col overflow-hidden transition-all duration-500 ease-in-out">
 
         {/* Top Header Row (Always visible) */}
-        <div ref={headerRef} className="flex-shrink-0 flex items-center justify-between px-4 py-2 min-h-20">
+        <div ref={headerRef} className="flex-shrink-0 flex items-center justify-between px-10 py-2 min-h-20">
           <div className="w-48 flex justify-start flex-shrink-0">
             {!isOpen && (
               <button

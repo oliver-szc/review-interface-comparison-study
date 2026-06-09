@@ -11,6 +11,7 @@ import { ProductImage, ProductDetails } from '@/components/ui/ProductPanel';
 import { ReviewListPanel } from '@/components/ui/ReviewListPanel';
 import { ChatbotPanel } from '@/components/interfaces/chatbot/ChatbotPanel';
 import { DashboardPanel } from '@/components/interfaces/dashboard/DashboardPanel';
+import type { AspectStat } from '@/lib/queries/absa';
 import earbudsImage from '@/app/earbuds.jpg';
 
 interface Claim {
@@ -25,53 +26,14 @@ interface TaskClientViewProps {
   productId: 'EARBUDS' | 'KETTLE' | 'SWEATSHIRT';
   claims: Claim[];
   productData: any;
+  reviews: any[];
+  starDistribution: any[];
+  aspectData?: AspectStat[];
 }
-
-// ─── Shared review data (placeholder until real product data is seeded) ───────
-const SHARED_REVIEWS = [
-  {
-    name: 'Sarah M.',
-    stars: 5,
-    date: 'January 15, 2024',
-    text: 'Absolutely love these earbuds! The sound quality is incredible and the noise cancellation works perfectly. I use them daily for my commute and they block out all the train noise. Battery life is exactly as advertised.',
-  },
-  {
-    name: 'James T.',
-    stars: 4,
-    date: 'January 12, 2024',
-    text: 'Great earbuds overall. Sound is crisp and clear, bass is punchy without being overwhelming. Only complaint is that they occasionally disconnect when my phone is in my pocket, but this is rare.',
-  },
-  {
-    name: 'Maria G.',
-    stars: 5,
-    date: 'January 10, 2024',
-    text: 'Best purchase I made this year. The fit is perfect, they never fall out even during workouts. The touch controls are intuitive and the app gives you lots of customization options. Highly recommend!',
-  },
-  {
-    name: 'David L.',
-    stars: 3,
-    date: 'January 8, 2024',
-    text: "They're okay but not amazing. Sound quality is good for the price but I expected better noise cancellation. The battery life is solid though and they're comfortable for long listening sessions.",
-  },
-  {
-    name: 'Emily R.',
-    stars: 5,
-    date: 'January 5, 2024',
-    text: 'These replaced my AirPods Pro and I actually like them better! The noise cancellation is on par and the sound quality is richer. The case is a bit bulky but the battery life makes up for it.',
-  },
-];
-
-const SHARED_STAR_DISTRIBUTION = [
-  { stars: 5, count: 1823 },
-  { stars: 4, count: 654 },
-  { stars: 3, count: 234 },
-  { stars: 2, count: 89 },
-  { stars: 1, count: 47 },
-];
 
 // Removed hardcoded PRODUCT_DATA_MAP
 
-export default function TaskClientView({ blockIndex, conditionType, productId, claims, productData }: TaskClientViewProps) {
+export default function TaskClientView({ blockIndex, conditionType, productId, claims, productData, reviews, starDistribution, aspectData = [] }: TaskClientViewProps) {
   const [startTime, setStartTime] = useState<number | null>(null);
 
   useEffect(() => {
@@ -127,10 +89,20 @@ export default function TaskClientView({ blockIndex, conditionType, productId, c
     }
   };
 
+  const calculatedTotalReviews = reviews.length;
+  const calculatedAvgRating = calculatedTotalReviews > 0
+    ? reviews.reduce((sum, r) => sum + (r.stars || 0), 0) / calculatedTotalReviews
+    : 0;
+
+  const computedStarDistribution = [5, 4, 3, 2, 1].map(stars => ({
+    stars,
+    count: reviews.filter(r => r.stars === stars).length
+  }));
+
   const uiProductData = {
     ...productData,
-    avgRating: Number(productData.averageRating || 0),
-    totalReviews: productData.reviewCount || 0,
+    avgRating: calculatedAvgRating,
+    totalReviews: calculatedTotalReviews,
     image: productData.imageUrl || earbudsImage,
   };
   const conditionLabel =
@@ -261,16 +233,17 @@ export default function TaskClientView({ blockIndex, conditionType, productId, c
         condition={conditionType.toLowerCase() as 'unassisted' | 'dashboard' | 'chatbot'}
         productImage={<ProductImage productData={uiProductData as any} />}
         topContent={<ProductDetails productData={uiProductData as any} />}
-        leftContent={conditionType === 'CHATBOT' ? <ChatbotPanel /> : null}
+        leftContent={null}
         middleContent={
           <div className="space-y-3">
             {/* Dashboard panel shown above reviews for DASHBOARD condition */}
-            {conditionType === 'DASHBOARD' && <DashboardPanel />}
+            {conditionType === 'DASHBOARD' && <DashboardPanel aspectData={aspectData} />}
+            {conditionType === 'CHATBOT' && <ChatbotPanel productId={productId} />}
 
             {/* Review list (shown for all conditions; rendered underneath the dashboard for DASHBOARD condition) */}
             <ReviewListPanel
-              reviews={SHARED_REVIEWS}
-              starDistribution={SHARED_STAR_DISTRIBUTION}
+              reviews={reviews}
+              starDistribution={computedStarDistribution}
               averageRating={uiProductData.avgRating}
               totalCount={uiProductData.totalReviews}
             />

@@ -58,7 +58,7 @@ export function ProductDetails({ productData }: ProductPanelProps) {
           <span className="text-[#ff9900] text-sm">{'★'.repeat(Math.floor(avgRating))}</span>
           <span className="text-slate-300 text-sm">{'☆'.repeat(5 - Math.floor(avgRating))}</span>
         </div>
-        <span className="text-sm text-slate-600">{avgRating} out of 5</span>
+        <span className="text-sm text-slate-600">{Number(avgRating).toFixed(1)} out of 5</span>
         <span className="text-sm text-slate-400">({totalReviews.toLocaleString()} ratings)</span>
       </div>
 

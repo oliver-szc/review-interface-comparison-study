@@ -32,7 +32,7 @@ export default async function ComprehensionScreeningOutPage() {
 
   // Since they are screened out, delete the cookie
   // But Next.js Server Components can't modify cookies directly without Route Handlers or Server Actions
-  // Actually, we can just let them stay or rely on middleware to eventually expire it.
+  // Actually, we can just let them stay or rely on proxy to eventually expire it.
   // We'll just display the exit screen.
 
   return (

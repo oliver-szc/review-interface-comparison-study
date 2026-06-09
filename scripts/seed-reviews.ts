@@ -8,8 +8,8 @@ const mockReviews = (productId: string) => [
     starRating: 4,
     reviewTitle: 'Good but not perfect',
     absaAspects: [
-      { aspect: 'sound quality', opinion: 'great', sentiment: 'positive' as const, category: 'audio' },
-      { aspect: 'battery life', opinion: 'could be better', sentiment: 'negative' as const, category: 'battery' },
+      { quad_id: 1, aspect_category: 'sound_quality', aspect_term: 'sound quality', opinion_term: 'great', sentiment_polarity: 'positive' as const },
+      { quad_id: 2, aspect_category: 'battery_life', aspect_term: 'battery life', opinion_term: 'could be better', sentiment_polarity: 'negative' as const },
     ],
   },
   // ... 9 more reviews

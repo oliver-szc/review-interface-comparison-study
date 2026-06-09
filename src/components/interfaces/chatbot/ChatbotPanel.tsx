@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { ChatMessage } from './ChatMessage'
 import { ChatInput } from './ChatInput'
 import { SuggestedQuestions } from './SuggestedQuestions'
@@ -8,15 +8,22 @@ import { SuggestedQuestions } from './SuggestedQuestions'
 interface Message {
   role: 'user' | 'bot'
   text: string
+  /** Whether this message represents an error */
+  isError?: boolean
 }
 
-export function ChatbotPanel() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: 'bot',
-      text: 'Hi! I can help you learn about this product based on customer reviews. What would you like to know?',
-    },
-  ])
+interface ChatbotPanelProps {
+  /** The product ID for the current study block (e.g. 'EARBUDS') */
+  productId: string
+}
+
+export function ChatbotPanel({ productId }: ChatbotPanelProps) {
+  const [messages, setMessages] = useState<Message[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [isStreaming, setIsStreaming] = useState(false)
+
+  // Abort controller ref so we can cancel in-flight requests
+  const abortControllerRef = useRef<AbortController | null>(null)
 
   const suggestedQuestions = [
     'What do people say about sound quality?',
@@ -24,55 +31,166 @@ export function ChatbotPanel() {
     'How is the battery life?',
   ]
 
-  const handleSend = (text: string) => {
-    // Add user message
-    const userMessage: Message = { role: 'user', text }
-    setMessages((prev) => [...prev, userMessage])
+  /**
+   * Sends the user query to the RAG chat API and streams the response
+   * token-by-token into the message display.
+   */
+  const handleSend = useCallback(async (text: string) => {
+    // Cancel any in-flight request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort()
+    }
 
-    // Simulate bot response (mock)
-    setTimeout(() => {
-      const botMessage: Message = {
-        role: 'bot',
-        text: 'Based on the reviews, customers generally appreciate the sound quality. Many mention that the audio is clear and crisp, with good bass response. Some users specifically highlight that they work well for gaming and music.',
+    const abortController = new AbortController()
+    abortControllerRef.current = abortController
+
+    // Record the time the query was sent (for tracking latency)
+    const querySentAt = Date.now()
+
+    // Show user message and clear previous bot response
+    const userMessage: Message = { role: 'user', text }
+    setMessages([userMessage])
+    setIsLoading(true)
+    setIsStreaming(false)
+
+    try {
+      const response = await fetch('/api/study/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: text, productId }),
+        signal: abortController.signal,
+      })
+
+      // Handle error responses (structured JSON)
+      if (!response.ok) {
+        let errorMessage = 'Something went wrong. Please try again.'
+        try {
+          const errorBody = await response.json()
+          if (errorBody.error) {
+            errorMessage = errorBody.error
+          }
+        } catch {
+          // Response body wasn't JSON — use default message
+        }
+
+        setMessages([userMessage, { role: 'bot', text: errorMessage, isError: true }])
+        setIsLoading(false)
+        return
       }
-      setMessages((prev) => [...prev, botMessage])
-    }, 500)
-  }
+
+      // Begin streaming the response
+      const reader = response.body?.getReader()
+      if (!reader) {
+        setMessages([
+          userMessage,
+          { role: 'bot', text: 'Failed to read the response stream.', isError: true },
+        ])
+        setIsLoading(false)
+        return
+      }
+
+      const decoder = new TextDecoder()
+      let accumulatedText = ''
+
+      // Add an empty bot message that we'll update as tokens arrive
+      setMessages([userMessage, { role: 'bot', text: '' }])
+      setIsStreaming(true)
+
+      while (true) {
+        const { done, value } = await reader.read()
+
+        if (done) break
+
+        // Decode the chunk and append to accumulated text
+        const chunk = decoder.decode(value, { stream: true })
+        accumulatedText += chunk
+
+        // Update the bot message with accumulated text
+        const currentText = accumulatedText
+        setMessages([userMessage, { role: 'bot', text: currentText }])
+      }
+
+      // Stream complete
+      setIsStreaming(false)
+      setIsLoading(false)
+
+      // Fire-and-forget: Log CHAT_RESPONSE_RECEIVED tracking event
+      const latencyMs = Date.now() - querySentAt
+      fetch('/api/study/chat/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          eventType: 'CHAT_RESPONSE_RECEIVED',
+          eventData: {
+            queryLength: text.length,
+            responseLength: accumulatedText.length,
+            latencyMs,
+            productId,
+          },
+        }),
+      }).catch(() => {
+        // Tracking failure is non-critical — silently ignore
+      })
+    } catch (error: unknown) {
+      // Handle abort (user sent a new query before this one finished)
+      if (error instanceof Error && error.name === 'AbortError') {
+        return
+      }
+
+      console.error('Chat error:', error)
+      setMessages([
+        userMessage,
+        {
+          role: 'bot',
+          text: 'Connection lost. Please check your internet and try again.',
+          isError: true,
+        },
+      ])
+      setIsStreaming(false)
+      setIsLoading(false)
+    }
+  }, [productId])
 
   const handleQuestionClick = (question: string) => {
     handleSend(question)
   }
 
   return (
-    <div className="h-full flex flex-col bg-sky-50 rounded-xl border border-sky-400 shadow-sm">
+    <div className="h-auto flex flex-col bg-sky-00 rounded-xl border-2 border-sky-400 shadow-sm mx-auto max-w-4xl w-full">
       {/* Header */}
-      <div className="px-4 py-3 border-b border-slate-200">
-        <h3 className="text-sm text-center font-semibold text-slate-900">
-          AI Shopping Assistant
-        </h3>
+      <div className="px-4 py-4">
+        <h2 className="text-xl font-bold text-slate-900">
+          Looking for specific info?
+        </h2>
       </div>
-
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
-        {messages.map((msg, index) => (
-          <ChatMessage key={index} role={msg.role} text={msg.text} />
+      {/* Input */}
+      <div className="px-4 space-y-2">
+        <ChatInput onSend={handleSend} disabled={isLoading} isLoading={isLoading} />
+        {/* Suggested Questions (only shown before first message) */}
+        {messages.length === 0 && (
+          <div className="pt-1">
+            <SuggestedQuestions
+              questions={suggestedQuestions}
+              onQuestionClick={handleQuestionClick}
+            />
+          </div>
+        )}
+      </div>
+      {/* Messages — only show bot messages (user message is implicit from the input) */}
+      <div className="flex-1 overflow-y-auto p-1 space-y-3">
+        {messages.filter(msg => msg.role !== 'user').map((msg, index) => (
+          <ChatMessage
+            key={index}
+            role={msg.role}
+            text={msg.text}
+            isError={msg.isError}
+            isStreaming={isStreaming && !msg.isError && index === messages.filter(m => m.role !== 'user').length - 1}
+          />
         ))}
       </div>
-
-      {/* Suggested Questions */}
-      {messages.length === 1 && (
-        <div className="px-4 pb-2">
-          <SuggestedQuestions
-            questions={suggestedQuestions}
-            onQuestionClick={handleQuestionClick}
-          />
-        </div>
-      )}
-
-      {/* Input */}
-      <div className="p-4">
-        <ChatInput onSend={handleSend} />
-      </div>
+      <p className="text-xs italic text-slate-500 pt-1 pb-4 px-4">
+        Powered by AI
+      </p>
     </div>
   )
 }

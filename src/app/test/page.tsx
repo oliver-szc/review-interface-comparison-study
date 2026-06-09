@@ -97,7 +97,7 @@ function DashboardPanel() {
             onClick={() => setActive(a)}
             className={`text-xs px-2 py-1 rounded-full border transition ${active === a
               ? 'bg-amazon text-white border-amazon'
-              : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+              : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-00'
               }`}
           >
             {a}

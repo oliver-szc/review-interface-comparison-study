@@ -19,6 +19,7 @@ export const products = pgTable('products', {
   bulletPoints: json('bullet_points').$type<{ label: string; value: string }[]>(),
   aboutItemSource: varchar('about_item_source', { length: 50 }),
   aboutItem: json('about_item').$type<string[]>(),
+  ratingDistribution: json('rating_distribution').$type<Record<number, number>>(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
@@ -43,26 +44,39 @@ export const reviews = pgTable('reviews', {
   reviewTitle: varchar('review_title', { length: 200 }),
   verifiedPurchase: boolean('verified_purchase').default(false),
   reviewDate: timestamp('review_date'),
+  asin: varchar('asin', { length: 20 }),
+  parentAsin: varchar('parent_asin', { length: 20 }),
+  helpfulVote: integer('helpful_vote').default(0),
+  userName: varchar('user_name', { length: 255 }),
+  absaSentences: integer('absa_sentences'),
   absaAspects: json('absa_aspects').$type<ABSAQuadruple[]>(),
-  embedding: vector('embedding', { dimensions: 1536 }),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 }, (table) => [
   // Changed from { key: index } to an array of indexes
   index('reviews_product_id_idx').on(table.productId),
   index('reviews_star_rating_idx').on(table.starRating),
-  index('reviews_embedding_idx').using('hnsw', table.embedding.op('vector_cosine_ops')),
 ]);
 
+export const reviewEmbeddings = pgTable('review_embeddings', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  reviewId: uuid('review_id').references(() => reviews.id, { onDelete: 'cascade' }).notNull().unique(),
+  embedding: vector('embedding', { dimensions: 1536 }),
+}, (table) => [
+  index('review_embeddings_embedding_idx').using('hnsw', table.embedding.op('vector_cosine_ops')),
+]);
 
 export type ABSAQuadruple = {
-  aspect: string;
-  opinion: string;
-  sentiment: 'positive' | 'negative' | 'neutral';
-  category: string;
+  quad_id: number;
+  aspect_category: string;
+  aspect_term: string | null;
+  opinion_term: string;
+  sentiment_polarity: 'positive' | 'negative' | 'neutral';
 };
 
 export type Review = typeof reviews.$inferSelect;
 export type NewReview = typeof reviews.$inferInsert;
+export type ReviewEmbedding = typeof reviewEmbeddings.$inferSelect;
+export type NewReviewEmbedding = typeof reviewEmbeddings.$inferInsert;
 
 // Participants table (source of truth for study state)
 export const participants = pgTable('participants', {

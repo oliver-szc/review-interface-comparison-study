@@ -73,29 +73,6 @@ export function WebshopLayout({
     </div>
   )
 
-  // ─── Chatbot condition ────────────────────────────────────────────────────
-  if (condition === 'chatbot') {
-    return (
-      <div className="w-full px-3 md:px-4 grid grid-cols-1 lg:grid-cols-5 gap-4 items-start">
-        {/* Sticky chatbot sidebar — sits inside Column 1 of the 5-column grid */}
-        <div
-          className="w-full lg:col-span-1 lg:sticky lg:z-30 h-[500px] lg:h-[calc(100vh-var(--banner-height,96px)-32px-24px-var(--debug-height,0px))]"
-          style={{
-            top: 'calc(var(--banner-height, 96px) + 32px)',
-          }}
-        >
-          {leftContent}
-        </div>
-
-        {/* 4-column grid sits to the right of the chatbot sidebar */}
-        <div className="lg:col-span-4 min-w-0">
-          {grid}
-        </div>
-      </div>
-    )
-  }
-
-  // ─── Non-chatbot conditions (unassisted, dashboard) ───────────────────────
   return (
     <div className="w-full px-3 md:px-4">
       {grid}

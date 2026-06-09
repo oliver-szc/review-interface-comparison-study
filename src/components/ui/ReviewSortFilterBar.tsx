@@ -1,5 +1,7 @@
 'use client'
 
+import { Search } from 'lucide-react'
+
 export type SortOption = 'none' | 'helpful' | 'recent' | 'rating_asc' | 'rating_desc'
 export type StarFilter = 'all' | '5' | '4' | '3' | '2' | '1' | 'positive' | 'critical'
 export type SentimentFilter = 'all' | 'positive' | 'negative' | 'neutral'
@@ -28,14 +30,17 @@ export function ReviewSortFilterBar({ filters, onChange }: ReviewSortFilterBarPr
     <div className="space-y-2">
 
       {/* Row 1 — Search */}
-      <div className="flex gap-2">
-        <input
-          type="search"
-          value={filters.search}
-          onChange={(e) => update({ search: e.target.value })}
-          placeholder="Search customer reviews"
-          className="flex-1 text-xs border border-slate-200 rounded-lg px-3 py-1.5 bg-white focus:outline-none focus:ring-1 focus:ring-amazon placeholder:text-slate-400"
-        />
+      <div className="flex gap-2 w-1/2">
+        <div className="relative flex-1">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <input
+            type="search"
+            value={filters.search}
+            onChange={(e) => update({ search: e.target.value })}
+            placeholder="Search customer reviews"
+            className="w-full text-xs border border-slate-200 rounded-lg pl-9 pr-3 py-1.5 bg-white focus:outline-none focus:ring-1 focus:ring-amazon placeholder:text-slate-400"
+          />
+        </div>
         <button
           onClick={() => update({ search: filters.search })}
           className="text-xs bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 px-3 py-1.5 rounded-lg transition"
@@ -49,7 +54,7 @@ export function ReviewSortFilterBar({ filters, onChange }: ReviewSortFilterBarPr
 
         {/* Sort by */}
         <div className="space-y-1">
-          <p className="text-xxs font-bold uppercase tracking-wide text-slate-500">Sort by</p>
+          <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Sort by</p>
           <select
             value={filters.sort}
             onChange={(e) => update({ sort: e.target.value as SortOption })}
@@ -64,7 +69,7 @@ export function ReviewSortFilterBar({ filters, onChange }: ReviewSortFilterBarPr
 
         {/* Filter by — star rating */}
         <div className="space-y-1">
-          <p className="text-xxs font-bold uppercase tracking-wide text-slate-500">Filter by</p>
+          <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Filter by</p>
           <div className="flex flex-wrap gap-2">
             <select
               value={filters.stars}
@@ -94,22 +99,24 @@ export function ReviewSortFilterBar({ filters, onChange }: ReviewSortFilterBarPr
       {/* Active filter badge */}
       {(filters.stars !== 'all' || filters.search) && (
         <div className="flex items-center gap-2 flex-wrap pt-1">
-          <span className="text-xxs font-semibold uppercase tracking-wide text-slate-400">
+          <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">
             Active filters:
           </span>
           {filters.stars !== 'all' && (
-            <span className="text-xxs bg-amazon/10 text-amazon border border-amazon/20 px-2 py-0.5 rounded-full">
-              {filters.stars} ★
+            <span className="text-xs bg-amazon/10 text-amazon border border-amazon/20 px-2 py-0.5 rounded-full">
+              {['positive', 'critical'].includes(filters.stars)
+                ? filters.stars.charAt(0).toUpperCase() + filters.stars.slice(1)
+                : `${filters.stars} ★`}
             </span>
           )}
           {filters.search && (
-            <span className="text-xxs bg-amazon/10 text-amazon border border-amazon/20 px-2 py-0.5 rounded-full">
+            <span className="text-xs bg-amazon/10 text-amazon border border-amazon/20 px-2 py-0.5 rounded-full">
               "{filters.search}"
             </span>
           )}
           <button
-            onClick={() => onChange({ sort: 'helpful', stars: 'all', sentiment: 'all', search: '' })}
-            className="text-xxs text-slate-400 underline hover:text-slate-600"
+            onClick={() => onChange({ ...filters, stars: 'all', search: '' })}
+            className="text-xs text-slate-400 underline hover:text-slate-600"
           >
             Clear All
           </button>

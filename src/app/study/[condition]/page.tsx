@@ -115,10 +115,11 @@ export default function StudyConditionPage() {
         condition={condition}
         productImage={<ProductImage productData={productData} />}
         topContent={<ProductDetails productData={productData} />}
-        leftContent={condition === 'chatbot' ? <ChatbotPanel /> : null}
+        leftContent={null}
         middleContent={
           <>
-            {condition === 'dashboard' ? <DashboardPanel /> : null}
+            {condition === 'dashboard' ? <DashboardPanel aspectData={[]} /> : null}
+            {condition === 'chatbot' ? <ChatbotPanel productId="EARBUDS" /> : null}
             <ReviewListPanel
               reviews={reviews}
               starDistribution={starDistribution}

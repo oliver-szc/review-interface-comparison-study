@@ -5,7 +5,7 @@ import { cookies } from 'next/headers';
 export async function POST() {
   const cookieStore = await cookies();
 
-  // Set debug cookie so middleware and API routes can detect it
+  // Set debug cookie so proxy and API routes can detect it
   cookieStore.set('debugMode', 'true', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
@@ -14,7 +14,7 @@ export async function POST() {
     maxAge: 60 * 60 * 8, // 8 hours
   });
 
-  // Set the fake participantId cookie so the middleware allows study routes
+  // Set the fake participantId cookie so the proxy allows study routes
   cookieStore.set('participantId', 'debug-participant', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
