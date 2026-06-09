@@ -97,7 +97,7 @@ async function seed() {
         productId: 'SWEATSHIRT',
         claimOrder: 3,
         claimText: 'The color of the sweatshirt fades very quickly if you dry it in the sun.',
-        correctOption: 3, // Not mentioned in the reviews
+        correctOption: 3, // Not mentioned
         sourceVersion: 'v1.0'
       },
 

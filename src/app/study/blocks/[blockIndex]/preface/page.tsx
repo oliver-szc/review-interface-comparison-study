@@ -60,7 +60,13 @@ export default async function BlockPrefacePage({ params }: { params: Promise<{ b
               <strong>The scenario:</strong> You are interested in buying this <span className="font-semibold">{productDisplay}</span> and want to find out if the claims you heard about it are actually true.
             </p>
             <p>
-              <strong>Your task:</strong> Please <span className="font-semibold">{systemText}</span> to explore the online reviews and verify whether the experiences of actual buyers support these claims. You have to find out, wether a claim is <span className="font-semibold italic">true</span>, <span className="font-semibold italic">false</span> or <span className="font-semibold italic">cannot be decided based on the available information</span> in the reviews. For each claim, you have to select one answer.
+              <strong>Your task:</strong> Please <span className="font-semibold">{systemText}</span> to explore the online reviews and verify whether the experiences of actual buyers support these claims. You have to find out, wether a claim is:
+              <ul className="list-disc list-inside">
+                <li><span className="font-semibold">True </span>(the majority of reviewers clearly rate this aspect as such)</li>
+                <li><span className="font-semibold">False </span>(the aspect is mentioned, but the majority rate it the opposite way)</li>
+                <li><span className="font-semibold">Not mentioned </span>(the aspect simply does not appear in the reviews)</li>
+              </ul>
+              For each claim, you have to select one answer.
             </p>
           </div>
           <PrefaceClient blockIndex={blockIndex} />

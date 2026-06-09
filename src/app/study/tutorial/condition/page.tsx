@@ -65,12 +65,12 @@ export default function TutorialConditionPage() {
                 <p className="text-slate-700 leading-relaxed mb-4">
                   Once you have gathered enough information, click the <strong>"Open Answer Form"</strong> button in the top right corner. For each of the three claims, you must select whether it is:
                 </p>
-                <ul className="list-disc pl-6 space-y-2 text-slate-700 mb-4">
-                  <li><strong>True</strong> (supported by the reviews)</li>
-                  <li><strong>False</strong> (contradicted by the reviews)</li>
-                  <li><strong>Not mentioned in the reviews</strong> (not enough evidence in the reviews)</li>
+                <ul className="list-disc">
+                  <li><span className="font-semibold">True </span>(the majority of reviewers clearly rate this aspect as such)</li>
+                  <li><span className="font-semibold">False </span>(the aspect is mentioned, but the majority rate it the opposite way)</li>
+                  <li><span className="font-semibold">Not mentioned </span>(the aspect simply does not appear in the reviews)</li>
                 </ul>
-                <p className="text-slate-750 font-semibold leading-relaxed">
+                <p className="text-slate-750 leading-relaxed">
                   Once you have selected an option for all three claims, click <strong>"Submit Answers"</strong> to finish the task.
                 </p>
               </div>

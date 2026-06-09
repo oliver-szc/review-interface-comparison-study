@@ -18,13 +18,12 @@ export function ChatMessage({ role, text, isError = false, isStreaming = false }
       className={`flex ${effectiveRole === 'user' ? 'justify-end' : 'justify-start'}`}
     >
       <div
-        className={`rounded-xl px-3 py-2 break-words whitespace-pre-wrap text-sm leading-relaxed ${
-          isError
+        className={`rounded-xl px-3 py-2 break-words whitespace-pre-wrap text-sm leading-relaxed ${isError
             ? 'max-w-full bg-red-50 text-red-700 border border-red-200 rounded-bl-none'
             : effectiveRole === 'user'
               ? 'max-w-[80%] bg-sky-600 text-white rounded-br-none'
-              : 'max-w-full text-slate-800 rounded-bl-none'
-        }`}
+              : 'max-w-full text-slate-700 rounded-bl-none'
+          }`}
       >
         <p>
           {text}

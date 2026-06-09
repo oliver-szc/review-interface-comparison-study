@@ -28,7 +28,10 @@ function ReviewSnippet({
     <li className="border-t border-slate-100 pt-2 first:border-t-0 first:pt-0">
       {/* Review meta */}
       <div className="flex items-center gap-1.5 mb-1">
-        <span className="text-amber-400 text-xs">{'★'.repeat(starRating)}{'☆'.repeat(5 - starRating)}</span>
+        <span className="text-xs">
+          <span className="text-[#ff9900]">{'★'.repeat(starRating)}</span>
+          <span className="text-slate-300">{'☆'.repeat(5 - starRating)}</span>
+        </span>
         <span className="text-slate-400 text-[10px]">by {userName}</span>
       </div>
       {/* Text */}

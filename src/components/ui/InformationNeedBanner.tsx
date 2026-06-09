@@ -126,15 +126,15 @@ export function InformationNeedBanner({
                   <div className="mb-6 space-y-3">
                     <div className="flex gap-3">
                       <span className="font-bold text-slate-900 text-xs md:text-sm w-30 shrink-0">True:</span>
-                      <span className="text-slate-700 text-xs md:text-sm">The majority of customer reviews clearly support the claim.</span>
+                      <span className="text-slate-700 text-xs md:text-sm">The majority of reviewers clearly rate this aspect as such.</span>
                     </div>
                     <div className="flex gap-3">
                       <span className="font-bold text-slate-900 text-xs md:text-sm w-30 shrink-0">False:</span>
-                      <span className="text-slate-700 text-xs md:text-sm">The majority of customer reviews clearly contradict the claim.</span>
+                      <span className="text-slate-700 text-xs md:text-sm">The aspect is mentioned, but the majority rate it the opposite way.</span>
                     </div>
                     <div className="flex gap-3">
-                      <span className="font-bold text-slate-900 text-xs md:text-sm w-30 shrink-0">Not mentioned<br />in the reviews:</span>
-                      <span className="text-slate-700 text-xs md:text-sm">There is not enough information or no clear consensus in the reviews regarding this specific claim.</span>
+                      <span className="font-bold text-slate-900 text-xs md:text-sm w-30 shrink-0">Not mentioned:</span>
+                      <span className="text-slate-700 text-xs md:text-sm">The aspect simply does not appear in the reviews.</span>
                     </div>
                   </div>
 

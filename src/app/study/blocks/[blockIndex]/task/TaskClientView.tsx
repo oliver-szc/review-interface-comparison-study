@@ -147,7 +147,7 @@ export default function TaskClientView({ blockIndex, conditionType, productId, c
                 <th scope="col" className="px-6 py-3.5 font-bold">Claim</th>
                 <th scope="col" className="px-4 py-3.5 text-center font-bold w-24">True</th>
                 <th scope="col" className="px-4 py-3.5 text-center font-bold w-24">False</th>
-                <th scope="col" className="px-4 py-3.5 text-center font-bold w-48">Not mentioned in reviews</th>
+                <th scope="col" className="px-4 py-3.5 text-center font-bold w-48">Not mentioned</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50 bg-white">
@@ -237,7 +237,7 @@ export default function TaskClientView({ blockIndex, conditionType, productId, c
         middleContent={
           <div className="space-y-3">
             {/* Dashboard panel shown above reviews for DASHBOARD condition */}
-            {conditionType === 'DASHBOARD' && <DashboardPanel aspectData={aspectData} />}
+            {conditionType === 'DASHBOARD' && <DashboardPanel aspectData={aspectData} productId={productId} />}
             {conditionType === 'CHATBOT' && <ChatbotPanel productId={productId} />}
 
             {/* Review list (shown for all conditions; rendered underneath the dashboard for DASHBOARD condition) */}

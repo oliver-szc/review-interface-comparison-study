@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import type { AspectStat } from '@/lib/queries/absa'
 import { useDashboardFilterStore } from '@/stores/dashboardFilterStore'
 import { getSentimentTier } from '@/lib/utils/formatAspect'
@@ -9,26 +9,49 @@ import { AspectDetailPanel } from './AspectDetailPanel'
 
 interface DashboardPanelProps {
   aspectData: AspectStat[]
+  productId?: string
 }
 
-export function DashboardPanel({ aspectData }: DashboardPanelProps) {
+const PRODUCT_SUMMARIES: Record<string, string> = {
+  EARBUDS: "Customers like the sound quality, active noise cancellation, and battery life of the earbuds. They mention the audio is exceptional and the earbuds last for hours on a single charge. Customers also appreciate the companion app for its helpful customization features. However, some reviewers disagree on the reliability of the touch controls.",
+  KETTLE: "Customers like the boiling speed, price, and overall design of the kettle. They mention the kettle heats water quickly and offers great value for the money. Customers also appreciate the large water capacity. However, some customers disagree on the temperature control capabilities.",
+  SWEATSHIRT: "Customers like the material quality, price, and fit of the sweatshirt. They mention the fabric is soft and the product is a great value for the money. Customers also appreciate the overall style. However, some customers disagree on the material thickness, noting it is not a true heavyweight sweatshirt."
+}
+
+export function DashboardPanel({ aspectData, productId }: DashboardPanelProps) {
   const { activeAspect, setActiveAspect } = useDashboardFilterStore()
 
-  // Default to the first (most frequent) category on mount
+  // Sort aspects: first positive, then mixed, then negative. Keep original order within tiers.
+  const sortedAspectData = useMemo(() => {
+    const order = { positive: 0, mixed: 1, negative: 2 }
+    return [...aspectData].sort((a, b) => {
+      const tierA = getSentimentTier(a.positive, a.negative, a.neutral)
+      const tierB = getSentimentTier(b.positive, b.negative, b.neutral)
+      if (tierA !== tierB) {
+        return order[tierA] - order[tierB]
+      }
+      return aspectData.indexOf(a) - aspectData.indexOf(b)
+    })
+  }, [aspectData])
+
+  // Default to the first category in sorted order on mount
   useEffect(() => {
-    if (aspectData.length > 0 && !activeAspect) {
-      setActiveAspect(aspectData[0].category)
+    if (sortedAspectData.length > 0 && !activeAspect) {
+      setActiveAspect(sortedAspectData[0].category)
     }
     // Clear filter when component unmounts (navigating away)
     return () => {
       setActiveAspect(null)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [aspectData])
+  }, [sortedAspectData])
 
-  const selectedStat = aspectData.find((a) => a.category === activeAspect) ?? aspectData[0]
+  const selectedStat = sortedAspectData.find((a) => a.category === activeAspect) ?? sortedAspectData[0]
 
-  if (aspectData.length === 0) {
+  const productKey = (productId || 'EARBUDS').toUpperCase()
+  const summaryText = PRODUCT_SUMMARIES[productKey] || PRODUCT_SUMMARIES.EARBUDS
+
+  if (sortedAspectData.length === 0) {
     return (
       <div className="bg-sky-50 rounded-xl border border-sky-400 p-4 mx-auto max-w-4xl w-full">
         <h2 className="text-xl font-bold text-slate-900">What customers say</h2>
@@ -45,11 +68,7 @@ export function DashboardPanel({ aspectData }: DashboardPanelProps) {
       </h2>
       {/* AI Summary */}
       <p className="text-md text-slate-600">
-        Customers like the sound quality, price, and quality of the headphones.
-        They mention they&apos;re clear, crisp, and good for gaming. Customers
-        also like the fit, saying the earbuds stay in place and fit securely in
-        their ears. However, some customers have mixed opinions on connectivity
-        and functionality.
+        {summaryText}
       </p>
       <p className="text-xs italic text-slate-500">
         AI-generated from customer reviews
@@ -59,7 +78,7 @@ export function DashboardPanel({ aspectData }: DashboardPanelProps) {
         Select to learn more:
       </p>
       <div className="flex flex-wrap gap-2">
-        {aspectData.map((stat) => (
+        {sortedAspectData.map((stat) => (
           <AspectButton
             key={stat.category}
             label={stat.label}

@@ -17,6 +17,24 @@ interface ChatbotPanelProps {
   productId: string
 }
 
+const SUGGESTED_QUESTIONS: Record<string, string[]> = {
+  EARBUDS: [
+    'What do people say about sound quality?',
+    'Are they comfortable?',
+    'How is the battery life?',
+  ],
+  SWEATSHIRT: [
+    'What do people say about the material quality?',
+    'Is it true to size?',
+    'How does it hold up after washing?',
+  ],
+  KETTLE: [
+    'What do people say about the noise level?',
+    'Is it easy to use?',
+    'How long does it take to boil?',
+  ],
+}
+
 export function ChatbotPanel({ productId }: ChatbotPanelProps) {
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -25,11 +43,8 @@ export function ChatbotPanel({ productId }: ChatbotPanelProps) {
   // Abort controller ref so we can cancel in-flight requests
   const abortControllerRef = useRef<AbortController | null>(null)
 
-  const suggestedQuestions = [
-    'What do people say about sound quality?',
-    'Are they comfortable?',
-    'How is the battery life?',
-  ]
+  const questionsKey = productId.toUpperCase()
+  const suggestedQuestions = SUGGESTED_QUESTIONS[questionsKey] || SUGGESTED_QUESTIONS.EARBUDS
 
   /**
    * Sends the user query to the RAG chat API and streams the response
@@ -177,7 +192,7 @@ export function ChatbotPanel({ productId }: ChatbotPanelProps) {
         )}
       </div>
       {/* Messages — only show bot messages (user message is implicit from the input) */}
-      <div className="flex-1 overflow-y-auto p-1 space-y-3">
+      <div className="flex-1 overflow-y-auto p-2 space-y-3">
         {messages.filter(msg => msg.role !== 'user').map((msg, index) => (
           <ChatMessage
             key={index}
@@ -188,7 +203,7 @@ export function ChatbotPanel({ productId }: ChatbotPanelProps) {
           />
         ))}
       </div>
-      <p className="text-xs italic text-slate-500 pt-1 pb-4 px-4">
+      <p className="text-xs italic text-slate-500 pt-1 pb-4 px-5">
         Powered by AI
       </p>
     </div>

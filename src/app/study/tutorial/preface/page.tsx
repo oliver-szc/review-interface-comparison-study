@@ -48,7 +48,13 @@ export default function TutorialPrefacePage() {
                 <strong>The scenario:</strong> You are interested in buying this kettle and want to find out if the claims you heard about it are actually true.
               </p>
               <p>
-                <strong>Your task:</strong> Please use the provided system to explore the online reviews and verify whether the experiences of actual buyers support these claims. You have to find out, wether a claim is <i>true</i>, <i>false</i> or <i>cannot be decided based on the available information</i> in the reviews. For each claim, you have to select one answer.
+                <strong>Your task:</strong> Please use the provided system to explore the online reviews and verify whether the experiences of actual buyers support these claims. You have to find out, wether a claim is:
+                <ul className="list-disc list-inside">
+                  <li><i>true</i></li>
+                  <li><i>false</i></li>
+                  <li><i>cannot be decided based on the available information</i> in the reviews.</li>
+                </ul>
+                For each claim, you have to select one answer.
               </p>
             </div>
             <div className="flex justify-end">

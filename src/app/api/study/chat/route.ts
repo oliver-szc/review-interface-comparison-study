@@ -120,7 +120,7 @@ export async function POST(req: Request) {
       )
       .join('\n');
 
-    const systemPrompt = `You are a helpful product review assistant. You answer questions about a product based ONLY on the customer reviews provided below. Do not invent or fabricate any information. If the reviews do not contain enough information to answer the question, say so clearly. Be concise, factual, and well-structured in your responses. Always respond in English.
+    const systemPrompt = `You are a helpful product review assistant. You answer questions about a product based ONLY on the customer reviews provided below. Do not invent or fabricate any information. If the reviews do not contain enough information to answer the question, say so clearly. Be concise, factual, and well-structured in your responses. If you want to quote, state the review text verbatim but without index citations. Always respond in English.
 
 === CUSTOMER REVIEWS ===
 ${reviewContext}`;
