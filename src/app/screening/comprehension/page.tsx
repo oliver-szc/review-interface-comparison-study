@@ -1,0 +1,78 @@
+import { cookies } from 'next/headers';
+import { db } from '@/db/client';
+import { participants } from '@/db/schema';
+import { eq } from 'drizzle-orm';
+import { redirect } from 'next/navigation';
+import { CompletionCodeButton } from '@/app/debrief/CompletionCodeButton';
+
+export default async function ComprehensionScreeningOutPage() {
+  const cookieStore = await cookies();
+  const participantId = cookieStore.get('participantId')?.value;
+
+  if (!participantId) {
+    redirect('/');
+  }
+
+  let code = 'DEBUG-COMPREHENSION-SCREEN-CODE';
+
+  if (participantId !== 'debug-participant') {
+    // Fetch the participant's code
+    const p = await db
+      .select({ completionCode: participants.completionCode })
+      .from(participants)
+      .where(eq(participants.id, participantId))
+      .limit(1);
+
+    if (p.length === 0 || !p[0].completionCode) {
+      redirect('/');
+    }
+
+    code = p[0].completionCode;
+  }
+
+  // Since they are screened out, delete the cookie
+  // But Next.js Server Components can't modify cookies directly without Route Handlers or Server Actions
+  // Actually, we can just let them stay or rely on proxy to eventually expire it.
+  // We'll just display the exit screen.
+
+  return (
+    <main className="h-screen w-full bg-slate-50 flex flex-col items-center justify-center p-4 overflow-hidden">
+      <div className="w-full max-w-3xl bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200 text-center">
+        <h1 className="text-2xl font-bold text-slate-900 mb-4">
+          Thank you for your interest in this study.
+        </h1>
+
+        <div className="text-slate-700 text-lg leading-relaxed space-y-4 text-left">
+          <p>
+            To ensure that the results are evaluated reliably, a clear understanding of the task is essential. Since the instructions were apparently not clear enough for you, we regret to inform you that you cannot continue participating at this point.
+          </p>
+          <p>
+            Thank you for your honest feedback and for taking the time so far.
+          </p>
+
+          <div className="bg-sky-50 border border-sky-100 rounded-lg p-6 mt-8 text-center text-sky-900">
+            <h2 className="text-xl font-semibold text-slate-900 mb-4">Claiming Your Participant Hours (VP-Stunden)</h2>
+            <p className="mb-6 text-sm">
+              To receive your VP hours, please send a brief email including your personal completion code:
+            </p>
+
+            <h4 className="font-bold text-sky-950 mb-2">Your personal completion code:</h4>
+            <CompletionCodeButton code={code} />
+
+            <h4 className="font-bold text-sky-950 mb-2 mt-8">Send the completion code to:</h4>
+            <p className="mb-2">
+              <a
+                href={`mailto:oliver.szczygiel@stud.uni-regensburg.de?subject=Study Completion Code: ${code}`}
+                className="font-mono bg-white hover:bg-sky-50/50 border border-sky-200 hover:border-sky-300 rounded px-4 py-2 inline-block text-sky-600 hover:text-sky-800 transition-all shadow-sm"
+              >
+                oliver.szczygiel@stud.uni-regensburg.de
+              </a>
+            </p>
+          </div>
+
+          <p className="text-center font-medium pt-4">You may now close this browser tab.</p>
+        </div>
+      </div>
+    </main>
+  );
+}

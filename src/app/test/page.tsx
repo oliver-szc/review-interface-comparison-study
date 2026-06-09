@@ -74,7 +74,7 @@ function ReviewCard({ name, stars, date, text }: { name: string; stars: number; 
           return `${count} ${count === 1 ? 'person' : 'people'} found this helpful`
         })()}
       </div>
-    <hr className="border-slate-100" />
+      <hr className="border-slate-100" />
     </div>
   )
 }
@@ -88,18 +88,17 @@ function DashboardPanel() {
       <h2 className="text-sm font-semibold text-slate-900">What customers say</h2>
       <p className="text-xs text-slate-600">
         Customers like the sound quality, price, and quality of the headphones. They mention they're clear, crisp, and good for gaming. Customers also like the fit, saying the earbuds stay in place and fit securely in their ears. However, some customers have mixed opinions on connectivity and functionality.      </p>
-      <p className="text-xs text-slate-400">*AI-generated from customer reviews</p>  
-      <p className="text-xs font-semibold text-slate-900">Select to learn more:</p>      
+      <p className="text-xs text-slate-400">*AI-generated from customer reviews</p>
+      <p className="text-xs font-semibold text-slate-900">Select to learn more:</p>
       <div className="flex flex-wrap gap-2">
         {aspects.map((a) => (
           <button
             key={a}
             onClick={() => setActive(a)}
-            className={`text-xs px-2 py-1 rounded-full border transition ${
-              active === a
-                ? 'bg-amazon text-white border-amazon'
-                : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
-            }`}
+            className={`text-xs px-2 py-1 rounded-full border transition ${active === a
+              ? 'bg-amazon text-white border-amazon'
+              : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-00'
+              }`}
           >
             {a}
           </button>
@@ -198,11 +197,10 @@ function ChatbotPanel() {
         {messages.map((m, i) => (
           <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div
-              className={`text-xs px-3 py-2 rounded-xl max-w-[80%] leading-relaxed ${
-                m.role === 'user'
-                  ? 'bg-amazon text-white rounded-br-none'
-                  : 'text-slate-800 rounded-bl-none'
-              }`}
+              className={`text-xs px-3 py-2 rounded-xl max-w-[80%] leading-relaxed ${m.role === 'user'
+                ? 'bg-amazon text-white rounded-br-none'
+                : 'text-slate-800 rounded-bl-none'
+                }`}
             >
               {m.text}
             </div>
@@ -252,7 +250,7 @@ function ReviewListPanel() {
     : allReviews
   return (
     <div className="bg-white rounded-xl p-4 mx-auto max-w-4xl w-full">
-      <h2 className="text-sm font-semibold text-slate-900">Customer Reviews</h2>
+      <h2 className="text-xl font-semibold text-slate-900">Customer Reviews</h2>
 
       {/* Star histogram at top */}
       <div className="mb-4">
@@ -309,7 +307,7 @@ export default function LayoutPreview() {
   const [condition, setCondition] = useState<Condition>('dashboard')
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-full bg-white">
       {/* Top Banner */}
       <InformationNeedBanner
         task="You work in product development. Identify three frequently requested features that are currently missing, and determine the feature with the highest priority."
@@ -323,9 +321,8 @@ export default function LayoutPreview() {
           <button
             key={c}
             onClick={() => setCondition(c)}
-            className={`text-[10px] px-2 py-1 rounded border ${
-              condition === c ? 'bg-amazon text-white border-amazon' : 'bg-white text-slate-500 border-slate-200'
-            }`}
+            className={`text-xxs px-2 py-1 rounded border ${condition === c ? 'bg-amazon text-white border-amazon' : 'bg-white text-slate-500 border-slate-200'
+              }`}
           >
             {c}
           </button>

@@ -2,7 +2,7 @@
 
 import { StudyLayout } from '@/components/layouts/StudyLayout'
 import { WebshopLayout } from '@/components/layouts/WebshopLayout'
-import { ProductPanel } from '@/components/ui/ProductPanel'
+import { ProductImage, ProductDetails } from '@/components/ui/ProductPanel'
 import { ReviewListPanel } from '@/components/ui/ReviewListPanel'
 import { ChatbotPanel } from '@/components/interfaces/chatbot/ChatbotPanel'
 import earbudsImage from '@/app/earbuds.jpg'
@@ -93,10 +93,12 @@ export default function ChatbotPage() {
   return (
     <StudyLayout task="Ask the AI assistant to help you identify the three most frequently mentioned positive aspects of this product.">
       <WebshopLayout
-        topContent={<ProductPanel productData={productData} />}
-        leftContent={<ChatbotPanel />}
+        productImage={<ProductImage productData={productData} />}
+        topContent={<ProductDetails productData={productData} />}
+        leftContent={null}
         middleContent={
           <>
+            <ChatbotPanel productId="EARBUDS" />
             <ReviewListPanel
               reviews={reviews}
               starDistribution={starDistribution}

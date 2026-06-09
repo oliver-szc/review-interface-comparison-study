@@ -20,7 +20,7 @@ export function StarHistogram({
     <div className="space-y-2">
       {/* Average + total */}
       <div className="flex items-baseline gap-2">
-        <span className="text-3xl font-semibold text-slate-800">{averageRating.toFixed(1)}</span>
+        <span className="text-2xl font-semibold text-slate-800">{averageRating.toFixed(1)}</span>
         <span className="text-sm text-slate-400">out of 5</span>
       </div>
       <p className="text-xs text-slate-400">
@@ -43,7 +43,7 @@ export function StarHistogram({
               </span>
 
               {/* Bar */}
-              <div className="flex-1 h-3 rounded-full bg-slate-200 overflow-hidden">
+              <div className="flex-1 h-3 rounded-full bg-slate-100 overflow-hidden">
                 <div
                   className="h-full rounded-full bg-amazon-light transition-all duration-300"
                   style={{ width: `${percentage}%` }}

@@ -1,6 +1,13 @@
 import { drizzle } from 'drizzle-orm/vercel-postgres';
 import { sql } from '@vercel/postgres';
+import * as dotenv from 'dotenv';
 import * as schema from './schema'; // Import your schema for type-safety
+
+dotenv.config({ path: '.env.local' });
+
+if (!process.env.POSTGRES_URL && process.env.DATABASE_URL) {
+  process.env.POSTGRES_URL = process.env.DATABASE_URL;
+}
 
 // 1. Export the raw SQL client (keep this as you already have it)
 export { sql };

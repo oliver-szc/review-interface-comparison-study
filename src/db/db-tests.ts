@@ -1,8 +1,7 @@
-import { db } from './client';
-import { products, reviews, sessions, trackingEvents, taskSubmissions } from './schema';
+import { db, sql } from './client';
+import { products, reviews, participants, trackingEvents, sequencePool, blockSubmissions, taskAnswers, chatbotLogs } from './schema';
 import { getProductById, getReviewsByProduct } from './queries';
 import { eq } from 'drizzle-orm';
-import { sql } from './client';
 
 // This file runs all database tests in sequence for easy execution and output comparison.
 // To run all tests, execute: npx tsx --env-file=.env.local src/db/all-tests.ts
@@ -57,52 +56,108 @@ async function testGetReviewsByProduct() {
   console.log('Test passed:', correct ? '✅' : '❌');
 }
 
-// Test 4: Insert and validate session with JSON fields
-async function testSession() {
-  console.log('\n===== Test 4: Session JSON Handling =====');
-  const testData = {
-    prolificId: 'test_user_123',
-    conditionOrder: 'ABC',
-    productMapping: { A: 'headphones', B: 'kettle', C: 'tshirt' },
-    completedPhases: ['baseline', 'condition_A']
-  };
-  const inserted = await db.insert(sessions).values(testData).returning();
-  const newId = inserted[0].id;
-  const session = await db.query.sessions.findFirst({ where: eq(sessions.id, newId) });
-  if (!session) throw new Error('Session not found');
-  console.log('Session:', session);
-  console.log(`- Condition Order: ${session.conditionOrder}`);
-  console.log(`- Mapping A: ${session.productMapping?.A}`);
-  console.log(`- Completed Phases: ${session.completedPhases?.join(', ')}`);
+// Test 4: Insert and validate participant record
+async function testParticipant() {
+  console.log('\n===== Test 4: Participant Insert =====');
+  const [participant] = await db.insert(participants).values({
+    externalId: 'test_user_123',
+    currentPage: 'landing',
+    currentBlockIndex: 0,
+  }).returning();
+  const stored = await db.query.participants.findFirst({ where: eq(participants.id, participant.id) });
+  if (!stored) throw new Error('Participant not found');
+  console.log('Participant:', stored);
 }
 
-// Test 5: Insert task submission with checkbox array answer
-async function testInsertTaskSubmissionCheckboxArray() {
-  console.log('\n===== Test 5: Task Submission Checkbox Array =====');
-  const [session] = await db.insert(sessions).values({
-    conditionOrder: 'ABC',
-    prolificId: 'test_task_submission_' + Date.now(),
+// Test 5: Insert tracking event for participant
+async function testTrackingEvent() {
+  console.log('\n===== Test 5: Tracking Event Insert =====');
+  const [participant] = await db.insert(participants).values({
+    externalId: 'test_tracking_' + Date.now(),
+    currentPage: 'landing',
   }).returning();
-  const [product] = await db.insert(products).values({
-    domain: 'Electronics',
-    asin: 'ASIN' + Date.now(),
-    title: 'Test Product',
-    price: '99.99',
-  }).returning();
-  const answer = ['battery_life', 'sound_quality', 'comfort'];
-  const [submission] = await db.insert(taskSubmissions).values({
-    sessionId: session.id,
-    condition: 'dashboard',
-    productId: product.id,
-    answer,
-    completionTimeSeconds: 42,
-  }).returning();
-  console.log('Task submission:', submission);
+  await db.insert(trackingEvents).values({
+    participantId: participant.id,
+    conditionType: 'BASELINE',
+    eventType: 'SESSION_START',
+    eventData: { test: true },
+  });
+  const events = await db.select().from(trackingEvents).where(eq(trackingEvents.participantId, participant.id));
+  console.log('Tracking events:', events.length);
 }
 
-// Test 6: Verify pgvector extension setup
+// Test 6: Insert sequence pool row
+async function testSequencePool() {
+  console.log('\n===== Test 6: Sequence Pool Insert =====');
+  await db.insert(sequencePool).values({
+    sequenceId: 1,
+    assistanceOrder: 'B,D,C',
+    productOrder: 'E,K,S',
+  }).onConflictDoNothing();
+  const row = await db.select().from(sequencePool).where(eq(sequencePool.sequenceId, 1));
+  console.log('Sequence row:', row[0]);
+}
+
+// Test 7: Insert block submission with task answers
+async function testBlockSubmissionAndAnswers() {
+  console.log('\n===== Test 7: Block Submission + Task Answers =====');
+  const [participant] = await db.insert(participants).values({
+    externalId: 'test_block_' + Date.now(),
+    currentPage: 'condition_1_task',
+    currentBlockIndex: 1,
+  }).returning();
+  const [block] = await db.insert(blockSubmissions).values({
+    participantId: participant.id,
+    blockIndex: 1,
+    conditionType: 'BASELINE',
+    productId: 'EARBUDS',
+    timeOnTaskMs: 1234,
+    tlxMd: 3,
+    tlxTd: 4,
+    tlxEffort: 3,
+    tlxFrustration: 2,
+    pu1: 4,
+    pu3: 4,
+    pu4: 5,
+  }).returning();
+  await db.insert(taskAnswers).values([
+    { blockSubmissionId: block.id, claimOrder: 1, claimId: 'earbuds_claim_1', userResponse: 1, groundTruth: 1, accuracy: 1 },
+    { blockSubmissionId: block.id, claimOrder: 2, claimId: 'earbuds_claim_2', userResponse: 2, groundTruth: 2, accuracy: 1 },
+    { blockSubmissionId: block.id, claimOrder: 3, claimId: 'earbuds_claim_3', userResponse: 3, groundTruth: 3, accuracy: 1 },
+  ]);
+  const answers = await db.select().from(taskAnswers).where(eq(taskAnswers.blockSubmissionId, block.id));
+  console.log('Task answers:', answers.length);
+}
+
+// Test 8: Insert chatbot log
+async function testChatbotLog() {
+  console.log('\n===== Test 8: Chatbot Log Insert =====');
+  const [participant] = await db.insert(participants).values({
+    externalId: 'test_chat_' + Date.now(),
+    currentPage: 'condition_3_task',
+    currentBlockIndex: 3,
+  }).returning();
+  const [block] = await db.insert(blockSubmissions).values({
+    participantId: participant.id,
+    blockIndex: 3,
+    conditionType: 'CHATBOT',
+    productId: 'SWEATSHIRT',
+    timeOnTaskMs: 4321,
+  }).returning();
+  await db.insert(chatbotLogs).values({
+    blockSubmissionId: block.id,
+    transcript: [
+      { timestamp: new Date().toISOString(), role: 'user', content: 'Test message' },
+      { timestamp: new Date().toISOString(), role: 'assistant', content: 'Test response' },
+    ],
+  });
+  const logs = await db.select().from(chatbotLogs).where(eq(chatbotLogs.blockSubmissionId, block.id));
+  console.log('Chatbot logs:', logs.length);
+}
+
+// Test 9: Verify pgvector extension setup
 async function testVerifySetup() {
-  console.log('\n===== Test 6: Verify pgvector Extension =====');
+  console.log('\n===== Test 9: Verify pgvector Extension =====');
   await sql`CREATE EXTENSION IF NOT EXISTS vector;`;
   const result = await sql`SELECT extname, extversion FROM pg_extension WHERE extname = 'vector';`;
   if (result.rows.length > 0) {
@@ -118,8 +173,11 @@ async function runAllTests() {
   await testSelectProduct();
   await testGetProductById();
   await testGetReviewsByProduct();
-  await testSession();
-  await testInsertTaskSubmissionCheckboxArray();
+  await testParticipant();
+  await testTrackingEvent();
+  await testSequencePool();
+  await testBlockSubmissionAndAnswers();
+  await testChatbotLog();
   await testVerifySetup();
   console.log('\n==================== ALL TESTS COMPLETE ====================\n');
   process.exit(0);

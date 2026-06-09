@@ -1,22 +1,82 @@
 'use client'
 
+import type { SentimentTier } from '@/lib/utils/formatAspect'
+import { SENTIMENT_SYMBOL } from '@/lib/utils/formatAspect'
+
 interface AspectButtonProps {
   label: string
   active: boolean
+  count?: number
+  sentiment: SentimentTier
   onClick: () => void
 }
 
-export function AspectButton({ label, active, onClick }: AspectButtonProps) {
+const TIER_STYLES: Record<
+  SentimentTier,
+  {
+    icon: string          // bg color of the icon pill
+    iconText: string      // text color inside icon
+    activeBg: string      // button bg when active
+    activeBorder: string  // button border when active
+    hoverBg: string
+  }
+> = {
+  positive: {
+    icon: 'bg-green-100 text-green-700',
+    iconText: 'text-green-700',
+    activeBg: 'bg-green-50',
+    activeBorder: 'border-green-500',
+    hoverBg: 'hover:bg-green-50',
+  },
+  mixed: {
+    icon: 'bg-amber-100 text-amber-700',
+    iconText: 'text-amber-700',
+    activeBg: 'bg-amber-50',
+    activeBorder: 'border-amber-400',
+    hoverBg: 'hover:bg-amber-50',
+  },
+  negative: {
+    icon: 'bg-red-100 text-red-600',
+    iconText: 'text-red-600',
+    activeBg: 'bg-red-50',
+    activeBorder: 'border-red-400',
+    hoverBg: 'hover:bg-red-50',
+  },
+}
+
+export function AspectButton({ label, active, count, sentiment, onClick }: AspectButtonProps) {
+  const tier = TIER_STYLES[sentiment]
+
   return (
     <button
       onClick={onClick}
-      className={`text-xs px-2 py-1 rounded-full border transition ${
-        active
-          ? 'bg-amazon text-white border-amazon'
-          : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
-      }`}
+      className={`
+        inline-flex items-center gap-1.5 pl-1.5 pr-2.5 py-1 rounded-full border text-xs
+        transition-all duration-150 font-medium select-none
+        ${active
+          ? `${tier.activeBg} ${tier.activeBorder} shadow-sm`
+          : `border-slate-200 ${tier.hoverBg} hover:border-slate-300`
+        }
+      `}
     >
-      {label}
+      {/* Sentiment icon pill */}
+      <span
+        className={`
+          inline-flex items-center justify-center w-4 h-4 rounded-full text-[10px] font-bold leading-none
+          ${tier.icon}
+        `}
+        aria-hidden="true"
+      >
+        {SENTIMENT_SYMBOL[sentiment]}
+      </span>
+
+      {/* Label */}
+      <span className="text-slate-800 leading-none">{label}</span>
+
+      {/* Count */}
+      {count !== undefined && (
+        <span className="text-slate-500 font-normal leading-none">({count})</span>
+      )}
     </button>
   )
 }
