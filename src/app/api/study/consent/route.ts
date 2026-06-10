@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     if (debugMode?.value === 'true') {
       cookieStore.set('participantId', 'debug-participant', {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: process.env.VERCEL === '1' || process.env.NODE_ENV === 'production' && process.env.VERCEL_ENV === 'production',
         sameSite: 'lax',
         path: '/',
         maxAge: 60 * 60 * 8,
@@ -57,7 +57,7 @@ export async function POST(req: Request) {
     // Set the session cookie
     cookieStore.set('participantId', participant.id, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: process.env.VERCEL === '1' || process.env.NODE_ENV === 'production' && process.env.VERCEL_ENV === 'production',
       sameSite: 'lax',
       path: '/',
       maxAge: 60 * 60 * 2, // 2 hours

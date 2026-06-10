@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { StudyPageGrid } from '@/components/layouts/StudyPageGrid';
 
 export default function TutorialAlternativePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -27,9 +28,8 @@ export default function TutorialAlternativePage() {
     }
   };
   return (
-    <main className="relative h-full w-full bg-slate-50 flex flex-col items-center justify-center p-4 overflow-hidden">
-      <div className="w-full max-w-3xl z-20">
-        <div className="w-full bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200">
+    <StudyPageGrid>
+      <div className="w-full bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200">
           <div className="mb-10">
             <h1 className="text-2xl font-bold text-slate-900 mb-6">Tutorial</h1>
 
@@ -83,8 +83,7 @@ export default function TutorialAlternativePage() {
               Yes, I Understand the Task Now – Continue
             </button>
           </div>
-        </div>
       </div>
-    </main >
+    </StudyPageGrid>
   );
 }

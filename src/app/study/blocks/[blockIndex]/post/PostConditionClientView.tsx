@@ -8,6 +8,7 @@ import { QuestionCard } from '@/components/forms/QuestionCard';
 import { LikertScale } from '@/components/forms/LikertScale';
 import { VerticalRadioGroup } from '@/components/forms/VerticalRadioGroup';
 import { AriaInvalidSync } from '@/components/forms/AriaInvalidSync';
+import { StudyPageGrid } from '@/components/layouts/StudyPageGrid';
 
 interface PostConditionProps {
   blockIndex: 1 | 2 | 3;
@@ -114,14 +115,15 @@ export default function PostConditionClientView({ blockIndex, conditionType }: P
   return (
     <>
       <AriaInvalidSync />
-      <QuestionnaireLayout
-        form={form}
-        onSubmit={onSubmit}
-        submitLabel="Continue"
-        hideFooter={true}
-        className="max-w-none w-full px-0"
-      >
-        <div className="w-[33.333%] mx-auto bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200 space-y-8">
+      <StudyPageGrid>
+        <QuestionnaireLayout
+          form={form}
+          onSubmit={onSubmit}
+          submitLabel="Continue"
+          hideFooter={true}
+          className="max-w-none w-full px-0"
+        >
+          <div className="bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200 space-y-8">
           <div>
             <h1 className="text-2xl font-bold text-slate-900">Post-Task Evaluation ({blockIndex}/3)</h1>
             <p className="text-slate-600 mt-2">
@@ -315,8 +317,9 @@ export default function PostConditionClientView({ blockIndex, conditionType }: P
               {isSubmitting ? 'Processing...' : 'Continue'}
             </button>
           </div>
-        </div>
-      </QuestionnaireLayout>
+          </div>
+        </QuestionnaireLayout>
+      </StudyPageGrid>
     </>
   );
 }

@@ -10,6 +10,7 @@ import { QuestionCard } from '@/components/forms/QuestionCard';
 import { LikertScale } from '@/components/forms/LikertScale';
 import { TextArea } from '@/components/forms/TextArea';
 import { AriaInvalidSync } from '@/components/forms/AriaInvalidSync';
+import { StudyPageGrid } from '@/components/layouts/StudyPageGrid';
 
 const PreferencesSchema = z.object({
   pref_chatbot: z.string().min(1, "Please rate the AI chatbot."),
@@ -58,14 +59,15 @@ export default function PreferencesPage() {
   return (
     <>
       <AriaInvalidSync />
-      <QuestionnaireLayout
-        form={form}
-        onSubmit={onSubmit}
-        submitLabel="Complete Study"
-        hideFooter={true}
-        className="max-w-none w-full px-0"
-      >
-        <div className="w-[33.333%] mx-auto bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200 space-y-8">
+      <StudyPageGrid>
+        <QuestionnaireLayout
+          form={form}
+          onSubmit={onSubmit}
+          submitLabel="Complete Study"
+          hideFooter={true}
+          className="max-w-none w-full px-0"
+        >
+          <div className="bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200 space-y-8">
           <div>
             <h1 className="text-2xl font-bold text-slate-900">System Preferences & Feedback</h1>
             <p className="text-slate-600 mt-2">
@@ -133,8 +135,9 @@ export default function PreferencesPage() {
               {isSubmitting ? 'Processing...' : 'Complete Study'}
             </button>
           </div>
-        </div>
-      </QuestionnaireLayout>
+          </div>
+        </QuestionnaireLayout>
+      </StudyPageGrid>
     </>
   );
 }

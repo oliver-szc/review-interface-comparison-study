@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { StudyPageGrid } from '@/components/layouts/StudyPageGrid';
 
 export default function ConsentPage() {
   const router = useRouter();
@@ -37,9 +38,8 @@ export default function ConsentPage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 flex flex-col items-center">
-      <div className="w-full py-12 my-auto px-0 max-w-none">
-        <div className="w-[33.333%] mx-auto bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200">
+    <StudyPageGrid>
+      <div className="bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200">
           <h1 className="text-2xl font-bold text-slate-900 mb-6">Informed Consent</h1>
 
           <div className="prose prose-slate max-w-none text-slate-700 leading-relaxed mb-10">
@@ -183,8 +183,7 @@ export default function ConsentPage() {
               {isSubmitting ? 'Processing...' : 'I Agree – Continue'}
             </button>
           </div>
-        </div>
       </div>
-    </main>
+    </StudyPageGrid>
   );
 }

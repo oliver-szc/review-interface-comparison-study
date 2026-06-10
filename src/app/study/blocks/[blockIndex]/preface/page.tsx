@@ -2,6 +2,7 @@ import { getBlockContext } from '@/lib/utils/blockContext';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import PrefaceClient from './PrefaceClient';
+import { StudyPageGrid } from '@/components/layouts/StudyPageGrid';
 
 export default async function BlockPrefacePage({ params }: { params: Promise<{ blockIndex: string }> }) {
   const resolvedParams = await params;
@@ -35,9 +36,8 @@ export default async function BlockPrefacePage({ params }: { params: Promise<{ b
   }
 
   return (
-    <main className="min-h-full bg-slate-50 flex flex-col items-center">
-      <div className="w-full py-12 my-auto px-0 max-w-none">
-        <div className="w-[33.333%] mx-auto bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200">
+    <StudyPageGrid>
+      <div className="bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200">
           <h1 className="text-2xl font-bold text-slate-900 mb-6">
             Task {blockIndex} of 3
           </h1>
@@ -70,8 +70,7 @@ export default async function BlockPrefacePage({ params }: { params: Promise<{ b
             </p>
           </div>
           <PrefaceClient blockIndex={blockIndex} />
-        </div>
       </div>
-    </main>
+    </StudyPageGrid>
   );
 }

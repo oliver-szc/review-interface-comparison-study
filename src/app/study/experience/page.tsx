@@ -9,6 +9,7 @@ import { QuestionnaireLayout } from '@/components/forms/QuestionnaireLayout';
 import { QuestionCard } from '@/components/forms/QuestionCard';
 import { VerticalRadioGroup } from '@/components/forms/VerticalRadioGroup';
 import { AriaInvalidSync } from '@/components/forms/AriaInvalidSync';
+import { StudyPageGrid } from '@/components/layouts/StudyPageGrid';
 
 const ExperienceSchema = z.object({
   exp_reviews: z.string().min(1, "Please answer this question."),
@@ -76,14 +77,15 @@ export default function ExperiencePage() {
   return (
     <>
       <AriaInvalidSync />
-      <QuestionnaireLayout
-        form={form}
-        onSubmit={onSubmit}
-        submitLabel="Continue to Tutorial"
-        hideFooter={true}
-        className="max-w-none w-full px-0"
-      >
-        <div className="w-[33.333%] mx-auto bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200 space-y-8">
+      <StudyPageGrid>
+        <QuestionnaireLayout
+          form={form}
+          onSubmit={onSubmit}
+          submitLabel="Continue to Tutorial"
+          hideFooter={true}
+          className="max-w-none w-full px-0"
+        >
+          <div className="bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200 space-y-8">
           <div>
             <h1 className="text-2xl font-bold text-slate-900">Background & Experience</h1>
             <p className="text-slate-600 mt-2">Please tell us about your prior experience with digital tools and reviews.</p>
@@ -222,8 +224,9 @@ export default function ExperiencePage() {
               {isSubmitting ? 'Processing...' : 'Continue to Tutorial'}
             </button>
           </div>
-        </div>
-      </QuestionnaireLayout>
+          </div>
+        </QuestionnaireLayout>
+      </StudyPageGrid>
     </>
   );
 }

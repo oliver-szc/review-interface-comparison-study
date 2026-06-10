@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { StudyPageGrid } from '@/components/layouts/StudyPageGrid';
 
 export default function TutorialConditionPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -26,9 +27,8 @@ export default function TutorialConditionPage() {
   };
 
   return (
-    <main className="relative h-full w-full bg-slate-50 flex flex-col items-center justify-center p-4 overflow-hidden">
-      <div className="w-full max-w-3xl z-20">
-        <div className="w-full bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200 flex flex-col space-y-8">
+    <StudyPageGrid>
+      <div className="w-full bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200 flex flex-col space-y-8">
           <div className="prose prose-slate max-w-none space-y-4">
             {/* Step 0: 2. The Claims */}
             {visibleStep === 0 && (
@@ -122,8 +122,7 @@ export default function TutorialConditionPage() {
               </button>
             )}
           </div>
-        </div>
       </div>
-    </main>
+    </StudyPageGrid>
   );
 }
