@@ -30,12 +30,12 @@ export function QuestionnaireLayout({
 
   return (
     <div className={cn(
-      "min-h-screen bg-slate-50 flex flex-col items-center",
+      "w-full",
       hideFooter ? "pb-0" : "pb-24"
     )}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className={cn("w-full max-w-3xl px-4 py-12 flex flex-col gap-8 my-auto", className)}
+        className={cn("w-full flex flex-col gap-8", className)}
         noValidate // We rely on React Hook Form + Zod, and use :user-invalid for styles
       >
         {children}

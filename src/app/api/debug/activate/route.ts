@@ -8,7 +8,7 @@ export async function POST() {
   // Set debug cookie so proxy and API routes can detect it
   cookieStore.set('debugMode', 'true', {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.VERCEL === '1' || process.env.NODE_ENV === 'production' && process.env.VERCEL_ENV === 'production',
     sameSite: 'lax',
     path: '/',
     maxAge: 60 * 60 * 8, // 8 hours
@@ -17,7 +17,7 @@ export async function POST() {
   // Set the fake participantId cookie so the proxy allows study routes
   cookieStore.set('participantId', 'debug-participant', {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.VERCEL === '1' || process.env.NODE_ENV === 'production' && process.env.VERCEL_ENV === 'production',
     sameSite: 'lax',
     path: '/',
     maxAge: 60 * 60 * 8,

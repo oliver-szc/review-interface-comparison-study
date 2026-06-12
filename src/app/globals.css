@@ -62,3 +62,9 @@ body {
 .animate-fadeIn {
   animation: fadeIn 0.4s ease-out forwards;
 }
+
+.page-content {
+  max-width: 1000px;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 3rem);
+}

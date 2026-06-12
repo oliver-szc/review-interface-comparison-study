@@ -23,6 +23,15 @@ export async function POST(req: Request) {
 
     const code = generateCompletionCode();
 
+    const [participant] = await db.select({ createdAt: participants.createdAt })
+      .from(participants)
+      .where(eq(participants.id, participantId));
+    
+    const completedAt = new Date();
+    const timeTotalMs = participant?.createdAt 
+      ? completedAt.getTime() - new Date(participant.createdAt).getTime() 
+      : null;
+
     await db.update(participants)
       .set({
         prefChatbot: Number(body.pref_chatbot),
@@ -32,7 +41,8 @@ export async function POST(req: Request) {
         currentPage: '/debrief',
         studyCompleted: true,
         completionCode: code,
-        completedAt: new Date(),
+        completedAt,
+        timeTotalMs,
         updatedAt: new Date(),
       })
       .where(eq(participants.id, participantId));

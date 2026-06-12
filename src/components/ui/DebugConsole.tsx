@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 // Quick-jump navigation destinations visible in the debug console
 const JUMP_ROUTES = [
@@ -36,17 +36,26 @@ const JUMP_ROUTES = [
 ];
 
 export function DebugConsole() {
-  const router = useRouter();
+  const pathname = usePathname();
   const [isDebugMode, setIsDebugMode] = useState(false);
   const [currentPath, setCurrentPath] = useState('');
   const consoleRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Check if debug mode is enabled via localStorage
+    // Sync ?debug= query param first (allows enabling/disabling without a full reload)
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('debug') === 'true') {
+      localStorage.setItem('STUDY_DEBUG_MODE', 'true');
+      fetch('/api/debug/activate', { method: 'POST' }).catch(console.error);
+    } else if (params.get('debug') === 'false') {
+      localStorage.removeItem('STUDY_DEBUG_MODE');
+      fetch('/api/debug/exit', { method: 'POST' }).catch(console.error);
+    }
+    // Re-read localStorage on every client-side navigation
     const flag = localStorage.getItem('STUDY_DEBUG_MODE');
     setIsDebugMode(flag === 'true');
     setCurrentPath(window.location.pathname);
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -79,8 +88,8 @@ export function DebugConsole() {
   if (!isDebugMode) return null;
 
   const handleJump = (path: string) => {
-    router.push(path);
-    setCurrentPath(path);
+    // Use hard navigation to avoid fighting with NavigationBlocker's history.pushState
+    window.location.href = path;
   };
 
   const handleExitDebug = () => {

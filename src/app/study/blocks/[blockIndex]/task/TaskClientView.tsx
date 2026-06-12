@@ -106,8 +106,8 @@ export default function TaskClientView({ blockIndex, conditionType, productId, c
     image: productData.imageUrl || earbudsImage,
   };
   const conditionLabel =
-    conditionType === 'CHATBOT' ? 'AI Chatbot' :
-      conditionType === 'DASHBOARD' ? 'Interactive Dashboard' :
+    conditionType === 'CHATBOT' ? 'Chatbot' :
+      conditionType === 'DASHBOARD' ? 'Dashboard' :
         'Reviews Only';
 
   const taskNode = ({ isOpen }: { isOpen: boolean }) => (
@@ -117,9 +117,9 @@ export default function TaskClientView({ blockIndex, conditionType, productId, c
       </p>
       {!isOpen && (
         <div className="flex flex-col items-center gap-0.5 mt-1">
-          {claims.map((claim) => (
+          {claims.map((claim, index) => (
             <p key={claim.id} className="text-slate-600 text-sm font-normal italic whitespace-nowrap leading-relaxed">
-              “{claim.claimText}”
+              Claim {index + 1}: “{claim.claimText}”
             </p>
           ))}
         </div>

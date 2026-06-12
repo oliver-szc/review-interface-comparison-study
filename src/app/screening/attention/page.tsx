@@ -31,7 +31,7 @@ export default async function AttentionScreeningOutPage() {
   }
 
   return (
-    <main className="h-screen w-full bg-slate-50 flex flex-col items-center justify-center p-4 overflow-hidden">
+    <main className="min-h-full w-full bg-slate-50 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-3xl bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200 text-center">
         <h1 className="text-2xl font-bold text-slate-900 mb-4">
           Thank you for your interest in this study.

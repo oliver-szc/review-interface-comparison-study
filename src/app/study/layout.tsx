@@ -6,6 +6,12 @@ import { eq } from 'drizzle-orm';
 import { headers } from 'next/headers';
 import { NavigationBlocker } from '@/components/ui/NavigationBlocker';
 
+const SCREEN_OUT_ROUTES: Record<string, string> = {
+  S1_ENGLISH:       '/screening/english',
+  S2_COMPREHENSION: '/screening/comprehension',
+  S3_ATTENTION:     '/screening/attention',
+};
+
 export default async function StudyLayout({
   children,
 }: {
@@ -14,13 +20,10 @@ export default async function StudyLayout({
   const cookieStore = await cookies();
   const participantId = cookieStore.get('participantId')?.value;
 
-  if (!participantId) {
-    // Proxy should already handle this, but double check
-    redirect('/');
-  }
+  const headersList = await headers();
+  const currentPath = headersList.get('x-current-path') || '';
 
   // Debug mode bypass: skip strict routing guard and DB check entirely
-  const headersList = await headers();
   const isDebugMode = headersList.get('x-debug-mode') === 'true' || participantId === 'debug-participant';
 
   if (isDebugMode) {
@@ -32,28 +35,54 @@ export default async function StudyLayout({
     );
   }
 
+  // The proxy allows /study/consent without a participantId because the ID is created ON this page.
+  if (!participantId) {
+    if (currentPath === '/study/consent') {
+      return (
+        <>
+          <NavigationBlocker />
+          {children}
+        </>
+      );
+    }
+    // Any other /study/* route requires a participantId
+    redirect('/');
+  }
+
   // Fetch the participant's current state from the database
   const p = await db
-    .select({ currentPage: participants.currentPage })
+    .select({ currentPage: participants.currentPage, screenedOutReason: participants.screenedOutReason })
     .from(participants)
     .where(eq(participants.id, participantId))
     .limit(1);
 
   if (p.length === 0) {
-    // Session is invalid or deleted
+    // Session desync: cookie exists but no DB record.
+    // Delete the cookie so they start fresh.
     cookieStore.delete('participantId');
+    // If they were heading to /study/consent, they can re-register on the landing page.
     redirect('/');
   }
 
-  const currentPage = p[0].currentPage;
+  const { currentPage, screenedOutReason } = p[0];
 
-  const currentPath = headersList.get('x-current-path') || '';
+  // Guard 1: Screen-Out Enforcement
+  // If this participant has been screened out, lock them to the screening page.
+  if (screenedOutReason) {
+    const dest = SCREEN_OUT_ROUTES[screenedOutReason] ?? '/screening/english';
+    redirect(dest);
+  }
 
-  // If we are on a different page than the database thinks we should be on,
-  // and it's not the exact same page, redirect.
+  // Guard 2: Protected Consent Page
+  // Prevent an active participant from restarting the study via /study/consent.
+  if (currentPath === '/study/consent' && currentPage) {
+    // They already have an active session — redirect them to where they left off.
+    redirect(currentPage);
+  }
+
+  // Guard 3: Page Enforcement
+  // If the participant is on a different page than the DB thinks they should be on, redirect.
   if (currentPage && currentPath && currentPath.startsWith('/study/') && currentPath !== currentPage) {
-    // Except if the current page is a screening or debrief, we might allow it depending on rules.
-    // For now, strict enforcement:
     redirect(currentPage);
   }
 

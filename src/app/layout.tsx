@@ -25,8 +25,12 @@ export default function RootLayout({
         </div>
         {/* Debug console is rendered here and is only visible when STUDY_DEBUG_MODE is set in localStorage */}
         <DebugConsole />
-        <Analytics />
-        <SpeedInsights />
+        {process.env.VERCEL === "1" && (
+          <>
+            <Analytics />
+            <SpeedInsights />
+          </>
+        )}
       </body>
     </html>
   );

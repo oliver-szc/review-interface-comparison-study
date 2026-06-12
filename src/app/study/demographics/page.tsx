@@ -9,6 +9,7 @@ import { QuestionnaireLayout } from '@/components/forms/QuestionnaireLayout';
 import { QuestionCard } from '@/components/forms/QuestionCard';
 import { VerticalRadioGroup } from '@/components/forms/VerticalRadioGroup';
 import { AriaInvalidSync } from '@/components/forms/AriaInvalidSync';
+import { StudyPageGrid } from '@/components/layouts/StudyPageGrid';
 
 const DemographicsSchema = z.object({
   demo_age: z.string().min(1, "Please enter your age.").refine(
@@ -59,14 +60,15 @@ export default function DemographicsPage() {
   return (
     <>
       <AriaInvalidSync />
-      <QuestionnaireLayout
-        form={form}
-        onSubmit={onSubmit}
-        submitLabel="Continue"
-        hideFooter={true}
-        className="max-w-none w-full px-0"
-      >
-        <div className="w-[33.333%] mx-auto bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200 space-y-16">
+      <StudyPageGrid>
+        <QuestionnaireLayout
+          form={form}
+          onSubmit={onSubmit}
+          submitLabel="Continue"
+          hideFooter={true}
+          className="max-w-none w-full px-0"
+        >
+          <div className="bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200 space-y-16">
           <div>
             <h1 className="text-2xl font-bold text-slate-900">Demographics</h1>
             <p className="text-slate-600 mt-2">Please answer a few questions about yourself.</p>
@@ -169,9 +171,9 @@ export default function DemographicsPage() {
               {isSubmitting ? 'Processing...' : 'Continue'}
             </button>
           </div>
-        </div>
-
-      </QuestionnaireLayout>
+          </div>
+        </QuestionnaireLayout>
+      </StudyPageGrid>
     </>
   );
 }
