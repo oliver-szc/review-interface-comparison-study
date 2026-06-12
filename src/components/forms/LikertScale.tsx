@@ -17,10 +17,11 @@ interface LikertScaleProps {
   required?: boolean;
   showNumbers?: boolean;
   textLabelsAtBottom?: boolean;
+  labelClassName?: string;
 }
 
 export const LikertScale = forwardRef<HTMLInputElement, LikertScaleProps>(
-  ({ scaleLength, labels, registration, className, required = true, showNumbers = true, textLabelsAtBottom = false }, ref) => {
+  ({ scaleLength, labels, registration, className, required = true, showNumbers = true, textLabelsAtBottom = false, labelClassName }, ref) => {
 
     const { ref: formRef, ...restRegistration } = registration;
 
@@ -91,7 +92,8 @@ export const LikertScale = forwardRef<HTMLInputElement, LikertScaleProps>(
                 {showNumbers && (
                   <div className={cn(
                     "text-sm font-medium whitespace-nowrap",
-                    textLabelsAtBottom ? "text-slate-900" : "text-slate-500"
+                    textLabelsAtBottom ? "text-slate-900" : "text-slate-500",
+                    labelClassName
                   )}>
                     {textLabelsAtBottom ? (matchingLabel || '') : value}
                   </div>

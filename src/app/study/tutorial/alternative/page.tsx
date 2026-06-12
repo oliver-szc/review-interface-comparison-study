@@ -67,18 +67,18 @@ export default function TutorialAlternativePage() {
             <h2 className="text-xl font-semibold text-slate-900 text-center">Are you ready to start the tasks now?</h2>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-16 w-full">
+          <div className="flex flex-col sm:flex-row justify-between gap-4 w-full">
             <button
               onClick={() => handleSelection(1)}
               disabled={isSubmitting}
-              className="flex-1 px-6 py-3 bg-sky-800 hover:bg-sky-900 disabled:bg-sky-800/200 text-white font-semibold rounded-lg shadow-sm transition-colors text-base"
+              className="w-full sm:w-96 px-6 py-3 bg-sky-800 hover:bg-sky-900 disabled:bg-sky-800/200 text-white font-semibold rounded-lg shadow-sm transition-colors text-base text-center"
             >
               No, I Still Do Not Understand the Task
             </button>
             <button
               onClick={() => handleSelection(2)}
               disabled={isSubmitting}
-              className="flex-1 px-6 py-3 bg-sky-800 hover:bg-sky-900 disabled:bg-sky-800/200 text-white font-semibold rounded-lg shadow-sm transition-colors text-base"
+              className="w-full sm:w-96 px-6 py-3 bg-sky-800 hover:bg-sky-900 disabled:bg-sky-800/200 text-white font-semibold rounded-lg shadow-sm transition-colors text-base text-center"
             >
               Yes, I Understand the Task Now – Continue
             </button>

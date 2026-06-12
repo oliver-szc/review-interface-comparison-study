@@ -6,21 +6,25 @@ interface StudyPageGridProps {
 }
 
 /**
- * Generic page grid layout for study pages (non-webshop).
- * Uses a 3-column CSS grid where the middle column is constrained
- * by clamp(70ch, 50vw, 100ch) for a comfortable reading width.
+ * Generic page layout for study pages (non-webshop).
+ * Uses a .page-content block (max-width: 900px, centered with fluid padding)
+ * for a comfortable reading width.
  *
  * Usage: wrap page content directly — replaces the old
- * `<main class="min-h-screen flex items-center"><div class="w-[33.333%] mx-auto">` pattern.
+ * 3-column CSS grid pattern.
  */
 export function StudyPageGrid({ children, header }: StudyPageGridProps) {
   return (
-    <div className={`grid grid-cols-page min-h-full bg-slate-50 ${header ? 'grid-rows-[max-content_1fr]' : 'grid-rows-[1fr]'}`}>
-      {header && <header className="col-span-3">{header}</header>}
-      <div className="col-start-2 flex flex-col min-w-0">
-        <div className="w-full py-12 my-auto">
+    <div className="min-h-full bg-slate-50 flex flex-col">
+      {header && <header className="shrink-0">{header}</header>}
+      <div className="flex-1 flex flex-col py-8 md:py-12">
+        {/* Spacer to push content to center, shrinks to 0 if overflow */}
+        <div className="flex-grow"></div>
+        <div className="page-content w-full shrink-0">
           {children}
         </div>
+        {/* Spacer to push content to center, shrinks to 0 if overflow */}
+        <div className="flex-grow"></div>
       </div>
     </div>
   );

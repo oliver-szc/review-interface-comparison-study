@@ -26,17 +26,17 @@ export async function POST(
 
     const body = await req.json();
 
-    const tlxMd = Number(body.tlx_md);
-    const tlxPd = Number(body.tlx_pd);
-    const tlxTd = Number(body.tlx_td);
-    const tlxPerformance = Number(body.tlx_performance);
-    const tlxEffort = Number(body.tlx_effort);
-    const tlxFrustration = Number(body.tlx_frustration);
-    
+    const tlx_mental_demand = Number(body.tlx_mental_demand);
+    const tlx_physical_demand = Number(body.tlx_physical_demand);
+    const tlx_temporal_demand = Number(body.tlx_temporal_demand);
+    const tlx_performance = Number(body.tlx_performance);
+    const tlx_effort = Number(body.tlx_effort);
+    const tlx_frustration = Number(body.tlx_frustration);
+
     const pu1 = Number(body.pu_1);
     const pu3 = Number(body.pu_3);
     const pu4 = Number(body.pu_4);
-    
+
     const assistUse = body.assist_use ? Number(body.assist_use) : null;
     const scrAttention = body.scr_attention ? Number(body.scr_attention) : null;
 
@@ -48,19 +48,29 @@ export async function POST(
       // Failed Attention Check
       if (participantId !== 'debug-participant') {
         const code = generateCompletionCode();
-        
+
+        const [participant] = await db.select({ createdAt: participants.createdAt })
+          .from(participants)
+          .where(eq(participants.id, participantId));
+
+        const completedAt = new Date();
+        const timeTotalMs = participant?.createdAt
+          ? completedAt.getTime() - new Date(participant.createdAt).getTime()
+          : null;
+
         await db.update(participants)
           .set({
             screenedOutReason: 'S3_ATTENTION',
             completionCode: code,
             studyCompleted: true,
-            completedAt: new Date(),
+            completedAt,
+            timeTotalMs,
           })
           .where(eq(participants.id, participantId));
 
         await releaseSequenceFromParticipant(participantId, 'S3_ATTENTION');
       }
-      
+
       return NextResponse.json({
         success: true,
         redirectUrl: '/screening/attention'
@@ -86,12 +96,12 @@ export async function POST(
       // Update block submission
       await tx.update(blockSubmissions)
         .set({
-          tlxMd,
-          tlxPd,
-          tlxTd,
-          tlxPerformance,
-          tlxEffort,
-          tlxFrustration,
+          tlx_mental_demand,
+          tlx_physical_demand,
+          tlx_temporal_demand,
+          tlx_performance,
+          tlx_effort,
+          tlx_frustration,
           pu1,
           pu3,
           pu4,

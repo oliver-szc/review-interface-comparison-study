@@ -42,8 +42,7 @@ export function proxy(request: NextRequest) {
   });
 }
 
-// Protect all /study routes and /api/study routes (except the ones we explicitly allowed)
+// Protect all /study routes, /api/study routes, and /screening routes
 export const config = {
-  matcher: ['/study/:path*', '/api/study/:path*'],
+  matcher: ['/study/:path*', '/api/study/:path*', '/screening/:path*'],
 };
-

@@ -18,6 +18,7 @@ export type AspectStat = {
     reviewText: string;
     starRating: number;
     userName: string;
+    opinionTerm: string;
   }>;
 };
 
@@ -62,6 +63,10 @@ export async function getAspectData(productUuid: string): Promise<AspectStat[]> 
       const cat = quad.aspect_category;
       if (!cat || cat === 'general') continue;
 
+      // Only count each category once per review so counts match the filtered review list
+      if (categoriesSeenInThisReview.has(cat)) continue;
+      categoriesSeenInThisReview.add(cat);
+
       if (!categoryMap.has(cat)) {
         categoryMap.set(cat, {
           total: 0,
@@ -83,7 +88,6 @@ export async function getAspectData(productUuid: string): Promise<AspectStat[]> 
 
       // Add review snippet if we haven't already added this review for this category
       if (
-        !categoriesSeenInThisReview.has(cat) &&
         !entry.seenReviewIds.has(review.id) &&
         entry.topReviews.length < 3
       ) {
@@ -92,11 +96,10 @@ export async function getAspectData(productUuid: string): Promise<AspectStat[]> 
           reviewText: review.reviewText,
           starRating: review.starRating,
           userName: review.userName ?? 'Anonymous',
+          opinionTerm: quad.opinion_term,
         });
         entry.seenReviewIds.add(review.id);
       }
-
-      categoriesSeenInThisReview.add(cat);
     }
   }
 

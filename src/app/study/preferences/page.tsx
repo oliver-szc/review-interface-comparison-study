@@ -68,73 +68,73 @@ export default function PreferencesPage() {
           className="max-w-none w-full px-0"
         >
           <div className="bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200 space-y-8">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900">System Preferences & Feedback</h1>
-            <p className="text-slate-600 mt-2">
-              You have completed all tasks! Before you finish, take a moment to reflect on the different ways of exploring reviews
-            </p>
-          </div>
+            <div>
+              <h1 className="text-2xl font-bold text-slate-900">System Preferences & Feedback</h1>
+              <p className="text-slate-600 mt-2">
+                You have completed all tasks! Before you finish, take a moment to reflect on the different ways of exploring reviews
+              </p>
+            </div>
 
-          <div className="!mt-20">
-            <h2 className="text-xl font-semibold text-slate-900">System Preferences</h2>
-            <p className="text-slate-600 mt-3 text-sm leading-relaxed">
-              Please indicate the degree to which you agree/disagree with the following statements.
-            </p>
-          </div>
+            <div className="!mt-20">
+              <h2 className="text-xl font-semibold text-slate-900">System Preferences</h2>
+              <p className="text-slate-600 mt-3 text-sm leading-relaxed">
+                Please indicate the degree to which you agree/disagree with the following statements.
+              </p>
+            </div>
 
-          <QuestionCard
-            question="I consider the chatbot assistance a preferable way to explore product reviews."
-            error={errors.pref_chatbot}
-            required={false}
-            className="shadow-none border-none p-0 bg-transparent"
-          >
-            <LikertScale scaleLength={7} labels={PREF_LABELS} registration={register('pref_chatbot')} textLabelsAtBottom={true} />
-          </QuestionCard>
-
-          <QuestionCard
-            question="I consider the data dashboard a preferable way to explore product reviews."
-            error={errors.pref_dashboard}
-            required={false}
-            className="shadow-none border-none p-0 bg-transparent"
-          >
-            <LikertScale scaleLength={7} labels={PREF_LABELS} registration={register('pref_dashboard')} textLabelsAtBottom={true} />
-          </QuestionCard>
-
-          <QuestionCard
-            question="I consider exploring product reviews without additional assistance a preferable way."
-            error={errors.pref_baseline}
-            required={false}
-            className="shadow-none border-none p-0 bg-transparent"
-          >
-            <LikertScale scaleLength={7} labels={PREF_LABELS} registration={register('pref_baseline')} textLabelsAtBottom={true} />
-          </QuestionCard>
-
-          <QuestionCard
-            question={
-              <span className="text-lg font-medium text-slate-900 block leading-snug">
-                Do you have any additional thoughts to share? We welcome all feedback, including what you liked, ideas for improvement, or other observations.
-              </span>
-            }
-            error={errors.pref_comment}
-            required={false}
-            className="shadow-none border-none p-0 bg-transparent !mt-24"
-          >
-            <TextArea
-              registration={register('pref_comment')}
-              placeholder="Your feedback... (optional)"
-              className="p-6 bg-slate-50/30 rounded-xl border border-slate-200 text-base focus:bg-white focus:border--500 focus:ring-1 focus:ring--500 transition-colors"
-            />
-          </QuestionCard>
-
-          <div className="flex justify-end pt-6">
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="px-6 py-3 bg-sky-800 hover:bg-sky-900 disabled:bg-sky-800/200 text-white font-semibold rounded-lg shadow-sm transition-colors text-base"
+            <QuestionCard
+              question="I consider the chatbot a preferable way to explore product reviews."
+              error={errors.pref_chatbot}
+              required={false}
+              className="shadow-none border-none p-0 bg-transparent"
             >
-              {isSubmitting ? 'Processing...' : 'Complete Study'}
-            </button>
-          </div>
+              <LikertScale scaleLength={7} labels={PREF_LABELS} registration={register('pref_chatbot')} textLabelsAtBottom={true} className="bg-white" labelClassName="text-center text-xs text-slate-500 leading-tight whitespace-normal" />
+            </QuestionCard>
+
+            <QuestionCard
+              question="I consider the dashboard a preferable way to explore product reviews."
+              error={errors.pref_dashboard}
+              required={false}
+              className="shadow-none border-none p-0 bg-transparent"
+            >
+              <LikertScale scaleLength={7} labels={PREF_LABELS} registration={register('pref_dashboard')} textLabelsAtBottom={true} className="bg-white" labelClassName="text-center text-xs text-slate-500 leading-tight whitespace-normal" />
+            </QuestionCard>
+
+            <QuestionCard
+              question="I consider exploring product reviews without additional assistance a preferable way."
+              error={errors.pref_baseline}
+              required={false}
+              className="shadow-none border-none p-0 bg-transparent"
+            >
+              <LikertScale scaleLength={7} labels={PREF_LABELS} registration={register('pref_baseline')} textLabelsAtBottom={true} className="bg-white" labelClassName="text-center text-xs text-slate-500 leading-tight whitespace-normal" />
+            </QuestionCard>
+
+            <QuestionCard
+              question={
+                <span className="text-lg font-medium text-slate-900 block leading-snug">
+                  Do you have any additional thoughts to share? We welcome all feedback, including what you liked, ideas for improvement, or other observations.
+                </span>
+              }
+              error={errors.pref_comment}
+              required={false}
+              className="shadow-none border-none p-0 bg-transparent !mt-24"
+            >
+              <TextArea
+                registration={register('pref_comment')}
+                placeholder="Your feedback... (optional)"
+                className="p-6 bg-slate-50/30 rounded-xl border border-slate-200 text-base focus:bg-white focus:border--500 focus:ring-1 focus:ring--500 transition-colors"
+              />
+            </QuestionCard>
+
+            <div className="flex justify-end pt-6">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="px-6 py-3 bg-sky-800 hover:bg-sky-900 disabled:bg-sky-800/200 text-white font-semibold rounded-lg shadow-sm transition-colors text-base"
+              >
+                {isSubmitting ? 'Processing...' : 'Complete Study'}
+              </button>
+            </div>
           </div>
         </QuestionnaireLayout>
       </StudyPageGrid>

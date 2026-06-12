@@ -7,9 +7,9 @@ import { headers } from 'next/headers';
 import { NavigationBlocker } from '@/components/ui/NavigationBlocker';
 
 const SCREEN_OUT_ROUTES: Record<string, string> = {
-  english:       '/screening/english',
-  comprehension: '/screening/comprehension',
-  attention:     '/screening/attention',
+  S1_ENGLISH:       '/screening/english',
+  S2_COMPREHENSION: '/screening/comprehension',
+  S3_ATTENTION:     '/screening/attention',
 };
 
 export default async function StudyLayout({

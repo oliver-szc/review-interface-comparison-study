@@ -20,13 +20,23 @@ export async function POST(req: Request) {
       if (participantId !== 'debug-participant') {
         const code = generateCompletionCode();
         
+        const [participant] = await db.select({ createdAt: participants.createdAt })
+          .from(participants)
+          .where(eq(participants.id, participantId));
+        
+        const completedAt = new Date();
+        const timeTotalMs = participant?.createdAt 
+          ? completedAt.getTime() - new Date(participant.createdAt).getTime() 
+          : null;
+
         // Update participant with code and screenedOutReason
         await db.update(participants)
           .set({
             screenedOutReason: 'S2_COMPREHENSION',
             completionCode: code,
             studyCompleted: true,
-            completedAt: new Date(),
+            completedAt,
+            timeTotalMs,
           })
           .where(eq(participants.id, participantId));
 

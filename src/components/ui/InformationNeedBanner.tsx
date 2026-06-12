@@ -116,7 +116,7 @@ export function InformationNeedBanner({
                   </h3>
 
                   <p className="text-slate-700 text-xs md:text-sm leading-relaxed mb-3">
-                    Your goal is to verify three specific claims about the product using the provided system (AI Chatbot, Interactive Dashboard, or Reviews Only). Please investigate whether the experiences of actual customers support or contradict these claims.
+                    Your goal is to verify three specific claims about the product using the provided system (chatbot, dashboard, or reviews only). Please investigate whether the experiences of actual customers support or contradict these claims.
                   </p>
 
                   <p className="text-slate-700 text-xs md:text-sm leading-relaxed mb-6">

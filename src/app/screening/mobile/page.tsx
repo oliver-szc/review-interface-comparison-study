@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export default function MobileScreeningOutPage() {
   return (
-    <main className="h-screen w-full bg-slate-50 flex flex-col items-center justify-center p-4 overflow-hidden">
+    <main className="min-h-full w-full bg-slate-50 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-3xl bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200 text-center">
         <div className="mx-auto w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mb-6">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">

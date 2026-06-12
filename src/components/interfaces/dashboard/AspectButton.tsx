@@ -22,25 +22,25 @@ const TIER_STYLES: Record<
   }
 > = {
   positive: {
-    icon: 'bg-green-100 text-green-700',
+    icon: 'bg-green-50 text-green-600',
     iconText: 'text-green-700',
-    activeBg: 'bg-green-50',
-    activeBorder: 'border-green-500',
-    hoverBg: 'hover:bg-green-50',
+    activeBg: 'bg-tranparent',
+    activeBorder: 'border-slate-400',
+    hoverBg: 'hover:bg-slate-50',
   },
   mixed: {
-    icon: 'bg-amber-100 text-amber-700',
-    iconText: 'text-amber-700',
-    activeBg: 'bg-amber-50',
-    activeBorder: 'border-amber-400',
-    hoverBg: 'hover:bg-amber-50',
+    icon: 'bg-slate-50 text-slate-500',
+    iconText: 'text-slate-600',
+    activeBg: 'bg-tranparent',
+    activeBorder: 'border-slate-400',
+    hoverBg: 'hover:bg-slate-50',
   },
   negative: {
-    icon: 'bg-red-100 text-red-600',
+    icon: 'bg-red-50 text-red-400',
     iconText: 'text-red-600',
-    activeBg: 'bg-red-50',
-    activeBorder: 'border-red-400',
-    hoverBg: 'hover:bg-red-50',
+    activeBg: 'bg-tranparent',
+    activeBorder: 'border-slate-400',
+    hoverBg: 'hover:bg-slate-50',
   },
 }
 
