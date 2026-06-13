@@ -10,6 +10,7 @@ interface StudyLayoutProps {
   onSubmit?: () => void
   submitContent?: ReactNode
   helpContent?: ReactNode
+  productId?: string
 }
 
 export function StudyLayout({
@@ -19,6 +20,7 @@ export function StudyLayout({
   onSubmit,
   submitContent,
   helpContent,
+  productId,
 }: StudyLayoutProps) {
   const handleHelp = onHelp || (() => console.log('Help clicked'))
   const handleSubmit = onSubmit || (() => console.log('Submit clicked'))
@@ -32,6 +34,7 @@ export function StudyLayout({
         onSubmit={handleSubmit}
         submitContent={submitContent}
         helpContent={helpContent}
+        productId={productId}
       />
 
       {/* Main Content */}

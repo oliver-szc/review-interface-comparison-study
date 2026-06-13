@@ -13,9 +13,9 @@ interface DashboardPanelProps {
 }
 
 const PRODUCT_SUMMARIES: Record<string, string> = {
-  EARBUDS: "Customers like the sound quality, active noise cancellation, and battery life of the earbuds. They mention the audio is exceptional and the earbuds last for hours on a single charge. Customers also appreciate the companion app for its helpful customization features. However, some reviewers disagree on the reliability of the touch controls.",
-  KETTLE: "Customers like the boiling speed, price, and overall design of the kettle. They mention the kettle heats water quickly and offers great value for the money. Customers also appreciate the large water capacity. However, some customers disagree on the temperature control capabilities.",
-  SWEATSHIRT: "Customers like the material quality, price, and fit of the sweatshirt. They mention the fabric is soft and the product is a great value for the money. Customers also appreciate the overall style. However, some customers disagree on the material thickness, noting it is not a true heavyweight sweatshirt."
+  EARBUDS: "Customers like the overall sound quality, noise cancelling capabilities, and price of the earbuds. They mention that the audio sounds clear with good bass and that the price offers great value. Customers also appreciate the long battery life and the useful companion app. However, some customers disagree on the reliability of the touch controls.",
+  KETTLE: "Customers like the functionality, heating speed, and price of the electric kettle. They mention it boils water rapidly and provides excellent value. Customers also appreciate the reliable auto shutoff. However, some customers disagree on the overall quality.",
+  SWEATSHIRT: "Customers like the comfort, price, and warmth of the sweatshirt. They mention feeling very cozy wearing it and getting an excellent deal for the cost. Customers also appreciate the durable material quality and nice colors. However, some customers disagree on the overall fit and sizing."
 }
 
 export function DashboardPanel({ aspectData, productId }: DashboardPanelProps) {
@@ -36,8 +36,11 @@ export function DashboardPanel({ aspectData, productId }: DashboardPanelProps) {
 
   // Default to the first category in sorted order on mount
   useEffect(() => {
-    if (sortedAspectData.length > 0 && !activeAspect) {
-      setActiveAspect(sortedAspectData[0].category)
+    if (sortedAspectData.length > 0) {
+      const hasActiveAspect = sortedAspectData.some((a) => a.category === activeAspect)
+      if (!hasActiveAspect) {
+        setActiveAspect(sortedAspectData[0].category)
+      }
     }
     // Clear filter when component unmounts (navigating away)
     return () => {
@@ -46,7 +49,11 @@ export function DashboardPanel({ aspectData, productId }: DashboardPanelProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortedAspectData])
 
-  const selectedStat = sortedAspectData.find((a) => a.category === activeAspect) ?? sortedAspectData[0]
+  const currentActiveAspect = activeAspect && sortedAspectData.some((a) => a.category === activeAspect)
+    ? activeAspect
+    : (sortedAspectData[0]?.category || null)
+
+  const selectedStat = sortedAspectData.find((a) => a.category === currentActiveAspect) ?? sortedAspectData[0]
 
   const productKey = (productId || 'EARBUDS').toUpperCase()
   const summaryText = PRODUCT_SUMMARIES[productKey] || PRODUCT_SUMMARIES.EARBUDS
@@ -84,9 +91,9 @@ export function DashboardPanel({ aspectData, productId }: DashboardPanelProps) {
             label={stat.label}
             count={stat.total}
             sentiment={getSentimentTier(stat.positive, stat.negative, stat.neutral)}
-            active={activeAspect === stat.category}
+            active={currentActiveAspect === stat.category}
             onClick={() => setActiveAspect(
-              activeAspect === stat.category ? null : stat.category
+              currentActiveAspect === stat.category ? null : stat.category
             )}
           />
         ))}

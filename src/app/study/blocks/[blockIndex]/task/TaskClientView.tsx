@@ -116,9 +116,8 @@ export default function TaskClientView({ blockIndex, conditionType, productId, c
         Task {blockIndex}/3 · {conditionLabel}
       </p>
       <div
-        className={`flex flex-col items-center gap-0.5 mt-1 transition-all duration-300 ${
-          isOpen ? 'invisible opacity-0 pointer-events-none' : 'visible opacity-100'
-        }`}
+        className={`flex flex-col items-center gap-0.5 mt-1 transition-all duration-300 ${isOpen ? 'invisible opacity-0 pointer-events-none' : 'visible opacity-100'
+          }`}
       >
         {claims.map((claim, index) => (
           <p key={claim.id} className="text-slate-600 text-sm font-normal italic whitespace-nowrap leading-relaxed">
@@ -129,10 +128,23 @@ export default function TaskClientView({ blockIndex, conditionType, productId, c
     </div>
   );
 
+  let conditionDisplay = "review section";
+  if (conditionType === 'CHATBOT') {
+    conditionDisplay = "chatbot";
+  } else if (conditionType === 'DASHBOARD') {
+    conditionDisplay = "dashboard";
+  }
+
   const submitFormNode = (
     <div className="w-full max-w-4xl flex flex-col gap-6 text-left">
       <p className="text-slate-700 text-sm md:text-base leading-relaxed">
-        You are interested in buying this {productId.toLowerCase()} and want to find out if the claims you heard about it are actually true. Please use the provided system to verify the three following claims:
+        Please use the {' '}
+        {conditionType === 'CHATBOT' || conditionType === 'DASHBOARD' ? (
+          <span className="rounded-md ml-0.5 mr-0.5 px-1 border-2 border-sky-400 font-semibold">{conditionDisplay}</span>
+        ) : (
+          <span className="font-semibold">{conditionDisplay}</span>
+        )} to explore the reviews and determine whether the claim is supported by customer feedback.
+        Mark a claim as <span className="font-semibold">True</span> if the majority confirms it, <span className="font-semibold">False</span> if the majority contradicts it, or <span className="font-semibold">Not mentioned</span> if the reviews simply don't address it.
       </p>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
@@ -230,6 +242,7 @@ export default function TaskClientView({ blockIndex, conditionType, productId, c
       task={taskNode}
       submitContent={submitFormNode}
       onSubmit={form.handleSubmit(onSubmit)}
+      productId={productId}
     >
       <WebshopLayout
         condition={conditionType.toLowerCase() as 'unassisted' | 'dashboard' | 'chatbot'}

@@ -4,9 +4,7 @@ import { useState, useEffect, type ComponentProps } from 'react'
 import { ReviewCard } from './ReviewCard'
 import { StarHistogram } from './StarHistogram'
 import { ReviewSortFilterBar } from './ReviewSortFilterBar'
-import { useDashboardFilterStore } from '@/stores/dashboardFilterStore'
 import type { ABSAQuadruple } from '@/db/schema'
-import { formatAspectLabel } from '@/lib/utils/formatAspect'
 
 interface Review {
   name: string
@@ -41,13 +39,13 @@ export function ReviewListPanel({
 }: ReviewListPanelProps) {
 
   const [filters, setFilters] = useState<SortFilters>({
-    sort: 'none',
+    sort: 'recent',
     stars: 'all',
     sentiment: 'all',
     search: '',
   })
 
-  const { activeAspect, setActiveAspect } = useDashboardFilterStore()
+
 
   // Convert { stars, count } → { star, percentage } for StarHistogram
   const distribution = starDistribution.map(({ stars, count }) => ({
@@ -57,14 +55,7 @@ export function ReviewListPanel({
 
   let visibleReviews = reviews
 
-  // Filter: Aspect category (from DashboardPanel via Zustand)
-  if (activeAspect) {
-    visibleReviews = visibleReviews.filter((r) =>
-      (r.absaAspects ?? []).some(
-        (q) => q.aspect_category === activeAspect
-      )
-    )
-  }
+
 
   // Filter: Search phrase
   if (filters.search) {
@@ -87,33 +78,31 @@ export function ReviewListPanel({
   }
 
   // Sort
-  if (filters.sort !== 'none') {
-    visibleReviews = [...visibleReviews].sort((a, b) => {
-      const timeA = a.timestamp || new Date(a.date).getTime() || 0;
-      const timeB = b.timestamp || new Date(b.date).getTime() || 0;
-      const timeDiff = timeB - timeA;
+  visibleReviews = [...visibleReviews].sort((a, b) => {
+    const timeA = a.timestamp || new Date(a.date).getTime() || 0;
+    const timeB = b.timestamp || new Date(b.date).getTime() || 0;
+    const timeDiff = timeB - timeA;
 
-      if (filters.sort === 'helpful') {
-        const diff = (Number(b.helpfulVotes) || 0) - (Number(a.helpfulVotes) || 0)
-        return diff === 0 ? timeDiff : diff;
-      } else if (filters.sort === 'recent') {
-        return timeDiff;
-      } else if (filters.sort === 'rating_asc') {
-        const diff = Number(a.stars) - Number(b.stars);
-        return diff === 0 ? timeDiff : diff;
-      } else if (filters.sort === 'rating_desc') {
-        const diff = Number(b.stars) - Number(a.stars);
-        return diff === 0 ? timeDiff : diff;
-      }
-      return 0
-    })
-  }
+    if (filters.sort === 'helpful') {
+      const diff = (Number(b.helpfulVotes) || 0) - (Number(a.helpfulVotes) || 0)
+      return diff === 0 ? timeDiff : diff;
+    } else if (filters.sort === 'recent') {
+      return timeDiff;
+    } else if (filters.sort === 'rating_asc') {
+      const diff = Number(a.stars) - Number(b.stars);
+      return diff === 0 ? timeDiff : diff;
+    } else if (filters.sort === 'rating_desc') {
+      const diff = Number(b.stars) - Number(a.stars);
+      return diff === 0 ? timeDiff : diff;
+    }
+    return 0
+  })
 
   const [loadedCount, setLoadedCount] = useState(20)
 
   useEffect(() => {
     setLoadedCount(20)
-  }, [filters, activeAspect])
+  }, [filters])
 
   const paginatedReviews = visibleReviews.slice(0, loadedCount)
   const currentlyShown = paginatedReviews.length
@@ -146,21 +135,7 @@ export function ReviewListPanel({
 
       <hr className="border-slate-200 mb-4" />
 
-      {/* Dashboard aspect filter badge */}
-      {activeAspect && (
-        <div className="flex items-center gap-2 mb-3 text-xs">
-          <span className="text-slate-500 font-semibold uppercase tracking-wide">Dashboard filter:</span>
-          <span className="bg-white text-slate-700 border-2 border-sky-300 px-2 py-0.5 rounded-full font-medium">
-            {formatAspectLabel(activeAspect)}
-          </span>
-          <button
-            onClick={() => setActiveAspect(null)}
-            className="text-slate-400 hover:text-slate-600 underline transition-colors"
-          >
-            Clear
-          </button>
-        </div>
-      )}
+
 
       {/* Sort / Filter Bar */}
       <div className="mb-4 w-full">

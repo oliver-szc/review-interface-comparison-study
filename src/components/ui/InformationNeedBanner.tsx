@@ -8,6 +8,7 @@ interface InformationNeedBannerProps {
   onSubmit?: () => void;
   submitContent?: ReactNode;
   helpContent?: ReactNode;
+  productId?: string;
 }
 
 export function InformationNeedBanner({
@@ -16,6 +17,7 @@ export function InformationNeedBanner({
   onSubmit = () => { },
   submitContent,
   helpContent,
+  productId,
 }: InformationNeedBannerProps) {
   const [activeTab, setActiveTab] = useState<'help' | 'submit' | null>(null);
   const [renderedTab, setRenderedTab] = useState<'help' | 'submit' | null>(null);
@@ -105,52 +107,42 @@ export function InformationNeedBanner({
               onClick={() => setActiveTab('submit')}
               className={`flex-shrink-0 flex items-center gap-2 text-sm font-medium text-slate-700 border border-slate-300 bg-white hover:bg-slate-100 rounded-lg px-[18px] py-[9px] transition shadow-sm ${isOpen ? 'invisible pointer-events-none' : 'visible'}`}
             >
-              ✓ Open Answer Form
+              <span>✓</span> Open Answer Form
             </button>
           </div>
         </div>
 
         {/* Expanded Content Area */}
         <div
-          className={`w-full grid transition-all duration-500 ease-in-out ${
-            isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-          }`}
+          className={`w-full grid transition-all duration-500 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+            }`}
         >
           <div className="min-h-0 overflow-hidden w-full flex flex-col items-center">
             {/* Scrollable interior - disabled scrollability, enabled flexible auto-sizing */}
             <div className="w-full flex-1 overflow-y-auto px-6 py-4 flex flex-col items-center max-h-[75vh] [scrollbar-gutter:stable]">
               {renderedTab === 'help' && (
                 helpContent || (
-                  <div className="w-full max-w-4xl text-left bg-white rounded-xl border border-slate-200 p-6 md:p-8 shadow-sm">
-                    <h3 className="text-lg font-bold text-slate-950 mb-3">
+                  <div className="w-full max-w-4xl text-left">
+                    <h3 className="text-xl font-bold text-slate-950 mb-3">
                       Help / Task Instructions
                     </h3>
-
-                    <p className="text-slate-700 text-xs md:text-sm leading-relaxed mb-3">
+                    <span className="text-slate-700 text-sm md:text-base leading-relaxed mb-3">Imagine following: You are interested in buying this {(productId || 'product').toLowerCase()} and want to evaluate claims you have heard about the product.</span> <br />
+                    <p className="text-slate-700 text-sm md:text-base leading-relaxed mb-3">
                       Your goal is to verify three specific claims about the product using the provided system (chatbot, dashboard, or reviews only). Please investigate whether the experiences of actual customers support or contradict these claims.
                     </p>
 
-                    <p className="text-slate-700 text-xs md:text-sm leading-relaxed mb-6">
+                    <p className="text-slate-700 text-sm md:text-base leading-relaxed mb-3">
                       Click on <strong>Open Answer Form</strong> to view the claims. For each claim, select one of the following options based on the evidence you found:
                     </p>
 
-                    <div className="mb-6 space-y-3">
-                      <div className="flex gap-3">
-                        <span className="font-bold text-slate-900 text-xs md:text-sm w-30 shrink-0">True:</span>
-                        <span className="text-slate-700 text-xs md:text-sm">The majority of reviewers clearly rate this aspect as such.</span>
-                      </div>
-                      <div className="flex gap-3">
-                        <span className="font-bold text-slate-900 text-xs md:text-sm w-30 shrink-0">False:</span>
-                        <span className="text-slate-700 text-xs md:text-sm">The aspect is mentioned, but the majority rate it the opposite way.</span>
-                      </div>
-                      <div className="flex gap-3">
-                        <span className="font-bold text-slate-900 text-xs md:text-sm w-30 shrink-0">Not mentioned:</span>
-                        <span className="text-slate-700 text-xs md:text-sm">Cannot be determined because the reviews do not address this aspect</span>
-                      </div>
-                    </div>
+                    <ul className="list-disc pl-5 mb-6 space-y-2 text-slate-700 text-sm md:text-base leading-relaxed">
+                      <li><span className="font-semibold">True </span>(the majority of reviewers clearly rate this aspect as such)</li>
+                      <li><span className="font-semibold">False </span>(the aspect is mentioned, but the majority rate it the opposite way)</li>
+                      <li><span className="font-semibold">Not mentioned </span>(cannot be determined because the reviews do not address this aspect)</li>
+                    </ul>
 
-                    <div className="p-5 bg-slate-100 border border-slate-200 rounded-lg text-slate-700">
-                      <h4 className="text-xs md:text-sm font-bold text-slate-900 mb-2.5">
+                    <div className="p-5 bg-white border border-slate-200 rounded-lg text-slate-700">
+                      <h4 className="text-xs md:text-sm font-bold text-slate-800 mb-2.5">
                         Remember:
                       </h4>
                       <ul className="list-disc pl-5 space-y-2 text-xs md:text-sm leading-relaxed">
@@ -165,7 +157,7 @@ export function InformationNeedBanner({
               )}
               {renderedTab === 'submit' && (
                 submitContent || (
-                  <div className="text-slate-1000 text-sm">
+                  <div className="text-slate-800 text-sm">
                     Submit content goes here...
                   </div>
                 )

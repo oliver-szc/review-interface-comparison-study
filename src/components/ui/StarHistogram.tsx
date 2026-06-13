@@ -45,7 +45,7 @@ export function StarHistogram({
               {/* Bar */}
               <div className="flex-1 h-3 rounded-full bg-slate-100 overflow-hidden">
                 <div
-                  className="h-full rounded-full bg-amazon-light transition-all duration-300"
+                  className="h-full rounded-full bg-amazon transition-all duration-300"
                   style={{ width: `${percentage}%` }}
                 />
               </div>

@@ -9,36 +9,68 @@ interface AspectDetailPanelProps {
 
 const CONTEXT_WORDS = 10
 
-function findTermIdx(text: string, term: string): number {
+function findTermIdx(text: string, term: string, referenceIdx: number = -1): number {
   if (!term) return -1
   const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   // Match the term ensuring it's surrounded by non-word boundaries (like spaces, punctuation, or start/end of string)
-  const regex = new RegExp(`(^|\\W)(${escaped})(?=\\W|$)`, 'i')
-  const match = text.match(regex)
-  if (match) {
-    return match.index! + match[1].length
+  const regex = new RegExp(`(^|\\W)(${escaped})(?=\\W|$)`, 'gi')
+  const indices: number[] = []
+
+  let match;
+  while ((match = regex.exec(text)) !== null) {
+    indices.push(match.index + match[1].length)
   }
-  // Fallback to simple indexOf if strict boundaries don't match
-  return text.toLowerCase().indexOf(term.toLowerCase())
+
+  if (indices.length === 0) {
+    // Fallback to simple indexOf if strict boundaries don't match
+    let idx = text.toLowerCase().indexOf(term.toLowerCase())
+    while (idx !== -1) {
+      indices.push(idx)
+      idx = text.toLowerCase().indexOf(term.toLowerCase(), idx + term.length)
+    }
+  }
+
+  if (indices.length === 0) return -1;
+  if (indices.length === 1 || referenceIdx === -1) return indices[0];
+
+  let closestIdx = indices[0];
+  let minDiff = Math.abs(indices[0] - referenceIdx);
+  for (let i = 1; i < indices.length; i++) {
+    const diff = Math.abs(indices[i] - referenceIdx);
+    if (diff < minDiff) {
+      minDiff = diff;
+      closestIdx = indices[i];
+    }
+  }
+
+  return closestIdx;
 }
 
 function highlightTerms(
   text: string,
-  terms: string[],
+  opinionTerm: string | null,
+  aspectTerm: string | null,
   sentiment: 'positive' | 'negative' | 'neutral'
 ): ReactNode {
-  const validTerms = terms.filter(Boolean) as string[]
-  if (validTerms.length === 0) return <>{text}</>
+  if (!opinionTerm && !aspectTerm) return <>{text}</>
 
   type Match = { start: number; end: number; term: string }
   const matches: Match[] = []
 
-  validTerms.forEach(term => {
-    const idx = findTermIdx(text, term)
-    if (idx !== -1) {
-      matches.push({ start: idx, end: idx + term.length, term })
+  let opIdx = -1;
+  if (opinionTerm) {
+    opIdx = findTermIdx(text, opinionTerm)
+    if (opIdx !== -1) {
+      matches.push({ start: opIdx, end: opIdx + opinionTerm.length, term: opinionTerm })
     }
-  })
+  }
+
+  if (aspectTerm) {
+    const asIdx = findTermIdx(text, aspectTerm, opIdx)
+    if (asIdx !== -1) {
+      matches.push({ start: asIdx, end: asIdx + aspectTerm.length, term: aspectTerm })
+    }
+  }
 
   if (matches.length === 0) return <>{text}</>
 
@@ -115,7 +147,7 @@ function buildSnippet(
 
   if (expanded) {
     return {
-      nodes: <>&quot;{highlightTerms(fullText, termsToHighlight, sentiment)}&quot;</>,
+      nodes: <>&quot;{highlightTerms(fullText, opinionTerm, aspectTerm, sentiment)}&quot;</>,
       isTruncated: false,
     }
   }
@@ -125,7 +157,7 @@ function buildSnippet(
   let primaryTermLength = 0
 
   const opIdx = opinionTerm ? findTermIdx(fullText, opinionTerm) : -1
-  const asIdx = aspectTerm ? findTermIdx(fullText, aspectTerm) : -1
+  const asIdx = aspectTerm ? findTermIdx(fullText, aspectTerm, opIdx) : -1
 
   const validIdxs = [
     { idx: opIdx, len: opinionTerm?.length || 0 },
@@ -198,7 +230,7 @@ function buildSnippet(
     nodes: (
       <>
         &quot;{prefixTruncated ? '...' : ''}
-        {highlightTerms(visibleText, termsToHighlight, sentiment)}
+        {highlightTerms(visibleText, opinionTerm, aspectTerm, sentiment)}
         {suffixTruncated ? '...' : ''}&quot;
       </>
     ),
@@ -232,7 +264,7 @@ function ReviewSnippet({
   const showToggle = isTruncated || expanded
 
   return (
-    <li className="border-t border-slate-100 pt-4 mb-4 first:border-t-0 first:pt-0">
+    <li className="border-t border-slate-100 pt-5 mb-5 first:border-t-0 first:pt-0">
       {/* Review meta */}
       <div className="flex items-center gap-1.5 mb-1">
         <span className="text-xs">
@@ -290,7 +322,7 @@ export function AspectDetailPanel({ stat }: AspectDetailPanelProps) {
   return (
     <div className="bg-white rounded-lg p-3 text-xs text-slate-600 space-y-2 border border-slate-200">
       {/* Mention summary */}
-      <p className="font-medium text-slate-700">
+      <p className="font-medium text-slate-700 pt-1">
         {stat.total} customers mention {stat.label} ・{' '}
         <span className="text-green-600">{stat.positive} positive</span>,{' '}
         <span className="text-red-500">{stat.negative} negative</span>
@@ -317,31 +349,27 @@ export function AspectDetailPanel({ stat }: AspectDetailPanelProps) {
           </ul>
 
           {/* Show more / Show less controls */}
-          {(hasMore || canCollapse) && (
-            <div className="flex items-center gap-3 pt-1 border-t border-slate-100">
-              {hasMore && (
-                <button
-                  onClick={handleShowMore}
-                  className="text-[11px] text-slate-500 hover:text-slate-800 hover:underline font-medium transition-colors"
-                >
-                  Show more ▾
-                </button>
-              )}
-              {canCollapse && (
-                <button
-                  onClick={handleShowLess}
-                  className="text-[11px] text-slate-400 hover:text-slate-700 hover:underline font-medium transition-colors"
-                >
-                  Show less ▴
-                </button>
-              )}
-              {hasMore && (
-                <span className="text-[10px] text-slate-400 ml-auto">
-                  {visibleCount} of {total}
-                </span>
-              )}
-            </div>
-          )}
+          <div className="flex items-center gap-3 pt-3 border-t border-slate-100">
+            {hasMore && (
+              <button
+                onClick={handleShowMore}
+                className="text-[12px] text-slate-600 hover:text-slate-800 hover:underline font-medium transition-colors"
+              >
+                Show more ▾
+              </button>
+            )}
+            {canCollapse && (
+              <button
+                onClick={handleShowLess}
+                className="text-[12px] text-slate-500 hover:text-slate-700 hover:underline font-medium transition-colors"
+              >
+                Show less <span className="inline-block rotate-180">▾</span>
+              </button>
+            )}
+            <span className="text-[11px] text-slate-500 ml-auto mr-1">
+              {Math.min(visibleCount, total)} of {total}
+            </span>
+          </div>
         </>
       ) : (
         <p className="text-slate-400 italic">No review snippets available.</p>
