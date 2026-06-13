@@ -150,7 +150,7 @@ export function ReviewListPanel({
       {activeAspect && (
         <div className="flex items-center gap-2 mb-3 text-xs">
           <span className="text-slate-500 font-semibold uppercase tracking-wide">Dashboard filter:</span>
-          <span className="bg-sky-100 text-sky-700 border border-sky-200 px-2 py-0.5 rounded-full font-medium">
+          <span className="bg-white text-slate-700 border-2 border-sky-300 px-2 py-0.5 rounded-full font-medium">
             {formatAspectLabel(activeAspect)}
           </span>
           <button
@@ -174,17 +174,23 @@ export function ReviewListPanel({
 
       {/* Review Cards */}
       <div className="space-y-3">
-        {paginatedReviews.map((review, index) => (
-          <ReviewCard
-            key={index}
-            name={review.name}
-            stars={review.stars}
-            date={review.date}
-            text={review.text}
-            title={review.title}
-            searchQuery={filters.search}
-          />
-        ))}
+        {totalInPool === 0 ? (
+          <div className="py-8 px-4 text-center text-slate-500 border border-dashed border-slate-200 rounded-xl bg-white text-sm">
+            No reviews match your selected filters. Try removing filters or adjusting your search term.
+          </div>
+        ) : (
+          paginatedReviews.map((review, index) => (
+            <ReviewCard
+              key={index}
+              name={review.name}
+              stars={review.stars}
+              date={review.date}
+              text={review.text}
+              title={review.title}
+              searchQuery={filters.search}
+            />
+          ))
+        )}
       </div>
 
       {/* Pagination Status & Button */}

@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { QuestionnaireLayout } from '@/components/forms/QuestionnaireLayout';
 import { QuestionCard } from '@/components/forms/QuestionCard';
-import { LikertScale } from '@/components/forms/LikertScale';
+import { NasaTlxScale } from '@/components/forms/NasaTlxScale';
 import { VerticalRadioGroup } from '@/components/forms/VerticalRadioGroup';
 import { AriaInvalidSync } from '@/components/forms/AriaInvalidSync';
 import { StudyPageGrid } from '@/components/layouts/StudyPageGrid';
@@ -36,10 +36,15 @@ const PostConditionSchema = z.object({
   // or we can just ensure they are populated dynamically.
 });
 
-const TLX_LABELS = [
-  { value: 1, label: "Very Low" },
-  { value: 7, label: "Very High" }
-];
+// NASA-TLX dimension definitions
+const TLX_DIMENSIONS = [
+  { field: 'tlx_mental_demand', name: 'Mental Demand', question: 'How mentally demanding was the task?' },
+  { field: 'tlx_physical_demand', name: 'Physical Demand', question: 'How physically demanding was the task?' },
+  { field: 'tlx_temporal_demand', name: 'Temporal Demand', question: 'How hurried or rushed was the pace of the task?' },
+  { field: 'tlx_performance', name: 'Performance', question: 'How successful were you in accomplishing what you were asked to do?' },
+  { field: 'tlx_effort', name: 'Effort', question: 'How hard did you have to work to accomplish your level of performance?' },
+  { field: 'tlx_frustration', name: 'Frustration', question: 'How insecure, discouraged, irritated, stressed, and annoyed were you?' },
+] as const;
 
 const PU_LABELS = [
   { value: 1, label: "strongly disagree" },
@@ -136,59 +141,15 @@ export default function PostConditionClientView({ blockIndex, conditionType }: P
               <h2 className="text-xl font-semibold text-slate-900">Task Load</h2>
             </div>
 
-            <QuestionCard
-              question="How mentally demanding was the task?"
-              error={errors.tlx_mental_demand}
-              required={false}
-              className="shadow-none border-none p-0 bg-transparent"
-            >
-              <LikertScale scaleLength={7} labels={TLX_LABELS} registration={register('tlx_mental_demand')} textLabelsAtBottom={true} className="bg-white" labelClassName="text-center text-xs text-slate-500 leading-tight whitespace-normal" />
-            </QuestionCard>
-
-            <QuestionCard
-              question="How physically demanding was the task?"
-              error={errors.tlx_physical_demand}
-              required={false}
-              className="shadow-none border-none p-0 bg-transparent"
-            >
-              <LikertScale scaleLength={7} labels={TLX_LABELS} registration={register('tlx_physical_demand')} textLabelsAtBottom={true} className="bg-white" labelClassName="text-center text-xs text-slate-500 leading-tight whitespace-normal" />
-            </QuestionCard>
-
-            <QuestionCard
-              question="How hurried or rushed was the pace of the task?"
-              error={errors.tlx_temporal_demand}
-              required={false}
-              className="shadow-none border-none p-0 bg-transparent"
-            >
-              <LikertScale scaleLength={7} labels={TLX_LABELS} registration={register('tlx_temporal_demand')} textLabelsAtBottom={true} className="bg-white" labelClassName="text-center text-xs text-slate-500 leading-tight whitespace-normal" />
-            </QuestionCard>
-
-            <QuestionCard
-              question="How successful were you in accomplishing what you were asked to do?"
-              error={errors.tlx_performance}
-              required={false}
-              className="shadow-none border-none p-0 bg-transparent"
-            >
-              <LikertScale scaleLength={7} labels={TLX_LABELS} registration={register('tlx_performance')} textLabelsAtBottom={true} className="bg-white" labelClassName="text-center text-xs text-slate-500 leading-tight whitespace-normal" />
-            </QuestionCard>
-
-            <QuestionCard
-              question="How hard did you have to work to accomplish your level of performance?"
-              error={errors.tlx_effort}
-              required={false}
-              className="shadow-none border-none p-0 bg-transparent"
-            >
-              <LikertScale scaleLength={7} labels={TLX_LABELS} registration={register('tlx_effort')} textLabelsAtBottom={true} className="bg-white" labelClassName="text-center text-xs text-slate-500 leading-tight whitespace-normal" />
-            </QuestionCard>
-
-            <QuestionCard
-              question="How insecure, discouraged, irritated, stressed, and annoyed were you?"
-              error={errors.tlx_frustration}
-              required={false}
-              className="shadow-none border-none p-0 bg-transparent"
-            >
-              <LikertScale scaleLength={7} labels={TLX_LABELS} registration={register('tlx_frustration')} textLabelsAtBottom={true} className="bg-white" labelClassName="text-center text-xs text-slate-500 leading-tight whitespace-normal" />
-            </QuestionCard>
+            {TLX_DIMENSIONS.map((dim) => (
+              <NasaTlxScale
+                key={dim.field}
+                name={dim.name}
+                question={dim.question}
+                registration={register(dim.field as 'tlx_mental_demand' | 'tlx_physical_demand' | 'tlx_temporal_demand' | 'tlx_performance' | 'tlx_effort' | 'tlx_frustration')}
+                error={errors[dim.field as keyof typeof errors] as import('react-hook-form').FieldError | undefined}
+              />
+            ))}
 
             {/* --- TAM-PU --- */}
             <div className="!mt-24">

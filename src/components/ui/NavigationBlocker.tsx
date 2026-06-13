@@ -12,37 +12,26 @@ export function NavigationBlocker() {
   const routerRef = useRef(router);
   useEffect(() => { routerRef.current = router; });
 
-  const lockedUrlRef = useRef<string>('');
-  const isRestoringRef = useRef(false);
-
   useEffect(() => {
     const search = searchParams.toString();
-    lockedUrlRef.current = search ? `${pathname}?${search}` : pathname;
-
-    // Push one extra history entry so the first back-press is absorbed without leaving the page
-    window.history.pushState(window.history.state, '', lockedUrlRef.current);
+    const lockedUrl = search ? `${pathname}?${search}` : pathname;
+    const state = window.history.state;
 
     const handlePopState = () => {
-      // Guard against re-entrancy: router.replace internally modifies history
-      // which can re-trigger popstate in some browsers
-      if (isRestoringRef.current) return;
-      isRestoringRef.current = true;
-
-      // Re-push so the trap never runs out of buffer entries
-      window.history.pushState(window.history.state, '', lockedUrlRef.current);
-
-      // Keep Next.js router in sync with the locked URL
-      routerRef.current.replace(lockedUrlRef.current);
-
-      // Release the guard after the current event loop tick
-      setTimeout(() => { isRestoringRef.current = false; }, 0);
+      // Push the state again to keep the user on the current page
+      window.history.pushState(state, '', lockedUrl);
+      // Keep Next.js router in sync in case it started transitioning
+      routerRef.current.replace(lockedUrl);
     };
 
+    // Push an initial state when the component mounts to have something to pop
+    window.history.pushState(state, '', lockedUrl);
     window.addEventListener('popstate', handlePopState);
+
     return () => {
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [pathname, searchParams]); // router intentionally excluded — stabilised via routerRef
+  }, [pathname, searchParams]);
 
   return null;
 }

@@ -58,7 +58,7 @@ export default async function BlockPrefacePage({ params }: { params: Promise<{ b
             <ul className="list-disc">
               <li><span className="font-semibold">True </span>(the majority of reviewers clearly rate this aspect as such)</li>
               <li><span className="font-semibold">False </span>(the aspect is mentioned, but the majority rate it the opposite way)</li>
-              <li><span className="font-semibold">Not mentioned </span>(the aspect simply does not appear in the reviews)</li>
+              <li><span className="font-semibold">Not mentioned </span>(cannot be determined because the reviews do not address this aspect)</li>
             </ul>
           </div>
         </div>

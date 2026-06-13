@@ -98,7 +98,7 @@ function LandingPageInner() {
                 <li><strong>Estimated total duration:</strong> approx. 40 minutes</li>
               </ul>
 
-              <h2 className="text-xl font-semibold text-slate-900 mt-10 mb-3">VP (Versuchspersonenstunden) for UR-students:</h2>
+              <h2 className="text-xl font-semibold text-slate-900 mt-10 mb-3">VPs for UR-students:</h2>
               <p>
                 You will receive <strong>1 VP</strong> for your participation. After completing the study, a personal code will be displayed. Please send this code informally via email to receive your VP.
               </p>

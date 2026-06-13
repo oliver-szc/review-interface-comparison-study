@@ -19,6 +19,8 @@ export type AspectStat = {
     starRating: number;
     userName: string;
     opinionTerm: string;
+    aspectTerm: string | null;
+    sentiment: 'positive' | 'negative' | 'neutral';
   }>;
 };
 
@@ -39,7 +41,7 @@ export async function getAspectData(productUuid: string): Promise<AspectStat[]> 
     .from(reviews)
     .where(eq(reviews.productId, productUuid));
 
-  // Map: aspect_category → aggregated stats + up-to-3 distinct reviews
+  // Map: aspect_category → aggregated stats + all distinct reviews
   const categoryMap = new Map<
     string,
     {
@@ -87,16 +89,16 @@ export async function getAspectData(productUuid: string): Promise<AspectStat[]> 
       else entry.neutral++;
 
       // Add review snippet if we haven't already added this review for this category
-      if (
-        !entry.seenReviewIds.has(review.id) &&
-        entry.topReviews.length < 3
-      ) {
+      // No cap — all reviews are stored so the UI can paginate freely
+      if (!entry.seenReviewIds.has(review.id)) {
         entry.topReviews.push({
           id: review.id,
           reviewText: review.reviewText,
           starRating: review.starRating,
           userName: review.userName ?? 'Anonymous',
           opinionTerm: quad.opinion_term,
+          aspectTerm: quad.aspect_term,
+          sentiment: quad.sentiment_polarity as 'positive' | 'negative' | 'neutral',
         });
         entry.seenReviewIds.add(review.id);
       }

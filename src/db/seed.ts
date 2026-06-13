@@ -1,9 +1,14 @@
-import { db } from './client';
-import { sequencePool, claimSeeds, type NewSequencePoolRow, type NewClaimSeed } from './schema';
 import * as dotenv from 'dotenv';
-import { sql } from 'drizzle-orm';
-
 dotenv.config({ path: '.env.local' });
+
+import { neon } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/neon-http';
+import { sequencePool, claimSeeds, type NewSequencePoolRow, type NewClaimSeed } from './schema';
+import { sql } from 'drizzle-orm';
+import * as schema from './schema';
+
+const connectionString = process.env.POSTGRES_URL_NON_POOLING || process.env.DATABASE_URL_UNPOOLED || process.env.POSTGRES_URL!;
+const db = drizzle(neon(connectionString), { schema });
 
 // Counterbalancing Permutations
 const ASSISTANCE_ORDERS = [
@@ -49,30 +54,56 @@ async function seed() {
 
     // 3. Seed ClaimSeeds with actual claim data
     const claimsToInsert: NewClaimSeed[] = [
+      // --- Earbuds ---
+      {
+        id: 'earbuds_claim_1',
+        productId: 'EARBUDS',
+        claimOrder: 1,
+        claimText: 'The earbuds are notably good when it comes to bass.',
+        correctOption: 1, // True
+        sourceVersion: 'v2.0'
+      },
+      {
+        id: 'earbuds_claim_2',
+        productId: 'EARBUDS',
+        claimOrder: 2,
+        claimText: 'The earbuds connect quickly to Bluetooth devices.',
+        correctOption: 1, // True
+        sourceVersion: 'v2.0'
+      },
+      {
+        id: 'earbuds_claim_3',
+        productId: 'EARBUDS',
+        claimOrder: 3,
+        claimText: "The earbuds' voice control typically works just fine.",
+        correctOption: 3, // Not mentioned
+        sourceVersion: 'v2.0'
+      },
+
       // --- Kettle ---
       {
         id: 'kettle_claim_1',
         productId: 'KETTLE',
         claimOrder: 1,
-        claimText: 'The kettle boils water incredibly fast, but the outside of the jug gets dangerously hot to the touch.',
+        claimText: 'The kettle offers poor value relative to its actual cost.',
         correctOption: 2, // False
-        sourceVersion: 'v1.0'
+        sourceVersion: 'v2.0'
       },
       {
         id: 'kettle_claim_2',
         productId: 'KETTLE',
         claimOrder: 2,
-        claimText: 'The lid-opening mechanism is extremely smooth and is highlighted as one of the biggest pros by customers.',
-        correctOption: 2, // False
-        sourceVersion: 'v1.0'
+        claimText: "The kettle's auto shutoff sensor withstands mineral buildup.",
+        correctOption: 3, // Not mentioned
+        sourceVersion: 'v2.0'
       },
       {
         id: 'kettle_claim_3',
         productId: 'KETTLE',
         claimOrder: 3,
-        claimText: 'The kettle is heavily criticized because the boiled water has an unpleasant plastic taste during the first few weeks of use.',
-        correctOption: 1, // True
-        sourceVersion: 'v1.0'
+        claimText: 'The kettle generally operates at a quiet noise level.',
+        correctOption: 2, // False
+        sourceVersion: 'v2.0'
       },
 
       // --- Sweatshirt ---
@@ -80,51 +111,25 @@ async function seed() {
         id: 'sweatshirt_claim_1',
         productId: 'SWEATSHIRT',
         claimOrder: 1,
-        claimText: 'The fabric feels very soft and comfortable at first, but shrinks significantly after the first wash.',
-        correctOption: 2, // False
-        sourceVersion: 'v1.0'
+        claimText: "The sweatshirt's minimalist look makes it ideal for streetwear.",
+        correctOption: 3, // Not mentioned
+        sourceVersion: 'v2.0'
       },
       {
         id: 'sweatshirt_claim_2',
         productId: 'SWEATSHIRT',
         claimOrder: 2,
-        claimText: 'The inner lining sheds a lot of fuzz and leaves lint all over the t-shirts worn underneath.',
-        correctOption: 1, // True
-        sourceVersion: 'v1.0'
+        claimText: "The sweatshirt fully delivers on its 'heavyweight' label.",
+        correctOption: 2, // False
+        sourceVersion: 'v2.0'
       },
       {
         id: 'sweatshirt_claim_3',
         productId: 'SWEATSHIRT',
         claimOrder: 3,
-        claimText: 'The color of the sweatshirt fades very quickly if you dry it in the sun.',
-        correctOption: 3, // Not mentioned
-        sourceVersion: 'v1.0'
-      },
-
-      // --- Earbuds ---
-      {
-        id: 'earbuds_claim_1',
-        productId: 'EARBUDS',
-        claimOrder: 1,
-        claimText: 'The earbuds barely last 4 hours when Active Noise Cancelling (ANC) is turned on.',
-        correctOption: 2, // False
-        sourceVersion: 'v1.0'
-      },
-      {
-        id: 'earbuds_claim_2',
-        productId: 'EARBUDS',
-        claimOrder: 2,
-        claimText: 'The earbuds stay securely in your ears even during intense workouts, like running or jumping.',
+        claimText: 'The sweatshirt offers surprising quality for its low price.',
         correctOption: 1, // True
-        sourceVersion: 'v1.0'
-      },
-      {
-        id: 'earbuds_claim_3',
-        productId: 'EARBUDS',
-        claimOrder: 3,
-        claimText: 'The built-in microphone provides crystal-clear phone calls even in windy outdoor environments.',
-        correctOption: 2, // False
-        sourceVersion: 'v1.0'
+        sourceVersion: 'v2.0'
       },
     ];
 

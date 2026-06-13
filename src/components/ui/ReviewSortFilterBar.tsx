@@ -103,14 +103,14 @@ export function ReviewSortFilterBar({ filters, onChange }: ReviewSortFilterBarPr
             Active filters:
           </span>
           {filters.stars !== 'all' && (
-            <span className="text-xs bg-amazon/10 text-amazon border border-amazon/20 px-2 py-0.5 rounded-full">
+            <span className="text-xs bg-white text-amazon border border-amazon/30 px-2 py-0.5 rounded-full">
               {['positive', 'critical'].includes(filters.stars)
                 ? filters.stars.charAt(0).toUpperCase() + filters.stars.slice(1)
                 : `${filters.stars} ★`}
             </span>
           )}
           {filters.search && (
-            <span className="text-xs bg-amazon/10 text-amazon border border-amazon/20 px-2 py-0.5 rounded-full">
+            <span className="text-xs bg-white text-amazon border border-amazon/30 px-2 py-0.5 rounded-full">
               "{filters.search}"
             </span>
           )}

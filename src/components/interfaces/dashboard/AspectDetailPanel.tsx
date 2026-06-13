@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, type ReactNode } from 'react'
+import { useState, useMemo, useEffect, type ReactNode } from 'react'
 import type { AspectStat } from '@/lib/queries/absa'
 
 interface AspectDetailPanelProps {
@@ -9,22 +9,100 @@ interface AspectDetailPanelProps {
 
 const CONTEXT_WORDS = 10
 
+function findTermIdx(text: string, term: string): number {
+  if (!term) return -1
+  const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  // Match the term ensuring it's surrounded by non-word boundaries (like spaces, punctuation, or start/end of string)
+  const regex = new RegExp(`(^|\\W)(${escaped})(?=\\W|$)`, 'i')
+  const match = text.match(regex)
+  if (match) {
+    return match.index! + match[1].length
+  }
+  // Fallback to simple indexOf if strict boundaries don't match
+  return text.toLowerCase().indexOf(term.toLowerCase())
+}
+
+function highlightTerms(
+  text: string,
+  terms: string[],
+  sentiment: 'positive' | 'negative' | 'neutral'
+): ReactNode {
+  const validTerms = terms.filter(Boolean) as string[]
+  if (validTerms.length === 0) return <>{text}</>
+
+  type Match = { start: number; end: number; term: string }
+  const matches: Match[] = []
+
+  validTerms.forEach(term => {
+    const idx = findTermIdx(text, term)
+    if (idx !== -1) {
+      matches.push({ start: idx, end: idx + term.length, term })
+    }
+  })
+
+  if (matches.length === 0) return <>{text}</>
+
+  matches.sort((a, b) => a.start - b.start)
+
+  const merged: Match[] = []
+  for (const m of matches) {
+    if (merged.length === 0) {
+      merged.push(m)
+      continue
+    }
+    const last = merged[merged.length - 1]
+    if (m.start <= last.end) {
+      last.end = Math.max(last.end, m.end)
+    } else {
+      merged.push(m)
+    }
+  }
+
+  const underlineColor =
+    sentiment === 'positive'
+      ? 'decoration-green-400/90'
+      : sentiment === 'negative'
+        ? 'decoration-red-400/90'
+        : 'decoration-gray-400/90'
+
+  const nodes: ReactNode[] = []
+  let lastIdx = 0
+  merged.forEach((m, i) => {
+    nodes.push(text.slice(lastIdx, m.start))
+    nodes.push(
+      <strong
+        key={i}
+        className={`font-semibold text-slate-800 underline decoration-[0.1rem] underline-offset-2 ${underlineColor}`}
+      >
+        {text.slice(m.start, m.end)}
+      </strong>
+    )
+    lastIdx = m.end
+  })
+  nodes.push(text.slice(lastIdx))
+
+  return <>{nodes}</>
+}
+
 /**
  * Builds a rendered snippet that:
- * 1. Finds the opinion term (case-insensitive) in the review text
- * 2. Bolds the matched phrase
+ * 1. Finds both the opinion term and aspect term (case-insensitive, preferring standalone words) in the review text
+ * 2. Bolds the matched phrases
  * 3. Keeps at most 10 words before and 10 words after the match
  * 4. Adds "..." where content is truncated
  *
- * When expanded, the full text is shown with the opinion term still bolded.
+ * When expanded, the full text is shown with the terms still bolded.
  */
 function buildSnippet(
   fullText: string,
-  opinionTerm: string,
+  opinionTerm: string | null,
+  aspectTerm: string | null,
+  sentiment: 'positive' | 'negative' | 'neutral',
   expanded: boolean
 ): { nodes: ReactNode; isTruncated: boolean } {
-  // If opinionTerm is null/empty, fall back to simple truncation with no bolding
-  if (!opinionTerm) {
+  const termsToHighlight = [opinionTerm, aspectTerm].filter(Boolean) as string[]
+
+  if (termsToHighlight.length === 0) {
     const words = fullText.split(/\s+/)
     if (expanded || words.length <= CONTEXT_WORDS * 2) {
       return { nodes: <>&quot;{fullText}&quot;</>, isTruncated: words.length > CONTEXT_WORDS * 2 }
@@ -35,32 +113,32 @@ function buildSnippet(
     }
   }
 
-  // If expanded, show the full text with the opinion term bolded
   if (expanded) {
-    const idx = fullText.toLowerCase().indexOf(opinionTerm.toLowerCase())
-    if (idx === -1) {
-      return { nodes: <>&quot;{fullText}&quot;</>, isTruncated: false }
-    }
-    const before = fullText.slice(0, idx)
-    const match = fullText.slice(idx, idx + opinionTerm.length)
-    const after = fullText.slice(idx + opinionTerm.length)
     return {
-      nodes: (
-        <>
-          &quot;{before}<strong className="font-semibold text-slate-800">{match}</strong>{after}&quot;
-        </>
-      ),
+      nodes: <>&quot;{highlightTerms(fullText, termsToHighlight, sentiment)}&quot;</>,
       isTruncated: false,
     }
   }
 
-  // --- Collapsed mode: truncate around the opinion term ---
-  const lowerText = fullText.toLowerCase()
-  const lowerTerm = opinionTerm.toLowerCase()
-  const termIdx = lowerText.indexOf(lowerTerm)
+  // Collapsed mode: center around the first matched term
+  let primaryTermIdx = -1
+  let primaryTermLength = 0
 
-  // If opinion term not found, fall back to first 20 words
-  if (termIdx === -1) {
+  const opIdx = opinionTerm ? findTermIdx(fullText, opinionTerm) : -1
+  const asIdx = aspectTerm ? findTermIdx(fullText, aspectTerm) : -1
+
+  const validIdxs = [
+    { idx: opIdx, len: opinionTerm?.length || 0 },
+    { idx: asIdx, len: aspectTerm?.length || 0 }
+  ].filter(x => x.idx !== -1).sort((a, b) => a.idx - b.idx)
+
+  if (validIdxs.length > 0) {
+    primaryTermIdx = validIdxs[0].idx
+    primaryTermLength = validIdxs[0].len
+  }
+
+  // If no terms found, fall back to first 20 words
+  if (primaryTermIdx === -1) {
     const words = fullText.split(/\s+/)
     const truncated = words.length > CONTEXT_WORDS * 2
     const display = truncated
@@ -70,7 +148,7 @@ function buildSnippet(
   }
 
   // Split text into words while preserving character positions
-  // We need to figure out which word indices correspond to the opinion term
+  // We need to figure out which word indices correspond to the primary term
   const words = fullText.split(/\s+/)
   let charPos = 0
   const wordStarts: number[] = []
@@ -81,18 +159,18 @@ function buildSnippet(
     charPos = pos + words[i].length
   }
 
-  // Find the word index that contains the start of the opinion term
+  // Find the word index that contains the start of the primary term
   let matchStartWord = 0
   for (let i = 0; i < wordStarts.length; i++) {
-    if (wordStarts[i] <= termIdx) {
+    if (wordStarts[i] <= primaryTermIdx) {
       matchStartWord = i
     } else {
       break
     }
   }
 
-  // Find the word index that contains the end of the opinion term
-  const termEnd = termIdx + opinionTerm.length
+  // Find the word index that contains the end of the primary term
+  const termEnd = primaryTermIdx + primaryTermLength
   let matchEndWord = matchStartWord
   for (let i = matchStartWord; i < words.length; i++) {
     const wordEnd = wordStarts[i] + words[i].length
@@ -114,35 +192,13 @@ function buildSnippet(
   const visibleWords = words.slice(windowStart, windowEnd + 1)
   const visibleText = visibleWords.join(' ')
 
-  // Now find the opinion term in this visible substring and bold it
-  const visibleLower = visibleText.toLowerCase()
-  const visibleTermIdx = visibleLower.indexOf(lowerTerm)
-
   const isTruncated = prefixTruncated || suffixTruncated
-
-  if (visibleTermIdx === -1) {
-    // Shouldn't happen, but safety fallback
-    return {
-      nodes: (
-        <>
-          &quot;{prefixTruncated ? '...' : ''}{visibleText}{suffixTruncated ? '...' : ''}&quot;
-        </>
-      ),
-      isTruncated,
-    }
-  }
-
-  const before = visibleText.slice(0, visibleTermIdx)
-  const match = visibleText.slice(visibleTermIdx, visibleTermIdx + opinionTerm.length)
-  const after = visibleText.slice(visibleTermIdx + opinionTerm.length)
 
   return {
     nodes: (
       <>
         &quot;{prefixTruncated ? '...' : ''}
-        {before}
-        <strong className="font-semibold text-slate-800">{match}</strong>
-        {after}
+        {highlightTerms(visibleText, termsToHighlight, sentiment)}
         {suffixTruncated ? '...' : ''}&quot;
       </>
     ),
@@ -155,24 +211,28 @@ function ReviewSnippet({
   starRating,
   userName,
   opinionTerm,
+  aspectTerm,
+  sentiment,
 }: {
   reviewText: string
   starRating: number
   userName: string
-  opinionTerm: string
+  opinionTerm: string | null
+  aspectTerm: string | null
+  sentiment: 'positive' | 'negative' | 'neutral'
 }) {
   const [expanded, setExpanded] = useState(false)
 
   const { nodes, isTruncated } = useMemo(
-    () => buildSnippet(reviewText, opinionTerm, expanded),
-    [reviewText, opinionTerm, expanded]
+    () => buildSnippet(reviewText, opinionTerm, aspectTerm, sentiment, expanded),
+    [reviewText, opinionTerm, aspectTerm, sentiment, expanded]
   )
 
   // Show the toggle whenever the text was truncated OR is being expanded
   const showToggle = isTruncated || expanded
 
   return (
-    <li className="border-t border-slate-100 pt-2 first:border-t-0 first:pt-0">
+    <li className="border-t border-slate-100 pt-4 mb-4 first:border-t-0 first:pt-0">
       {/* Review meta */}
       <div className="flex items-center gap-1.5 mb-1">
         <span className="text-xs">
@@ -182,14 +242,14 @@ function ReviewSnippet({
         <span className="text-slate-400 text-[10px]">by {userName}</span>
       </div>
       {/* Text + inline "Read more" */}
-      <p className="text-slate-600 text-xs leading-relaxed">
+      <p className="text-slate-600 text-sm leading-relaxed">
         {nodes}
         {showToggle && (
           <>
             {' '}
             <button
               onClick={() => setExpanded((prev) => !prev)}
-              className="text-[10px] text-slate-500 hover:underline font-medium inline"
+              className="text-[11px] text-slate-500 hover:underline font-medium inline"
             >
               {expanded ? 'Collapse ◂' : 'Read more ▸'}
             </button>
@@ -200,7 +260,33 @@ function ReviewSnippet({
   )
 }
 
+const INITIAL_COUNT = 3
+const FIRST_LOAD_MORE = 7   // brings total to 10
+const SUBSEQUENT_LOAD = 10
+
 export function AspectDetailPanel({ stat }: AspectDetailPanelProps) {
+  const [visibleCount, setVisibleCount] = useState(INITIAL_COUNT)
+
+  const total = stat.topReviews.length
+  const visibleReviews = stat.topReviews.slice(0, visibleCount)
+  const hasMore = visibleCount < total
+  const canCollapse = visibleCount > INITIAL_COUNT
+
+  const handleShowMore = () => {
+    setVisibleCount((prev) =>
+      prev === INITIAL_COUNT
+        ? INITIAL_COUNT + FIRST_LOAD_MORE
+        : prev + SUBSEQUENT_LOAD
+    )
+  }
+
+  const handleShowLess = () => setVisibleCount(INITIAL_COUNT)
+
+  // Reset visible count when the selected aspect changes
+  useEffect(() => {
+    setVisibleCount(INITIAL_COUNT)
+  }, [stat.category])
+
   return (
     <div className="bg-white rounded-lg p-3 text-xs text-slate-600 space-y-2 border border-slate-200">
       {/* Mention summary */}
@@ -214,21 +300,53 @@ export function AspectDetailPanel({ stat }: AspectDetailPanelProps) {
       </p>
 
       {/* Review snippets */}
-      {stat.topReviews.length > 0 ? (
-        <ul className="space-y-2 pt-1">
-          {stat.topReviews.map((review) => (
-            <ReviewSnippet
-              key={review.id}
-              reviewText={review.reviewText}
-              starRating={review.starRating}
-              userName={review.userName}
-              opinionTerm={review.opinionTerm}
-            />
-          ))}
-        </ul>
+      {total > 0 ? (
+        <>
+          <ul className="space-y-2 pt-1">
+            {visibleReviews.map((review) => (
+              <ReviewSnippet
+                key={review.id}
+                reviewText={review.reviewText}
+                starRating={review.starRating}
+                userName={review.userName}
+                opinionTerm={review.opinionTerm}
+                aspectTerm={review.aspectTerm}
+                sentiment={review.sentiment}
+              />
+            ))}
+          </ul>
+
+          {/* Show more / Show less controls */}
+          {(hasMore || canCollapse) && (
+            <div className="flex items-center gap-3 pt-1 border-t border-slate-100">
+              {hasMore && (
+                <button
+                  onClick={handleShowMore}
+                  className="text-[11px] text-slate-500 hover:text-slate-800 hover:underline font-medium transition-colors"
+                >
+                  Show more ▾
+                </button>
+              )}
+              {canCollapse && (
+                <button
+                  onClick={handleShowLess}
+                  className="text-[11px] text-slate-400 hover:text-slate-700 hover:underline font-medium transition-colors"
+                >
+                  Show less ▴
+                </button>
+              )}
+              {hasMore && (
+                <span className="text-[10px] text-slate-400 ml-auto">
+                  {visibleCount} of {total}
+                </span>
+              )}
+            </div>
+          )}
+        </>
       ) : (
         <p className="text-slate-400 italic">No review snippets available.</p>
       )}
     </div>
   )
 }
+

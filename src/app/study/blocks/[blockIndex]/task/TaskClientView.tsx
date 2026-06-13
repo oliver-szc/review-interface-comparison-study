@@ -115,15 +115,17 @@ export default function TaskClientView({ blockIndex, conditionType, productId, c
       <p className="font-bold text-slate-950 text-sm whitespace-nowrap mb-1">
         Task {blockIndex}/3 · {conditionLabel}
       </p>
-      {!isOpen && (
-        <div className="flex flex-col items-center gap-0.5 mt-1">
-          {claims.map((claim, index) => (
-            <p key={claim.id} className="text-slate-600 text-sm font-normal italic whitespace-nowrap leading-relaxed">
-              Claim {index + 1}: “{claim.claimText}”
-            </p>
-          ))}
-        </div>
-      )}
+      <div
+        className={`flex flex-col items-center gap-0.5 mt-1 transition-all duration-300 ${
+          isOpen ? 'invisible opacity-0 pointer-events-none' : 'visible opacity-100'
+        }`}
+      >
+        {claims.map((claim, index) => (
+          <p key={claim.id} className="text-slate-600 text-sm font-normal italic whitespace-nowrap leading-relaxed">
+            Claim {index + 1}: “{claim.claimText}”
+          </p>
+        ))}
+      </div>
     </div>
   );
 
