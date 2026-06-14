@@ -1,13 +1,23 @@
 'use client'
 
 import { useState, useMemo, useEffect, type ReactNode } from 'react'
+import { useTutorial } from '@/lib/contexts/TutorialContext'
+import { TutorialHighlight } from '@/components/tutorial/TutorialHighlight'
 import type { AspectStat } from '@/lib/queries/absa'
 
 interface AspectDetailPanelProps {
   stat: AspectStat
+  onCollapse?: () => void
 }
 
 const CONTEXT_WORDS = 10
+
+// Highlight mode configurations:
+// - 'underline': bold + underline with sentiment color (default)
+// - 'textColor': bold + colored text with sentiment color
+// - 'mark': bold + marked with a colored background field (like search highlight)
+type HighlightMode = 'underline' | 'textColor' | 'mark'
+const HIGHLIGHT_MODE: HighlightMode = 'textColor'
 
 function findTermIdx(text: string, term: string, referenceIdx: number = -1): number {
   if (!term) return -1
@@ -90,12 +100,32 @@ function highlightTerms(
     }
   }
 
-  const underlineColor =
-    sentiment === 'positive'
-      ? 'decoration-green-400/90'
-      : sentiment === 'negative'
-        ? 'decoration-red-400/90'
-        : 'decoration-gray-400/90'
+  let highlightClass = ''
+  if (HIGHLIGHT_MODE === 'underline') {
+    const underlineColor =
+      sentiment === 'positive'
+        ? 'decoration-green-400/90'
+        : sentiment === 'negative'
+          ? 'decoration-red-400/90'
+          : 'decoration-gray-400/90'
+    highlightClass = `font-semibold text-slate-800 underline decoration-[0.1rem] underline-offset-2 ${underlineColor}`
+  } else if (HIGHLIGHT_MODE === 'textColor') {
+    const textColor =
+      sentiment === 'positive'
+        ? 'text-emerald-600'
+        : sentiment === 'negative'
+          ? 'text-rose-600'
+          : 'text-slate-500'
+    highlightClass = `font-bold ${textColor}`
+  } else if (HIGHLIGHT_MODE === 'mark') {
+    const bgColor =
+      sentiment === 'positive'
+        ? 'bg-emerald-100 text-emerald-950'
+        : sentiment === 'negative'
+          ? 'bg-rose-100 text-rose-950'
+          : 'bg-slate-100 text-slate-950'
+    highlightClass = `font-bold px-1 py-0.5 rounded ${bgColor}`
+  }
 
   const nodes: ReactNode[] = []
   let lastIdx = 0
@@ -104,7 +134,7 @@ function highlightTerms(
     nodes.push(
       <strong
         key={i}
-        className={`font-semibold text-slate-800 underline decoration-[0.1rem] underline-offset-2 ${underlineColor}`}
+        className={highlightClass}
       >
         {text.slice(m.start, m.end)}
       </strong>
@@ -296,7 +326,8 @@ const INITIAL_COUNT = 3
 const FIRST_LOAD_MORE = 7   // brings total to 10
 const SUBSEQUENT_LOAD = 10
 
-export function AspectDetailPanel({ stat }: AspectDetailPanelProps) {
+export function AspectDetailPanel({ stat, onCollapse }: AspectDetailPanelProps) {
+  const { waitingForAction, dispatchTutorialAction } = useTutorial()
   const [visibleCount, setVisibleCount] = useState(INITIAL_COUNT)
 
   const total = stat.topReviews.length
@@ -310,9 +341,16 @@ export function AspectDetailPanel({ stat }: AspectDetailPanelProps) {
         ? INITIAL_COUNT + FIRST_LOAD_MORE
         : prev + SUBSEQUENT_LOAD
     )
+    dispatchTutorialAction('DASHBOARD_SHOW_MORE')
   }
 
-  const handleShowLess = () => setVisibleCount(INITIAL_COUNT)
+  const handleShowLess = () => {
+    setVisibleCount(INITIAL_COUNT)
+    dispatchTutorialAction('DASHBOARD_SHOW_LESS')
+    if (onCollapse) {
+      onCollapse()
+    }
+  }
 
   // Reset visible count when the selected aspect changes
   useEffect(() => {
@@ -351,20 +389,32 @@ export function AspectDetailPanel({ stat }: AspectDetailPanelProps) {
           {/* Show more / Show less controls */}
           <div className="flex items-center gap-3 pt-3 border-t border-slate-100">
             {hasMore && (
-              <button
-                onClick={handleShowMore}
-                className="text-[12px] text-slate-600 hover:text-slate-800 hover:underline font-medium transition-colors"
+              <TutorialHighlight
+                active={waitingForAction === 'DASHBOARD_SHOW_MORE'}
+                roundedClass="rounded-lg"
+                insetClass="inset-[-6px]"
               >
-                Show more ▾
-              </button>
+                <button
+                  onClick={handleShowMore}
+                  className="text-[12px] text-slate-600 hover:text-slate-800 font-medium transition-colors group"
+                >
+                  <span className="group-hover:underline">Show more</span> <span>▾</span>
+                </button>
+              </TutorialHighlight>
             )}
             {canCollapse && (
-              <button
-                onClick={handleShowLess}
-                className="text-[12px] text-slate-500 hover:text-slate-700 hover:underline font-medium transition-colors"
+              <TutorialHighlight
+                active={waitingForAction === 'DASHBOARD_SHOW_LESS'}
+                roundedClass="rounded-lg"
+                insetClass="inset-[-6px]"
               >
-                Show less <span className="inline-block rotate-180">▾</span>
-              </button>
+                <button
+                  onClick={handleShowLess}
+                  className="text-[12px] text-slate-500 hover:text-slate-700 font-medium transition-colors group"
+                >
+                  <span className="group-hover:underline">Show less</span> <span className="inline-block rotate-180 translate-y-[1.5px]">▾</span>
+                </button>
+              </TutorialHighlight>
             )}
             <span className="text-[11px] text-slate-500 ml-auto mr-1">
               {Math.min(visibleCount, total)} of {total}

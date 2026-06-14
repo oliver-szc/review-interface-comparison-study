@@ -1,6 +1,8 @@
 'use client';
 
 import { ReactNode, useState, useEffect, useRef } from 'react';
+import { useTutorial } from '@/lib/contexts/TutorialContext';
+import { TutorialHighlight } from '@/components/tutorial/TutorialHighlight';
 
 interface InformationNeedBannerProps {
   task: ReactNode | ((props: { isOpen: boolean }) => ReactNode);
@@ -19,6 +21,7 @@ export function InformationNeedBanner({
   helpContent,
   productId,
 }: InformationNeedBannerProps) {
+  const { waitingForAction, dispatchTutorialAction } = useTutorial();
   const [activeTab, setActiveTab] = useState<'help' | 'submit' | null>(null);
   const [renderedTab, setRenderedTab] = useState<'help' | 'submit' | null>(null);
   const headerRef = useRef<HTMLDivElement>(null);
@@ -102,13 +105,21 @@ export function InformationNeedBanner({
           </div>
 
           <div className="w-48 flex justify-end flex-shrink-0">
-            <button
-              type="button"
-              onClick={() => setActiveTab('submit')}
-              className={`flex-shrink-0 flex items-center gap-2 text-sm font-medium text-slate-700 border border-slate-300 bg-white hover:bg-slate-100 rounded-lg px-[18px] py-[9px] transition shadow-sm ${isOpen ? 'invisible pointer-events-none' : 'visible'}`}
+            <TutorialHighlight 
+              active={waitingForAction === 'OPEN_ANSWER_FORM'} 
+              roundedClass="rounded-lg"
             >
-              <span>✓</span> Open Answer Form
-            </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveTab('submit');
+                  dispatchTutorialAction('OPEN_ANSWER_FORM');
+                }}
+                className={`flex-shrink-0 flex items-center gap-2 text-sm font-medium text-slate-700 border border-slate-300 bg-white hover:bg-slate-100 rounded-lg px-[18px] py-[9px] transition shadow-sm ${isOpen ? 'invisible pointer-events-none' : 'visible'}`}
+              >
+                <span>✓</span> Open Answer Form
+              </button>
+            </TutorialHighlight>
           </div>
         </div>
 

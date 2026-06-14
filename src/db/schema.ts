@@ -1,7 +1,7 @@
 import { pgTable, uuid, varchar, text, decimal, integer, timestamp, vector, boolean, json, index, uniqueIndex, pgEnum } from 'drizzle-orm/pg-core';
 
 export const conditionTypeEnum = pgEnum('condition_type', ['BASELINE', 'DASHBOARD', 'CHATBOT']);
-export const productIdEnum = pgEnum('product_id', ['EARBUDS', 'KETTLE', 'SWEATSHIRT']);
+export const productIdEnum = pgEnum('product_id', ['EARBUDS', 'KETTLE', 'SWEATSHIRT', 'TUTORIAL']);
 
 // Products table
 export const products = pgTable('products', {

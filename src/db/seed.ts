@@ -29,9 +29,10 @@ async function seed() {
 
   try {
     // 1. Clear existing seed data (truncate)
-    console.log('Clearing existing sequence pool and claim seeds...');
+    console.log('Clearing existing sequence pool, claim seeds, and participants...');
     await db.execute(sql`TRUNCATE TABLE sequence_pool CASCADE;`);
     await db.execute(sql`TRUNCATE TABLE claim_seeds CASCADE;`);
+    await db.execute(sql`TRUNCATE TABLE participants CASCADE;`);
 
     // 2. Seed SequencePool
     const sequencesToInsert: NewSequencePoolRow[] = [];

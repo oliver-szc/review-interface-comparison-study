@@ -1,8 +1,10 @@
 'use client'
 
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import type { AspectStat } from '@/lib/queries/absa'
 import { useDashboardFilterStore } from '@/stores/dashboardFilterStore'
+import { useTutorial } from '@/lib/contexts/TutorialContext'
+import { TutorialHighlight } from '@/components/tutorial/TutorialHighlight'
 import { getSentimentTier } from '@/lib/utils/formatAspect'
 import { AspectButton } from './AspectButton'
 import { AspectDetailPanel } from './AspectDetailPanel'
@@ -19,7 +21,17 @@ const PRODUCT_SUMMARIES: Record<string, string> = {
 }
 
 export function DashboardPanel({ aspectData, productId }: DashboardPanelProps) {
+  const { waitingForAction, dispatchTutorialAction } = useTutorial()
   const { activeAspect, setActiveAspect } = useDashboardFilterStore()
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const handleCollapse = () => {
+    setTimeout(() => {
+      if (containerRef.current) {
+        containerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }, 0)
+  }
 
   // Sort aspects: first positive, then mixed, then negative. Keep original order within tiers.
   const sortedAspectData = useMemo(() => {
@@ -68,7 +80,7 @@ export function DashboardPanel({ aspectData, productId }: DashboardPanelProps) {
   }
 
   return (
-    <div className="bg-sky-00 rounded-xl rounded-xl border-2 border-sky-400 p-4 space-y-3 mx-auto max-w-4xl w-full">
+    <div ref={containerRef} className="scroll-mt-[150px] bg-sky-00 rounded-xl rounded-xl border-2 border-sky-400 p-4 space-y-3 mx-auto max-w-4xl w-full">
       {/* Header */}
       <h2 className="text-xl font-bold text-slate-900">
         What customers say
@@ -85,23 +97,42 @@ export function DashboardPanel({ aspectData, productId }: DashboardPanelProps) {
         Select to learn more:
       </p>
       <div className="flex flex-wrap gap-2">
-        {sortedAspectData.map((stat) => (
-          <AspectButton
-            key={stat.category}
-            label={stat.label}
-            count={stat.total}
-            sentiment={getSentimentTier(stat.positive, stat.negative, stat.neutral)}
-            active={currentActiveAspect === stat.category}
-            onClick={() => setActiveAspect(
-              currentActiveAspect === stat.category ? null : stat.category
-            )}
-          />
-        ))}
+        {sortedAspectData.map((stat, idx) => {
+          const isTargetAspect = idx > 0
+          const isHighlighted = waitingForAction === 'DASHBOARD_CLICK_ASPECT' && isTargetAspect
+          const buttonNode = (
+            <AspectButton
+              key={stat.category}
+              label={stat.label}
+              count={stat.total}
+              sentiment={getSentimentTier(stat.positive, stat.negative, stat.neutral)}
+              active={currentActiveAspect === stat.category}
+              onClick={() => {
+                setActiveAspect(
+                  currentActiveAspect === stat.category ? null : stat.category
+                )
+                if (isHighlighted) {
+                  dispatchTutorialAction('DASHBOARD_CLICK_ASPECT')
+                }
+              }}
+            />
+          )
+
+          if (isHighlighted) {
+            return (
+              <TutorialHighlight key={stat.category} active={true} roundedClass="rounded-full">
+                {buttonNode}
+              </TutorialHighlight>
+            )
+          }
+
+          return buttonNode
+        })}
       </div>
 
       {/* Aspect Details */}
       {selectedStat && (
-        <AspectDetailPanel stat={selectedStat} />
+        <AspectDetailPanel stat={selectedStat} onCollapse={handleCollapse} />
       )}
     </div>
   )

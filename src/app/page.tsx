@@ -80,10 +80,10 @@ function LandingPageInner() {
           <>
             <div className="space-y-5 text-slate-700 text-base leading-relaxed">
               <p>
-                Thank you for your interest in participating! In this study, we investigate how different types of user assistance influence the experience of exploring online product reviews. You will complete a series of short tasks using these tools and share your impressions along the way.
+                Thank you for your interest in participating! In this study, we investigate how different types of user assistance influence the experience of exploring online product reviews.
               </p>
 
-              <div className="bg-slate-50 border border-slate-200 p-4 rounded-lg text-slate-900 text-sm">
+              <div className="bg-slate-50 border border-slate-200 p-4 mt-7 rounded-lg text-slate-900 text-sm">
                 <p>
                   <strong>Note:</strong> The study will be conducted entirely in English. A basic knowledge of English is required to complete the tasks. The study includes quality assurance measures to ensure the integrity of the collected data.
                 </p>

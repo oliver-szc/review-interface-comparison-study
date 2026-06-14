@@ -2,9 +2,13 @@
 
 import { useState } from 'react';
 import { StudyPageGrid } from '@/components/layouts/StudyPageGrid';
+import { TutorialProvider } from '@/lib/contexts/TutorialContext';
+import { TutorialOverlay } from '@/components/tutorial/TutorialOverlay';
+import PostConditionClientView from '../../blocks/[blockIndex]/post/PostConditionClientView';
 
 export default function TutorialCheckPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [visibleStep, setVisibleStep] = useState(0);
 
   const handleSelection = async (value: number) => {
     setIsSubmitting(true);
@@ -27,6 +31,33 @@ export default function TutorialCheckPage() {
       setIsSubmitting(false);
     }
   };
+
+  if (visibleStep === 0) {
+    return (
+      <TutorialProvider currentStep={0} onAction={() => { }}>
+        <div className="relative min-h-screen">
+          <PostConditionClientView
+            blockIndex={0 as any}
+            conditionType="BASELINE"
+            onTutorialSubmit={() => setVisibleStep(1)}
+          />
+          <TutorialOverlay
+            isVisible={true}
+            content={
+              <div>
+                <h1 className="text-xl font-bold text-slate-900 mb-6">Post-task Questionnaire</h1>
+                <p className="text-slate-700 font-normal leading-relaxed mb-4">
+                  After each task you will answer a short questionnaire about your experience.
+                </p>
+              </div>
+            }
+            onContinue={() => setVisibleStep(1)}
+          />
+        </div>
+      </TutorialProvider>
+    );
+  }
+
   return (
     <StudyPageGrid>
       <div className="w-full bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200">

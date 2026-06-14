@@ -1,9 +1,11 @@
 'use client'
 
 import { useState, useRef, useCallback } from 'react'
+import { useTutorial } from '@/lib/contexts/TutorialContext'
 import { ChatMessage } from './ChatMessage'
 import { ChatInput } from './ChatInput'
 import { SuggestedQuestions } from './SuggestedQuestions'
+
 
 interface Message {
   role: 'user' | 'bot'
@@ -36,12 +38,14 @@ const SUGGESTED_QUESTIONS: Record<string, string[]> = {
 }
 
 export function ChatbotPanel({ productId }: ChatbotPanelProps) {
+  const { waitingForAction, dispatchTutorialAction } = useTutorial()
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
 
   // Abort controller ref so we can cancel in-flight requests
   const abortControllerRef = useRef<AbortController | null>(null)
+  const isTutorialChatTriggered = useRef(false)
 
   const questionsKey = productId.toUpperCase()
   const suggestedQuestions = SUGGESTED_QUESTIONS[questionsKey] || SUGGESTED_QUESTIONS.EARBUDS
@@ -58,6 +62,10 @@ export function ChatbotPanel({ productId }: ChatbotPanelProps) {
 
     const abortController = new AbortController()
     abortControllerRef.current = abortController
+
+    if (waitingForAction === 'CHATBOT_SUGGESTION_CLICK') {
+      isTutorialChatTriggered.current = true
+    }
 
     // Record the time the query was sent (for tracking latency)
     const querySentAt = Date.now()
@@ -90,6 +98,7 @@ export function ChatbotPanel({ productId }: ChatbotPanelProps) {
 
         setMessages([userMessage, { role: 'bot', text: errorMessage, isError: true }])
         setIsLoading(false)
+        isTutorialChatTriggered.current = false
         return
       }
 
@@ -101,6 +110,7 @@ export function ChatbotPanel({ productId }: ChatbotPanelProps) {
           { role: 'bot', text: 'Failed to read the response stream.', isError: true },
         ])
         setIsLoading(false)
+        isTutorialChatTriggered.current = false
         return
       }
 
@@ -128,6 +138,11 @@ export function ChatbotPanel({ productId }: ChatbotPanelProps) {
       // Stream complete
       setIsStreaming(false)
       setIsLoading(false)
+
+      if (isTutorialChatTriggered.current) {
+        isTutorialChatTriggered.current = false
+        dispatchTutorialAction('CHATBOT_SUGGESTION_CLICK')
+      }
 
       // Fire-and-forget: Log CHAT_RESPONSE_RECEIVED tracking event
       const latencyMs = Date.now() - querySentAt
@@ -163,8 +178,9 @@ export function ChatbotPanel({ productId }: ChatbotPanelProps) {
       ])
       setIsStreaming(false)
       setIsLoading(false)
+      isTutorialChatTriggered.current = false
     }
-  }, [productId])
+  }, [productId, waitingForAction, dispatchTutorialAction])
 
   const handleQuestionClick = (question: string) => {
     handleSend(question)

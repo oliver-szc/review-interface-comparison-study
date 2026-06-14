@@ -12,7 +12,8 @@ import { StudyPageGrid } from '@/components/layouts/StudyPageGrid';
 
 interface PostConditionProps {
   blockIndex: 1 | 2 | 3;
-  conditionType: 'BASELINE' | 'DASHBOARD' | 'CHATBOT';
+  conditionType: 'BASELINE' | 'DASHBOARD' | 'CHATBOT' | 'TUTORIAL';
+  onTutorialSubmit?: () => void;
 }
 
 const PostConditionSchema = z.object({
@@ -72,7 +73,7 @@ const FREQUENCY_OPTIONS = [
   { value: 5, label: "Very often" }
 ];
 
-export default function PostConditionClientView({ blockIndex, conditionType }: PostConditionProps) {
+export default function PostConditionClientView({ blockIndex, conditionType, onTutorialSubmit }: PostConditionProps) {
   const form = useForm<z.infer<typeof PostConditionSchema>>({
     resolver: zodResolver(PostConditionSchema),
     mode: 'onSubmit',
@@ -80,21 +81,27 @@ export default function PostConditionClientView({ blockIndex, conditionType }: P
 
   const { register, formState: { errors, isSubmitting } } = form;
 
-  const systemNameMap = {
+  const systemNameMap: Record<string, string> = {
     BASELINE: "the review section",
     DASHBOARD: "the dashboard",
-    CHATBOT: "the chatbot"
+    CHATBOT: "the chatbot",
+    TUTORIAL: "the system"
   };
-  const systemName = systemNameMap[conditionType];
+  const systemName = systemNameMap[conditionType] || "the system";
 
   const onSubmit = async (data: z.infer<typeof PostConditionSchema>) => {
     // 1. Manual validation for conditional fields since Zod schema is static
-    if (conditionType !== 'BASELINE' && !data.assist_use) {
+    if (conditionType !== 'BASELINE' && conditionType !== 'TUTORIAL' && !data.assist_use) {
       alert("Please answer the extent of assistance question.");
       return;
     }
     if (blockIndex === 2 && !data.scr_attention) {
       alert("Please answer the quality assurance question.");
+      return;
+    }
+
+    if (onTutorialSubmit) {
+      onTutorialSubmit();
       return;
     }
 
