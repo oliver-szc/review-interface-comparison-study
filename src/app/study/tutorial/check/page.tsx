@@ -63,7 +63,7 @@ export default function TutorialCheckPage() {
       <div className="w-full bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200">
         <div className="mb-10 text-center">
           <h1 className="text-2xl font-bold text-slate-900 mb-4">Tutorial completed</h1>
-          <h2 className="text-xl font-semibold text-slate-900">Are you ready for the upcoming tasks?</h2>
+          <p className="text-lg font-medium text-slate-700">Are you ready for the upcoming tasks?</p>
         </div>
 
         <div className="flex flex-col sm:flex-row justify-between gap-4 w-full">

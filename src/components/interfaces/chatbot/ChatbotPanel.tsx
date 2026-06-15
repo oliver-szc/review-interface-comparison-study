@@ -219,7 +219,7 @@ export function ChatbotPanel({ productId }: ChatbotPanelProps) {
           />
         ))}
       </div>
-      <p className="text-xs italic text-slate-500 pt-1 pb-4 px-5">
+      <p className="text-xs italic text-slate-500 pt-0 pb-4 px-5">
         Powered by AI
       </p>
     </div>

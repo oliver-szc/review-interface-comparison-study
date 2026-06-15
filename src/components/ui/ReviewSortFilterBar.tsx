@@ -53,11 +53,11 @@ export function ReviewSortFilterBar({ filters, onChange }: ReviewSortFilterBarPr
   }
 
   return (
-    <div className="space-y-2 relative bg-white">
+    <div className="space-y-0 relative bg-white">
 
       <div className="w-fit flex flex-col">
         {/* Row 1 — Search */}
-        <div className="mt-2">
+        <div>
           <TutorialHighlight active={waitingForAction === 'REVIEW_SEARCH' && !filters.search} roundedClass="rounded-lg">
             <div className="flex gap-2 p-1">
               <div className="relative flex-1">
@@ -82,7 +82,7 @@ export function ReviewSortFilterBar({ filters, onChange }: ReviewSortFilterBarPr
         </div>
 
         {/* Row 2 — Sort + Filters */}
-        <div className="flex flex-wrap items-end gap-5 mt-4">
+        <div className="flex flex-wrap items-end gap-5 mt-2">
 
           {/* Sort by */}
           <div className="space-y-1">
@@ -101,7 +101,7 @@ export function ReviewSortFilterBar({ filters, onChange }: ReviewSortFilterBarPr
           {/* Filter by — star rating */}
           <div>
             <TutorialHighlight active={waitingForAction === 'REVIEW_SEARCH' && filters.stars !== '5'} roundedClass="rounded-lg">
-              <div className="space-y-1 p-1">
+              <div className="space-y-1">
                 <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Filter by</p>
                 <div className="flex flex-wrap gap-2">
                   <select

@@ -9,7 +9,7 @@ import { WebshopLayout } from '@/components/layouts/WebshopLayout';
 import { AriaInvalidSync } from '@/components/forms/AriaInvalidSync';
 import { ProductImage, ProductDetails } from '@/components/ui/ProductPanel';
 import { ReviewListPanel } from '@/components/ui/ReviewListPanel';
-import { ChatbotPanel } from '@/components/interfaces/chatbot/ChatbotPanel';
+import { ChatbotPanel } from '@/components/interfaces/chatbot/ChatbotPanel'; // Touch for final scroll timing rebuild
 import { DashboardPanel } from '@/components/interfaces/dashboard/DashboardPanel';
 import { useTutorial } from '@/lib/contexts/TutorialContext';
 import { TutorialHighlight } from '@/components/tutorial/TutorialHighlight';

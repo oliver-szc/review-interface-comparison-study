@@ -161,23 +161,27 @@ export default function TutorialConditionClient({
   }, []);
 
   // Configuration to tweak the scroll target and offset (margin from top) for step 2, 3, 4, 5, and 6
-  const SCROLL_CONFIGS: Record<number, { targetId?: string; offset?: number; toTop?: boolean }> = {
-    2: { targetId: 'tutorial-review-list', offset: 120 }, // Step 2: scroll to review list
-    3: { toTop: true },                                    // Step 3: reset to top
+  const SCROLL_CONFIGS: Record<number, { targetId?: string; offset?: number; toTop?: boolean; instant?: boolean }> = {
+    2: { targetId: 'tutorial-review-list', offset: 130 }, // Step 2: scroll to review list
+    3: { toTop: true, instant: true },                     // Step 3: reset to top (instant)
     4: { targetId: 'tutorial-chatbot', offset: 150 },     // Step 4: scroll to chatbot
-    5: { toTop: true },                                    // Step 5: reset to top
+    5: { toTop: true, instant: true },                     // Step 5: reset to top (instant)
     6: { targetId: 'tutorial-dashboard', offset: 150 },   // Step 6: scroll to dashboard
   };
 
   useEffect(() => {
     const config = SCROLL_CONFIGS[visibleStep];
     if (config) {
+      const delay = config.instant ? 0 : 350;
       const t = setTimeout(() => {
         if (config.toTop) {
-          window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-          });
+          const element = document.getElementById('tutorial-page-top');
+          if (element) {
+            element.scrollIntoView({
+              behavior: config.instant ? 'auto' : 'smooth',
+              block: 'start'
+            });
+          }
         } else if (config.targetId && config.offset !== undefined) {
           const element = document.getElementById(config.targetId);
           if (element) {
@@ -189,7 +193,7 @@ export default function TutorialConditionClient({
             });
           }
         }
-      }, 350);
+      }, delay);
       timeoutRefs.current.push(t);
     }
   }, [visibleStep]);
@@ -219,6 +223,7 @@ export default function TutorialConditionClient({
 
       if (isAssistanceStep) {
         setTransitionState('fading');
+
         const t = setTimeout(() => {
           setVisibleStep((prev) => prev + 1);
           setTransitionState('idle');
@@ -239,6 +244,9 @@ export default function TutorialConditionClient({
       onAction={handleTutorialAction}
     >
       <div className="relative min-h-screen">
+        {/* Hidden scroll-to-top anchor */}
+        <div id="tutorial-page-top" className="absolute top-0 left-0 w-0 h-0 pointer-events-none" />
+
         {/* The underlying interactive task view */}
         <TaskClientView
           blockIndex={0}
