@@ -115,8 +115,8 @@ function highlightTerms(
         ? 'text-emerald-600'
         : sentiment === 'negative'
           ? 'text-rose-600'
-          : 'text-slate-500'
-    highlightClass = `font-bold ${textColor}`
+          : 'text-slate-600'
+    highlightClass = `font-semibold ${textColor}`
   } else if (HIGHLIGHT_MODE === 'mark') {
     const bgColor =
       sentiment === 'positive'
@@ -124,7 +124,7 @@ function highlightTerms(
         : sentiment === 'negative'
           ? 'bg-rose-100 text-rose-950'
           : 'bg-slate-100 text-slate-950'
-    highlightClass = `font-bold px-1 py-0.5 rounded ${bgColor}`
+    highlightClass = `font-semibold px-1 py-0.5 rounded ${bgColor}`
   }
 
   const nodes: ReactNode[] = []

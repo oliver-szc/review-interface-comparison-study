@@ -7,8 +7,9 @@ interface TutorialOverlayProps {
   content: ReactNode;
   onContinue?: () => void;
   requiresAction?: string; // If set, the Continue button is hidden and clicks pass through the backdrop
-  position?: 'center' | 'bottom-left' | 'bottom-right' | 'top-left' | 'top-right';
+  position?: 'center';
   transitionState?: 'idle' | 'cooldown' | 'fading';
+  transitionDuration?: number; // duration of transition in milliseconds
 }
 
 export function TutorialOverlay({
@@ -16,17 +17,15 @@ export function TutorialOverlay({
   content,
   onContinue,
   requiresAction,
-  position = 'center',
   transitionState = 'idle',
+  transitionDuration = 4000,
 }: TutorialOverlayProps) {
   if (!isVisible && transitionState === 'idle') return null;
 
-  // Determine positioning classes
+  // Determine positioning
   let positionClasses = 'items-center justify-center';
-  if (position === 'bottom-left') positionClasses = 'items-end justify-start p-8';
-  if (position === 'bottom-right') positionClasses = 'items-end justify-end p-8';
-  if (position === 'top-left') positionClasses = 'items-start justify-start p-8 mt-20';
-  if (position === 'top-right') positionClasses = 'items-start justify-end p-8 mt-20';
+
+  const isBlurred = transitionState === 'fading' || (!requiresAction && transitionState === 'idle');
 
   return (
     <div
@@ -35,18 +34,19 @@ export function TutorialOverlay({
     >
       {/* Backdrop */}
       <div
-        className={`absolute inset-0 transition-all ${transitionState === 'fading'
-            ? 'duration-[2000ms] ease-in-out bg-slate-900/5 backdrop-blur-[3px] pointer-events-none'
-            : transitionState === 'cooldown' || requiresAction
-              ? 'duration-300 bg-transparent backdrop-blur-none pointer-events-none'
-              : 'duration-300 bg-slate-900/5 backdrop-blur-[3px] pointer-events-auto'
-          }`}
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          transition: `backdrop-filter ${transitionState === 'fading' ? transitionDuration : 300}ms ease-in-out, -webkit-backdrop-filter ${transitionState === 'fading' ? transitionDuration : 300}ms ease-in-out, background-color ${transitionState === 'fading' ? transitionDuration : 300}ms ease-in-out`,
+          backgroundColor: isBlurred ? 'rgba(15, 23, 42, 0.05)' : 'rgba(0, 0, 0, 0)',
+          backdropFilter: isBlurred ? 'blur(3px)' : 'blur(0px)',
+          WebkitBackdropFilter: isBlurred ? 'blur(3px)' : 'blur(0px)',
+        }}
       />
 
       {/* Tutorial Card */}
       {content && transitionState === 'idle' && (
         <div
-          className={`relative bg-white rounded-xl shadow-2xl border border-sky-100 p-8 md:p-10 max-w-2xl w-full pointer-events-auto animate-in fade-in zoom-in-95 duration-300`}
+          className={`relative bg-white rounded-xl shadow-2xl border border-sky-100 md:p-6 max-w-2xl w-full pointer-events-auto animate-in fade-in zoom-in-95 duration-300`}
         >
           {/* Content */}
           <div className="prose prose-slate max-w-none">
@@ -67,7 +67,7 @@ export function TutorialOverlay({
               <button
                 type="button"
                 onClick={onContinue}
-                className="px-6 py-3 bg-sky-800 hover:bg-sky-900 text-white font-semibold rounded-lg shadow-sm transition-colors text-base"
+                className="px-6 py-3 !mt-[-10px] bg-sky-800 hover:bg-sky-900 text-white font-semibold rounded-lg shadow-sm transition-colors text-base"
               >
                 Continue
               </button>

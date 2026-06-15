@@ -45,15 +45,15 @@ export default function ConsentPage() {
         <div className="prose prose-slate max-w-none text-slate-700 leading-relaxed mb-10">
 
 
-          <p className="mb-4">
-            You are invited to take part in the online study <strong className="text-slate-900">&quot;User Assistance in Exploring Online Reviews: Chatbot vs. ABSA Dashboard&quot;</strong>.
+          <p className="mb-4 text-sm">
+            You are invited to take part in the online study <span className="text-slate-900">&quot;User Assistance in Exploring Online Reviews: Conversational Interface vs. Aspect-Based-Sentiment-Analysis Dashboard&quot;</span>.
             The study is conducted by Oliver Szczygiel and overseen by Nils Constantin Hellwig at the University of Regensburg.
             We expect about 36 participants. Data collection is planned from 17.06.2026 to 05.07.2026.
           </p>
 
           <div className="bg-slate-50 border border-slate-200 rounded-xl p-6 mb-6">
             <h3 className="text-base font-bold text-slate-900 mt-0 mb-3">Key Points:</h3>
-            <ul className="list-disc pl-5 space-y-2 text-slate-700 mt-0 mb-0">
+            <ul className="list-disc text-sm pl-5 space-y-2 text-slate-700 mt-0 mb-0">
               <li><strong>Participation is voluntary:</strong> You may stop at any time without penalty or withdraw your consent.</li>
               <li><strong>Age Requirement:</strong> Participation requires that you are at least 18 years of age.</li>
               <li><strong>Duration:</strong> One session of the online study takes about 40 minutes.</li>
@@ -65,12 +65,12 @@ export default function ConsentPage() {
             </ul>
           </div>
 
-          <p className="mb-6">
+          <p className="mb-6 text-sm">
             The alternative is not to take part. If you have questions about the study, the consent process, or your rights as a participant, please contact Nils Constantin Hellwig.
             Please read the following information carefully and take the time you need before deciding.
           </p>
 
-          <section className="mb-6">
+          <section className="mb-6 text-sm">
             <h3 className="text-lg font-bold text-slate-900 mb-2">1. Purpose and Goal of this Research</h3>
             <p>
               This study examines how a chatbot and an ABSA dashboard differ in supporting users when exploring online reviews.
@@ -79,7 +79,7 @@ export default function ConsentPage() {
             </p>
           </section>
 
-          <section className="mb-6">
+          <section className="mb-6 text-sm">
             <h3 className="text-lg font-bold text-slate-900 mb-2">2. Study Participation</h3>
             <p>
               Your participation in this online study is voluntary. If you feel uncomfortable, you may stop immediately. The researchers may end your participation if this is necessary for organizational reasons,
@@ -87,7 +87,7 @@ export default function ConsentPage() {
             </p>
           </section>
 
-          <section className="mb-6">
+          <section className="mb-6 text-sm">
             <h3 className="text-lg font-bold text-slate-900 mb-2">3. Study Procedure</h3>
             <p className="mb-3">If you agree to participate, the study will usually proceed as follows:</p>
             <ol className="list-decimal pl-5 space-y-2 mb-4">
@@ -102,7 +102,7 @@ export default function ConsentPage() {
             </p>
           </section>
 
-          <section className="mb-6">
+          <section className="mb-6 text-sm">
             <h3 className="text-lg font-bold text-slate-900 mb-2">4. Risks and Benefits</h3>
             <p>
               Based on current knowledge, this online study does not involve risks beyond those of everyday activities.
@@ -111,7 +111,7 @@ export default function ConsentPage() {
             </p>
           </section>
 
-          <section className="mb-6">
+          <section className="mb-6 text-sm">
             <h3 className="text-lg font-bold text-slate-900 mb-2">5. Data Protection and Confidentiality</h3>
             <p className="mb-4">
               In this study, we collect directly identifying information, where necessary, and research data.
@@ -131,7 +131,7 @@ export default function ConsentPage() {
             </p>
           </section>
 
-          <section className="mb-6">
+          <section className="mb-6 text-sm">
             <h3 className="text-lg font-bold text-slate-900 mb-3">6. Identification of Investigators</h3>
             <p className="mb-6">If you have questions about the study or your data, please contact:</p>
 
@@ -154,7 +154,7 @@ export default function ConsentPage() {
                 <p className="text-sm text-slate-700 mb-1">
                   <strong>Nils Constantin Hellwig</strong>
                 </p>
-                <p className="text-sm text-slate-600 mb-3 break-all">
+                <p className="text-sm text-slate-600 mb-2 break-all">
                   nils-constantin.hellwig@ur.de
                 </p>
                 <p className="text-sm text-slate-600 leading-snug">

@@ -159,11 +159,11 @@ export default function ExperiencePage() {
                     })}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 bg-white whitespace-pre-line">
+                <tbody className="divide-y divide-slate-100 bg-white">
                   {[
                     { name: 'ati_1', text: 'I like to occupy myself in greater detail with technical systems.' },
                     { name: 'ati_2', text: 'I like testing the functions of new technical systems.' },
-                    { name: 'ati_3', text: 'It is enough for me that a technical system works;\n I don’t care how or why.' },
+                    { name: 'ati_3', text: 'It is enough for me that a technical system works; I don’t care how or why.' },
                     { name: 'ati_4', text: 'It is enough for me to know the basic functions of a technical system.' },
                   ].map((item) => {
                     const hasError = !!errors[item.name as keyof typeof errors];

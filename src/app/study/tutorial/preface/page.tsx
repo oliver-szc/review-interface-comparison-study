@@ -24,15 +24,15 @@ export default function TutorialPrefacePage() {
     }
   };
 
-  const nextStep = (stepIndex: number) => {
-    setVisibleStep(stepIndex + 1);
+  const nextStep = () => {
+    setVisibleStep((prev) => prev + 1);
   };
 
-  if (visibleStep === 2) {
-    return (
-      <TutorialProvider currentStep={0} onAction={() => { }}>
-        <StudyPageGrid>
-          <div className="bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200">
+  return (
+    <TutorialProvider currentStep={0} onAction={() => { }}>
+      <StudyPageGrid>
+        {visibleStep === 2 && (
+          <div className="bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200 animate-in fade-in duration-500">
             <h1 className="text-2xl font-bold text-slate-900 mb-6">
               Task 0 of 3 (Tutorial)
             </h1>
@@ -64,62 +64,50 @@ export default function TutorialPrefacePage() {
               </button>
             </div>
           </div>
-        </StudyPageGrid>
+        )}
+      </StudyPageGrid>
 
-        {/* Card 1 Overlay */}
-        <TutorialOverlay
-          isVisible={true}
-          content={
-            <div>
-              <p className="text-slate-700 leading-relaxed">
-                Before each task, you will see a brief task description. The task itself stays the same across all three rounds, but the system you use to solve it changes.
-              </p>
-            </div>
-          }
-          onContinue={handleContinue}
-        />
-      </TutorialProvider>
-    );
-  }
-
-  return (
-    <main className="relative h-full w-full bg-slate-50 flex flex-col items-center justify-center p-4 overflow-hidden">
-      {/* Active Tutorial Card (Top Layer) */}
-      <div className="w-full max-w-3xl z-20">
-        <div className="w-full bg-white p-8 md:p-10 rounded-xl shadow-lg border border-slate-200 flex flex-col space-y-8">
-          <div className="prose prose-slate max-w-none space-y-4">
-            {/* Step 0: Welcome */}
-            {visibleStep === 0 && (
-              <div>
-                <h1 className="text-2xl font-bold text-slate-900 mb-6">Tutorial</h1>
-                <p className="text-lg text-slate-700">
-                  Welcome to the Tutorial. This step-by-step guide explains how to successfully complete the upcoming tasks.
-                </p>
-              </div>
-            )}
-
-            {/* Step 1: Task Procedure */}
-            {visibleStep === 1 && (
-              <div>
-                <p className="text-slate-700">
-                  You will complete three tasks in total. Each task follows the same basic procedure...
-                </p>
-              </div>
-            )}
+      {/* Step 0 Overlay */}
+      <TutorialOverlay
+        isVisible={visibleStep === 0}
+        content={
+          <div>
+            <h3 className="text-2xl font-bold text-slate-800 !mt-2">Tutorial</h3>
+            <p className="text-slate-700 leading-relaxed text-base">
+              Welcome to the tutorial. This step-by-step guide explains how to successfully complete the upcoming tasks.
+            </p>
           </div>
+        }
+        onContinue={nextStep}
+      />
 
-          {/* Action Buttons */}
-          <div className="flex justify-end">
-            <button
-              type="button"
-              onClick={() => nextStep(visibleStep)}
-              className="px-6 py-3 bg-sky-800 hover:bg-sky-900 text-white font-semibold rounded-lg shadow-sm transition-colors text-base"
-            >
-              Continue
-            </button>
+      {/* Step 1 Overlay */}
+      <TutorialOverlay
+        isVisible={visibleStep === 1}
+        content={
+          <div>
+            <h3 className="text-2xl font-bold text-slate-800 !mt-2">Tasks</h3>
+            <p className="text-slate-700 leading-relaxed text-base">
+              You will complete three tasks in total. Each task follows the same basic procedure...
+            </p>
           </div>
-        </div>
-      </div>
-    </main>
+        }
+        onContinue={nextStep}
+      />
+
+      {/* Step 2 Overlay */}
+      <TutorialOverlay
+        isVisible={visibleStep === 2}
+        content={
+          <div>
+            <h3 className="text-2xl font-bold text-slate-800 !mt-2">Task Introduction</h3>
+            <p className="text-slate-700 leading-relaxed text-base">
+              Before each task, you will see a brief task description. The task itself stays the same across all three rounds, but the system you use to solve it changes.
+            </p>
+          </div>
+        }
+        onContinue={handleContinue}
+      />
+    </TutorialProvider>
   );
 }

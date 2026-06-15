@@ -19,8 +19,8 @@ const TUTORIAL_STEPS = [
   {
     content: (
       <div>
-        <h1 className="text-xl font-bold text-slate-800 !mb-4">The Study Task</h1>
-        <p className="text-slate-700 leading-relaxed !mb-2">
+        <h3 className="text-2xl font-bold text-slate-800 !mt-2">Study Task</h3>
+        <p className="text-slate-700 leading-relaxed text-base">
           This is the main page where you will complete your tasks. It simulates a typical product page with user reviews. Throughout the study, you will use three different assistance systems to explore these reviews. We will now briefly introduce each system.</p>
       </div>
     ),
@@ -29,19 +29,19 @@ const TUTORIAL_STEPS = [
   {
     content: (
       <div>
-        <h1 className="text-xl font-bold text-slate-800 !mb-4">The Review Section</h1>
-        <p className="text-slate-700 leading-relaxed !mb-2">
+        <h3 className="text-2xl font-bold text-slate-800 !mt-2">The Review Section</h3>
+        <p className="text-slate-700 leading-relaxed text-base !mb-[-3px]">
           This is the standard section containing all customer reviews. Here, you can:
         </p>
-        <div className="text-slate-750 font-normal">
-          <ul className="list-disc pl-5 !my-2 !space-y-1">
-            <li><span className="font-bold">view </span> all reviews</li>
-            <li><span className="font-bold">sort </span> the reviews</li>
-            <li><span className="font-bold">filter </span>the reviews using a keyword search</li>
+        <div className="text-slate-700 text-base leading-relaxed">
+          <ul className="list-disc pl-6 !my-2 !space-y-1">
+            <li><span className="font-semibold">view </span> all reviews</li>
+            <li><span className="font-semibold">sort </span> the reviews</li>
+            <li><span className="font-semibold">filter </span>the reviews using a keyword search</li>
           </ul>
         </div>
-        <p className="text-slate-750 font-normal !mt-2">
-          For practice, sort the reviews by “5 stars only”, then enter a word in the search bar and click “Search”.
+        <p className="text-slate-700 leading-relaxed text-base !mt-2">
+          For practice, sort the reviews by “5 stars only”, then enter the keyword "good" in the search bar and click “Search”.
         </p>
       </div>
     ),
@@ -52,17 +52,17 @@ const TUTORIAL_STEPS = [
   {
     content: (
       <div>
-        <h1 className="text-xl font-bold text-slate-800 !mb-4">The Chatbot</h1>
-        <p className="text-slate-700 leading-relaxed !mb-2">
+        <h3 className="text-2xl font-bold text-slate-800 !mt-2">The Chatbot</h3>
+        <p className="text-slate-700 leading-relaxed text-base !mb-[-3px]">
           This assistance allows you to ask specific questions about the reviews to quickly gather insights. Here, you can:
         </p>
-        <div className="text-slate-750 font-normal">
-          <ul className="list-disc pl-5 !my-2 !space-y-1">
-            <li><span className="font-bold">ask </span> specific questions about the review</li>
-            <li><span className="font-bold">get </span> tailored answers regarding the topic</li>
+        <div className="text-slate-700 text-base leading-relaxed">
+          <ul className="list-disc pl-6 !my-2 !space-y-1">
+            <li><span className="font-semibold">ask </span> specific questions about the review</li>
+            <li><span className="font-semibold">get </span> tailored answers regarding the topic</li>
           </ul>
         </div>
-        <p className="text-slate-750 font-normal !mt-2">
+        <p className="text-slate-700 leading-relaxed text-base !mt-2">
           For practice, select one of the suggested question to trigger an answer from the chatbot.
         </p>
       </div>
@@ -74,18 +74,18 @@ const TUTORIAL_STEPS = [
   {
     content: (
       <div>
-        <h1 className="text-xl font-bold text-slate-800 !mb-4">The Dashboard</h1>
-        <p className="text-slate-700 leading-relaxed !mb-2">
+        <h3 className="text-2xl font-bold text-slate-800 !mt-2">The Dashboard</h3>
+        <p className="text-slate-700 leading-relaxed text-base !mb-[-3px]">
           This assistance gives you a structured overview of the reviews based on categories. Here, you can:
         </p>
-        <div className="text-slate-750 font-normal">
-          <ul className="list-disc pl-5 !my-2 !space-y-1">
-            <li><span className="font-bold">view </span> reviews grouped by category</li>
-            <li><span className="font-bold">explore </span> the reviews in each category</li>
-            <li><span className="font-bold">see </span> highlights based on the customers opinions</li>
+        <div className="text-slate-700 text-base leading-relaxed">
+          <ul className="list-disc pl-6 !my-2 !space-y-1">
+            <li><span className="font-semibold">view </span> reviews grouped by category</li>
+            <li><span className="font-semibold">explore </span> the reviews in each category</li>
+            <li><span className="font-semibold">see </span> highlights based on the customers opinions</li>
           </ul>
         </div>
-        <p className="text-slate-750 font-normal !mt-2">
+        <p className="text-slate-700 leading-relaxed text-base !mt-2">
           For practice, select one of the categories, click on “Show more” to expand the list of reviews and close the view again by clicking “Show less”.
         </p>
       </div>
@@ -101,8 +101,8 @@ const TUTORIAL_STEPS = [
   {
     content: (
       <div>
-        <h1 className="text-xl font-bold text-slate-800 !mb-4">Answering the Claims</h1>
-        <p className="text-slate-700 leading-relaxed mb-4">
+        <h3 className="text-2xl font-bold text-slate-800 !mt-2">Answering the Claims</h3>
+        <p className="text-slate-700 leading-relaxed text-base">
           Now that you are familiar with the systems, you will learn how to enter your answers.
           To proceed, click "Open Answer Form" and mark the first claim as "True".
         </p>
@@ -117,8 +117,8 @@ const TUTORIAL_STEPS = [
   {
     content: (
       <div>
-        <h1 className="text-xl font-bold text-slate-900 mb-6">Completing the Form</h1>
-        <p className="text-slate-700 font-normal leading-relaxed mb-4">
+        <h3 className="text-2xl font-bold text-slate-800 !mt-2">Completing the Form</h3>
+        <p className="text-slate-700 leading-relaxed text-base">
           You can open and close the answer form at any time while gathering information. Your progress is saved, so you can work through the claims one by one.
           To proceed, please complete the remaining answers.
         </p>
@@ -131,8 +131,8 @@ const TUTORIAL_STEPS = [
   {
     content: (
       <div>
-        <h1 className="text-xl font-bold text-slate-900 mb-6">Submitting the Task</h1>
-        <p className="text-slate-700 font-normal leading-relaxed mb-4">
+        <h3 className="text-2xl font-bold text-slate-800 !mt-2">Submitting the Task</h3>
+        <p className="text-slate-700 leading-relaxed text-base">
           Once you have answered all claims, you can submit the task. Please click “Submit answers” to complete this tutorial task
         </p>
       </div>
@@ -160,6 +160,40 @@ export default function TutorialConditionClient({
     };
   }, []);
 
+  // Configuration to tweak the scroll target and offset (margin from top) for step 2, 3, 4, 5, and 6
+  const SCROLL_CONFIGS: Record<number, { targetId?: string; offset?: number; toTop?: boolean }> = {
+    2: { targetId: 'tutorial-review-list', offset: 120 }, // Step 2: scroll to review list
+    3: { toTop: true },                                    // Step 3: reset to top
+    4: { targetId: 'tutorial-chatbot', offset: 150 },     // Step 4: scroll to chatbot
+    5: { toTop: true },                                    // Step 5: reset to top
+    6: { targetId: 'tutorial-dashboard', offset: 150 },   // Step 6: scroll to dashboard
+  };
+
+  useEffect(() => {
+    const config = SCROLL_CONFIGS[visibleStep];
+    if (config) {
+      const t = setTimeout(() => {
+        if (config.toTop) {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        } else if (config.targetId && config.offset !== undefined) {
+          const element = document.getElementById(config.targetId);
+          if (element) {
+            // Set the scroll margin dynamically to adjust the exact top spacing position
+            element.style.scrollMarginTop = `${config.offset}px`;
+            element.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        }
+      }, 350);
+      timeoutRefs.current.push(t);
+    }
+  }, [visibleStep]);
+
   const handleTaskSubmit = async () => {
     setIsSubmitting(true);
     try {
@@ -184,15 +218,12 @@ export default function TutorialConditionClient({
       ].includes(action);
 
       if (isAssistanceStep) {
-        setTransitionState('cooldown');
-        const t1 = setTimeout(() => {
-          setTransitionState('fading');
-        }, 3000);
-        const t2 = setTimeout(() => {
+        setTransitionState('fading');
+        const t = setTimeout(() => {
           setVisibleStep((prev) => prev + 1);
           setTransitionState('idle');
         }, 5000);
-        timeoutRefs.current.push(t1, t2);
+        timeoutRefs.current.push(t);
       } else {
         setVisibleStep((prev) => prev + 1);
       }
@@ -223,12 +254,13 @@ export default function TutorialConditionClient({
 
         {/* The floating tutorial overlay */}
         <TutorialOverlay
-          isVisible={visibleStep < TUTORIAL_STEPS.length && currentStepConfig?.content !== null}
+          isVisible={visibleStep < TUTORIAL_STEPS.length}
           content={currentStepConfig?.content}
           requiresAction={currentStepConfig?.requiresAction}
           onContinue={() => setVisibleStep((v) => v + 1)}
           position="center"
           transitionState={transitionState}
+          transitionDuration={5000}
         />
       </div>
     </TutorialProvider>

@@ -320,16 +320,27 @@ export default function TaskClientView({ blockIndex, conditionType, productId, c
         middleContent={
           <div className="space-y-3">
             {/* For TUTORIAL condition, show dashboard -> chatbot -> reviews stacked */}
-            {(conditionType === 'DASHBOARD' || (conditionType === 'TUTORIAL' && currentStep >= 5)) && <DashboardPanel aspectData={aspectData} productId={productId} />}
-            {(conditionType === 'CHATBOT' || (conditionType === 'TUTORIAL' && currentStep >= 3 && currentStep < 5)) && <ChatbotPanel productId={productId} />}
+            {(conditionType === 'DASHBOARD' || (conditionType === 'TUTORIAL' && currentStep >= 5)) && (
+              <div id="tutorial-dashboard">
+                <DashboardPanel aspectData={aspectData} productId={productId} />
+              </div>
+            )}
+            {(conditionType === 'CHATBOT' || (conditionType === 'TUTORIAL' && currentStep >= 3 && currentStep < 5)) && (
+              <div id="tutorial-chatbot">
+                <ChatbotPanel productId={productId} />
+              </div>
+            )}
 
             {/* Review list (shown for all conditions) */}
-            <ReviewListPanel
-              reviews={reviews}
-              starDistribution={computedStarDistribution}
-              averageRating={uiProductData.avgRating}
-              totalCount={uiProductData.totalReviews}
-            />
+            <div id="tutorial-review-list">
+              <ReviewListPanel
+                key={conditionType === 'TUTORIAL' ? `reviews-step-${currentStep}` : 'reviews-normal'}
+                reviews={reviews}
+                starDistribution={computedStarDistribution}
+                averageRating={uiProductData.avgRating}
+                totalCount={uiProductData.totalReviews}
+              />
+            </div>
           </div>
         }
       />
