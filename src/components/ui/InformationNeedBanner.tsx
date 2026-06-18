@@ -90,13 +90,13 @@ export function InformationNeedBanner({
 
         {/* Top Header Row (Always visible) */}
         <div ref={headerRef} className="flex-shrink-0 flex items-center justify-between px-10 py-2 min-h-20">
-          <div className="w-48 flex justify-start flex-shrink-0">
+          <div className="w-56 flex justify-start flex-shrink-0">
             <button
               type="button"
               onClick={() => setActiveTab('help')}
-              className={`flex-shrink-0 flex items-center gap-2 text-sm font-medium text-slate-700 border border-slate-300 bg-white hover:bg-slate-100 rounded-lg px-[18px] py-[9px] transition shadow-sm ${isOpen ? 'invisible pointer-events-none' : 'visible'}`}
+              className={`flex-shrink-0 flex items-center gap-1.5 whitespace-nowrap text-sm font-medium text-slate-700 border border-slate-300 bg-white hover:bg-slate-50 rounded-lg pl-[10px] pr-[14px] py-[9px] transition shadow-sm ${isOpen ? 'invisible pointer-events-none' : 'visible'}`}
             >
-              <span>?</span> Open Help
+              <span className="material-symbols-outlined">help</span> Open Help
             </button>
           </div>
 
@@ -104,9 +104,9 @@ export function InformationNeedBanner({
             {typeof task === 'function' ? task({ isOpen }) : task}
           </div>
 
-          <div className="w-48 flex justify-end flex-shrink-0">
-            <TutorialHighlight 
-              active={waitingForAction === 'OPEN_ANSWER_FORM'} 
+          <div className="w-56 flex justify-end flex-shrink-0">
+            <TutorialHighlight
+              active={waitingForAction === 'OPEN_ANSWER_FORM'}
               roundedClass="rounded-lg"
             >
               <button
@@ -115,9 +115,9 @@ export function InformationNeedBanner({
                   setActiveTab('submit');
                   dispatchTutorialAction('OPEN_ANSWER_FORM');
                 }}
-                className={`flex-shrink-0 flex items-center gap-2 text-sm font-medium text-slate-700 border border-slate-300 bg-white hover:bg-slate-100 rounded-lg px-[18px] py-[9px] transition shadow-sm ${isOpen ? 'invisible pointer-events-none' : 'visible'}`}
+                className={`flex-shrink-0 flex items-center gap-1.5 whitespace-nowrap text-sm font-medium text-slate-700 border border-slate-300 bg-white hover:bg-slate-50 rounded-lg pl-[10px] pr-[12px] py-[9px] transition shadow-sm ${isOpen ? 'invisible pointer-events-none' : 'visible'}`}
               >
-                <span>✓</span> Open Answer Form
+                <span className="material-symbols-outlined">expand_circle_down</span> Open Answer Form
               </button>
             </TutorialHighlight>
           </div>
@@ -180,9 +180,18 @@ export function InformationNeedBanner({
               <button
                 type="button"
                 onClick={() => setActiveTab(null)}
-                className="px-[18px] py-[9px] border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 rounded-lg text-sm font-medium transition shadow-sm"
+                className={`flex-shrink-0 flex items-center gap-1.5 whitespace-nowrap text-sm font-medium text-slate-700 border border-slate-300 bg-white hover:bg-slate-50 rounded-lg py-[9px] transition shadow-sm ${renderedTab === 'help' ? 'pl-[10px] pr-[14px]' : 'pl-[10px] pr-[12px]'
+                  }`}
               >
-                {renderedTab === 'help' ? 'Close Help' : 'Close Answer Form'}
+                {renderedTab === 'help' ? (
+                  <>
+                    <span className="material-symbols-outlined">expand_circle_up</span> Close Help
+                  </>
+                ) : (
+                  <>
+                    <span className="material-symbols-outlined">expand_circle_up</span> Close Answer Form
+                  </>
+                )}
               </button>
             </div>
           </div>

@@ -46,7 +46,7 @@ export default async function AttentionScreeningOutPage() {
           </p>
 
           <div className="bg--50 border border-sky-100 bg-sky-50 rounded-lg p-6 mt-8 text-center text--900">
-            <h2 className="text-xl font-semibold text-slate-900 mb-4">Claiming Your Participant Hours (VP-Stunden)</h2>
+            <h2 className="text-xl font-semibold text-slate-900 mb-4">Compensation for students of the University of Regensburg:</h2>
             <p className="mb-6 text-sm">
               To receive your VP hours, please send a brief email including your personal completion code:
             </p>

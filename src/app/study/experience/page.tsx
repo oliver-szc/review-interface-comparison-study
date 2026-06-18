@@ -142,7 +142,7 @@ export default function ExperiencePage() {
                 <thead>
                   <tr className="border-b border-slate-200 bg-slate-50 text-xs font-semibold text-slate-500 uppercase tracking-wide">
                     <th scope="col" className="p-5 font-semibold text-slate-500 leading-relaxed normal-case tracking-normal">
-                      Please indicate the degree to which you agree/disagree<br />with the following statements.
+                      Please indicate the degree to which you agree/disagree with the following statements.
                     </th>
                     {ATI_LABELS.map((opt) => {
                       const firstWord = opt.label.split(' ')[0];

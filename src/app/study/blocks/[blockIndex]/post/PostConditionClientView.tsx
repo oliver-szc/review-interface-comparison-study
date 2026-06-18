@@ -18,9 +18,7 @@ interface PostConditionProps {
 
 const PostConditionSchema = z.object({
   tlx_mental_demand: z.string().min(1, "Please answer this question."),
-  tlx_physical_demand: z.string().min(1, "Please answer this question."),
   tlx_temporal_demand: z.string().min(1, "Please answer this question."),
-  tlx_performance: z.string().min(1, "Please answer this question."),
   tlx_effort: z.string().min(1, "Please answer this question."),
   tlx_frustration: z.string().min(1, "Please answer this question."),
 
@@ -40,9 +38,7 @@ const PostConditionSchema = z.object({
 // NASA-TLX dimension definitions
 const TLX_DIMENSIONS = [
   { field: 'tlx_mental_demand', name: 'Mental Demand', question: 'How mentally demanding was the task?' },
-  { field: 'tlx_physical_demand', name: 'Physical Demand', question: 'How physically demanding was the task?' },
   { field: 'tlx_temporal_demand', name: 'Temporal Demand', question: 'How hurried or rushed was the pace of the task?' },
-  { field: 'tlx_performance', name: 'Performance', question: 'How successful were you in accomplishing what you were asked to do?' },
   { field: 'tlx_effort', name: 'Effort', question: 'How hard did you have to work to accomplish your level of performance?' },
   { field: 'tlx_frustration', name: 'Frustration', question: 'How insecure, discouraged, irritated, stressed, and annoyed were you?' },
 ] as const;
@@ -153,7 +149,7 @@ export default function PostConditionClientView({ blockIndex, conditionType, onT
                 key={dim.field}
                 name={dim.name}
                 question={dim.question}
-                registration={register(dim.field as 'tlx_mental_demand' | 'tlx_physical_demand' | 'tlx_temporal_demand' | 'tlx_performance' | 'tlx_effort' | 'tlx_frustration')}
+                registration={register(dim.field as 'tlx_mental_demand' | 'tlx_temporal_demand' | 'tlx_effort' | 'tlx_frustration')}
                 error={errors[dim.field as keyof typeof errors] as import('react-hook-form').FieldError | undefined}
               />
             ))}

@@ -5,6 +5,7 @@ import { participants } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { headers } from 'next/headers';
 import { NavigationBlocker } from '@/components/ui/NavigationBlocker';
+import { ConnectionMonitor } from '@/components/ui/ConnectionMonitor';
 
 const SCREEN_OUT_ROUTES: Record<string, string> = {
   S1_ENGLISH:       '/screening/english',
@@ -29,7 +30,7 @@ export default async function StudyLayout({
   if (isDebugMode) {
     return (
       <>
-        <NavigationBlocker />
+        <ConnectionMonitor />
         {children}
       </>
     );
@@ -41,6 +42,7 @@ export default async function StudyLayout({
       return (
         <>
           <NavigationBlocker />
+          <ConnectionMonitor />
           {children}
         </>
       );
@@ -89,6 +91,7 @@ export default async function StudyLayout({
   return (
     <>
       <NavigationBlocker />
+      <ConnectionMonitor />
       {children}
     </>
   );

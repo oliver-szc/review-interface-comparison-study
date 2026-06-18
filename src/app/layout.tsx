@@ -8,7 +8,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Review Study Platform",
+  title: "Study: Exploring Online Reviews",
   description: "Research study comparing review interfaces",
 };
 
@@ -19,6 +19,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="h-screen overflow-hidden">
+      <head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+      </head>
       <body className={`${inter.className} bg-white text-slate-950 selection:bg-indigo-100 h-full flex flex-col overflow-hidden`}>
         <div className="flex-1 overflow-y-auto min-h-0 relative">
           {children}

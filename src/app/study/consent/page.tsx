@@ -48,7 +48,7 @@ export default function ConsentPage() {
           <p className="mb-4 text-sm">
             You are invited to take part in the online study <span className="text-slate-900">&quot;User Assistance in Exploring Online Reviews: Conversational Interface vs. Aspect-Based-Sentiment-Analysis Dashboard&quot;</span>.
             The study is conducted by Oliver Szczygiel and overseen by Nils Constantin Hellwig at the University of Regensburg.
-            We expect about 36 participants. Data collection is planned from 17.06.2026 to 05.07.2026.
+            Data collection is planned from 17.06.2026 to 05.07.2026.
           </p>
 
           <div className="bg-slate-50 border border-slate-200 rounded-xl p-6 mb-6">

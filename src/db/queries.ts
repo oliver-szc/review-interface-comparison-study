@@ -1,6 +1,6 @@
 import { db, sql } from './client';
 import { trackingEvents, type NewTrackingEvent, reviews, type Review, products, type Product, participants, sequencePool, type Participant } from './schema';
-import { and, eq, inArray, desc, asc } from 'drizzle-orm';
+import { and, eq, inArray, desc, asc, lt } from 'drizzle-orm';
 
 // Function to insert a test record into the test_connection table
 export async function insertTestRecord(message: string) {
@@ -194,4 +194,67 @@ export async function releaseSequenceFromParticipant(participantId: string, reas
       })
       .where(eq(sequencePool.sequenceId, vpId));
   });
+}
+
+// Transaction: Release sequences that have been reserved for more than X hours by uncompleted participants
+export async function releaseStaleSequences(hoursThreshold: number): Promise<number> {
+  const thresholdDate = new Date(Date.now() - hoursThreshold * 60 * 60 * 1000);
+
+  let releasedCount = 0;
+
+  await db.transaction(async (tx) => {
+    // 1. Find stale sequences
+    // We need sequences where isAvailable = false and reservedAt < thresholdDate
+    // and the linked participant has studyCompleted = false.
+    const staleSequences = await tx
+      .select({
+        sequenceId: sequencePool.sequenceId,
+        participantId: sequencePool.reservedByParticipantId,
+      })
+      .from(sequencePool)
+      .innerJoin(participants, eq(sequencePool.reservedByParticipantId, participants.id))
+      .where(
+        and(
+          eq(sequencePool.isAvailable, false),
+          lt(sequencePool.reservedAt, thresholdDate),
+          eq(participants.studyCompleted, false)
+        )
+      )
+      .for('update');
+
+    if (staleSequences.length === 0) {
+      return;
+    }
+
+    releasedCount = staleSequences.length;
+
+    // 2. Update participants: clear vpId, set screenedOutReason
+    const participantIds = staleSequences.map(s => s.participantId).filter((id): id is string => id !== null);
+    
+    if (participantIds.length > 0) {
+      await tx
+        .update(participants)
+        .set({
+          vpId: null,
+          screenedOutReason: 'TIMEOUT',
+          updatedAt: new Date(),
+        })
+        .where(inArray(participants.id, participantIds));
+    }
+
+    // 3. Release sequences back to pool
+    const sequenceIds = staleSequences.map(s => s.sequenceId);
+    if (sequenceIds.length > 0) {
+      await tx
+        .update(sequencePool)
+        .set({
+          isAvailable: true,
+          reservedByParticipantId: null,
+          reservedAt: null,
+        })
+        .where(inArray(sequencePool.sequenceId, sequenceIds));
+    }
+  });
+
+  return releasedCount;
 }

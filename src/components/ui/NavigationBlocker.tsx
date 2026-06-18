@@ -13,6 +13,12 @@ export function NavigationBlocker() {
   useEffect(() => { routerRef.current = router; });
 
   useEffect(() => {
+    // Check client-side debug mode flag to disable blocking
+    const isDebug = typeof window !== 'undefined' && localStorage.getItem('STUDY_DEBUG_MODE') === 'true';
+    if (isDebug) {
+      return;
+    }
+
     const search = searchParams.toString();
     const lockedUrl = search ? `${pathname}?${search}` : pathname;
     const state = window.history.state;

@@ -47,7 +47,7 @@ export default async function DebriefPage() {
 
           <h2 className="text-xl font-semibold text-slate-900 mt-6 mb-3">About This Study</h2>
           <p>
-            This research investigated how two different types of user assistance (an AI-based chatbot and a data dashboard) affect the experience of browsing and evaluating online product reviews. Your responses make a valuable contribution to our understanding of human-computer interaction.
+            This research investigated how two different types of user assistance (a chatbot and a dashboard) affect the experience of browsing and evaluating online product reviews. Your responses make a valuable contribution to our understanding of human-computer interaction.
           </p>
 
           <div className="bg-slate-50 border border-slate-200 p-4 rounded-lg text-slate-900 text-sm">
@@ -68,7 +68,7 @@ export default async function DebriefPage() {
           </p>
 
           <div className="bg-sky-50 border border-sky-100 rounded-lg p-6 mt-8 text-center text--900">
-            <h2 className="text-xl font-semibold text-slate-900 mb-4">Claiming Your Participant Hours (VP-Stunden)</h2>
+            <h2 className="text-xl font-semibold text-slate-900 mb-4">Compensation for students of the University of Regensburg:</h2>
             <p className="mb-6 text-sm">
               To receive your VP hours, please send a brief email including your personal completion code:
             </p>

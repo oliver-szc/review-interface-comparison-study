@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 // Quick-jump navigation destinations visible in the debug console
 const JUMP_ROUTES = [
@@ -54,6 +54,7 @@ function getCookie(name: string): string | null {
 
 export function DebugConsole() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isDebugMode, setIsDebugMode] = useState(false);
   const [currentPath, setCurrentPath] = useState('');
   const [productSequence, setProductSequence] = useState('E,K,S');
@@ -110,8 +111,8 @@ export function DebugConsole() {
   if (!isDebugMode) return null;
 
   const handleJump = (path: string) => {
-    // Use hard navigation to avoid fighting with NavigationBlocker's history.pushState
-    window.location.href = path;
+    // Use soft navigation since NavigationBlocker is disabled in debug mode
+    router.push(path);
   };
 
   const handleProductSequenceChange = (newSeq: string) => {
