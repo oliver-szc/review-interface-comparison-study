@@ -11,6 +11,7 @@ interface InformationNeedBannerProps {
   submitContent?: ReactNode;
   helpContent?: ReactNode;
   productId?: string;
+  conditionType?: 'BASELINE' | 'DASHBOARD' | 'CHATBOT' | 'TUTORIAL';
 }
 
 export function InformationNeedBanner({
@@ -20,8 +21,9 @@ export function InformationNeedBanner({
   submitContent,
   helpContent,
   productId,
+  conditionType,
 }: InformationNeedBannerProps) {
-  const { waitingForAction, dispatchTutorialAction } = useTutorial();
+  const { currentStep, waitingForAction, dispatchTutorialAction } = useTutorial();
   const [activeTab, setActiveTab] = useState<'help' | 'submit' | null>(null);
   const [renderedTab, setRenderedTab] = useState<'help' | 'submit' | null>(null);
   const headerRef = useRef<HTMLDivElement>(null);
@@ -76,6 +78,22 @@ export function InformationNeedBanner({
     };
   }, []);
 
+  let activeAssistance: 'REVIEWS' | 'CHATBOT' | 'DASHBOARD' | null = null;
+  if (conditionType === 'BASELINE') {
+    activeAssistance = 'REVIEWS';
+  } else if (conditionType === 'CHATBOT') {
+    activeAssistance = 'CHATBOT';
+  } else if (conditionType === 'DASHBOARD') {
+    activeAssistance = 'DASHBOARD';
+  } else if (conditionType === 'TUTORIAL') {
+    if (currentStep < 3) {
+      activeAssistance = 'REVIEWS';
+    } else if (currentStep === 3 || currentStep === 4) {
+      activeAssistance = 'CHATBOT';
+    } else {
+      activeAssistance = 'DASHBOARD';
+    }
+  }
 
   return (
     <>
@@ -134,34 +152,81 @@ export function InformationNeedBanner({
               {renderedTab === 'help' && (
                 helpContent || (
                   <div className="w-full max-w-4xl text-left">
-                    <h3 className="text-xl font-bold text-slate-950 mb-3">
-                      Help / Task Instructions
-                    </h3>
-                    <span className="text-slate-700 text-sm md:text-base leading-relaxed mb-3">Imagine following: You are interested in buying this {(productId || 'product').toLowerCase()} and want to evaluate claims you have heard about the product.</span> <br />
-                    <p className="text-slate-700 text-sm md:text-base leading-relaxed mb-3">
-                      Your goal is to verify three specific claims about the product using the provided system (chatbot, dashboard, or reviews only). Please investigate whether the experiences of actual customers support or contradict these claims.
+                    <h2 className="text-3xl font-bold text-slate-950 mb-4">
+                      Help
+                    </h2>
+                    <h4 className="text-lg font-bold text-slate-950 mb-3">How it works:</h4>
+                    <p className="text-slate-700 text-sm md:text-base leading-relaxed mb-4">
+                      You are evaluating three claims about a product using customer reviews. Your goal is to decide for each claim whether the reviews support or contradict it.
                     </p>
+                    <ol className="list-decimal pl-5 mb-6 space-y-2 text-slate-700 text-sm md:text-base leading-relaxed">
+                      <li><strong>Explore</strong> the reviews using the tool on your screen.</li>
+                      <li><strong>Open the answer form</strong> and mark each claim as <em>True</em>, <em>False</em>, or <em>Not mentioned</em>.</li>
+                      <li><strong>Submit</strong> once all three claims are answered.</li>
+                    </ol>
 
-                    <p className="text-slate-700 text-sm md:text-base leading-relaxed mb-3">
-                      Click on <strong>Open Answer Form</strong> to view the claims. For each claim, select one of the following options based on the evidence you found:
-                    </p>
-
-                    <ul className="list-disc pl-5 mb-6 space-y-2 text-slate-700 text-sm md:text-base leading-relaxed">
-                      <li><span className="font-semibold">True </span>(the majority of reviewers clearly rate this aspect as such)</li>
-                      <li><span className="font-semibold">False </span>(the aspect is mentioned, but the majority rate it the opposite way)</li>
-                      <li><span className="font-semibold">Not mentioned </span>(cannot be determined because the reviews do not address this aspect)</li>
+                    <h4 className="text-lg font-bold text-slate-950 mb-3">Tips:</h4>
+                    <ul className="list-disc pl-5 mb-8 space-y-2 text-slate-700 text-sm md:text-base leading-relaxed">
+                      <li>Base your answers on what the <strong>majority</strong> of reviewers say, not on individual cases.</li>
+                      <li>If you searched for a topic but found no relevant reviews, select <em>Not mentioned</em>.</li>
+                      <li>You can open and close the answer form at any time — your progress is saved.</li>
                     </ul>
 
-                    <div className="p-5 bg-white border border-slate-200 rounded-lg text-slate-700">
-                      <h4 className="text-xs md:text-sm font-bold text-slate-800 mb-2.5">
-                        Remember:
-                      </h4>
-                      <ul className="list-disc pl-5 space-y-2 text-xs md:text-sm leading-relaxed">
-                        <li><strong>Use the provided system:</strong> Solve the task using the system currently visible on your screen.</li>
-                        <li><strong>Stay focused:</strong> Please do not switch browser tabs or take breaks while the time is running.</li>
-                        <li><strong>Complete the form:</strong> You must select an answer for all three claims before you can submit.</li>
-                      </ul>
-                    </div>
+                    {activeAssistance === 'REVIEWS' && (
+                      <div className="p-6 bg-slate-50 border border-slate-200 rounded-xl text-slate-700">
+                        <h4 className="text-lg font-bold text-slate-950 mb-3">
+                          Current Assistance in Detail: Reviews
+                        </h4>
+                        <p className="text-slate-700 text-sm md:text-base leading-relaxed mb-3">
+                          In the Reviews section, you’ll see the complete list of all customer reviews. Here, you can:
+                        </p>
+                        <ul className="list-disc pl-5 space-y-2 text-slate-700 text-sm md:text-base leading-relaxed">
+                          <li>scroll through all reviews, just like on a regular product page</li>
+                          <li>sort the reviews, for example by highest ratings</li>
+                          <li>filter the reviews using a keyword search to see only specific topics</li>
+                        </ul>
+                        <p className="text-slate-700 text-sm md:text-base leading-relaxed mt-4 font-semibold">
+                          This helps you to read exactly what individual people have written.
+                        </p>
+                      </div>
+                    )}
+
+                    {activeAssistance === 'CHATBOT' && (
+                      <div className="p-6 bg-slate-50 border border-slate-200 rounded-xl text-slate-700">
+                        <h4 className="text-lg font-bold text-slate-950 mb-3">
+                          Current Assistance in Detail: Chatbot
+                        </h4>
+                        <p className="text-slate-700 text-sm md:text-base leading-relaxed mb-3">
+                          The chatbot is a text-based assistant that lets you “talk” about the reviews. Instead of searching through all the text yourself, here you can:
+                        </p>
+                        <ul className="list-disc pl-5 space-y-2 text-slate-700 text-sm md:text-base leading-relaxed">
+                          <li>ask specific questions, such as “Do customers mention battery life?”</li>
+                          <li>get summaries or specific insights based on the existing reviews</li>
+                        </ul>
+                        <p className="text-slate-700 text-sm md:text-base leading-relaxed mt-4 font-semibold">
+                          The chatbot helps you get an overview more quickly or find out specific details without having to read every review individually.
+                        </p>
+                      </div>
+                    )}
+
+                    {activeAssistance === 'DASHBOARD' && (
+                      <div className="p-6 bg-slate-50 border border-slate-200 rounded-xl text-slate-700">
+                        <h4 className="text-lg font-bold text-slate-950 mb-3">
+                          Current Assistance in Detail: Dashboard
+                        </h4>
+                        <p className="text-slate-700 text-sm md:text-base leading-relaxed mb-3">
+                          The dashboard summarizes the reviews into categories. Instead of reading many individual texts, you get a structured overview. There, you can:
+                        </p>
+                        <ul className="list-disc pl-5 space-y-2 text-slate-700 text-sm md:text-base leading-relaxed">
+                          <li>see which categories appear in the reviews (e.g., “quality,” “usability,” “delivery”)</li>
+                          <li>view reviews within a category to read the details</li>
+                          <li>identify key points or highlights, such as aspects that are frequently praised or criticized</li>
+                        </ul>
+                        <p className="text-slate-700 text-sm md:text-base leading-relaxed mt-4 font-semibold">
+                          The dashboard helps you to understand which topics dominate the reviews and what the opinions are on them.
+                        </p>
+                      </div>
+                    )}
                   </div>
 
                 )

@@ -159,7 +159,7 @@ export default function TaskClientView({ blockIndex, conditionType, productId, c
         {conditionType === 'TUTORIAL' ? conditionLabel : `Task ${blockIndex}/3 · ${conditionLabel}`}
       </p>
       <div
-        className={`flex flex-col items-center gap-0.5 mt-1 transition-all duration-300 ${isOpen ? 'invisible opacity-0 pointer-events-none' : 'visible opacity-100'
+        className={`flex flex-col items-center gap-0.5 mt-1 transition-all duration-300 ${isOpen ? 'hidden opacity-0 pointer-events-none' : 'visible opacity-100'
           }`}
       >
         {claims.map((claim, index) => (
@@ -311,6 +311,7 @@ export default function TaskClientView({ blockIndex, conditionType, productId, c
       submitContent={submitFormNode}
       onSubmit={form.handleSubmit(onSubmit)}
       productId={productId}
+      conditionType={conditionType}
     >
       <WebshopLayout
         condition={conditionType === 'TUTORIAL' ? 'dashboard' : conditionType.toLowerCase() as 'unassisted' | 'dashboard' | 'chatbot'}

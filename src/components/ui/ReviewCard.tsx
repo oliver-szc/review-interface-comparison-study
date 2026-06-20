@@ -24,7 +24,7 @@ export function ReviewCard({ name, stars, date, text, title: propTitle, searchQu
       <>
         {parts.map((part, i) =>
           part.toLowerCase() === query.toLowerCase() ? (
-            <mark key={i} className="bg-amber-100 text-slate-600 rounded-sm px-0.5 py-0.5">
+            <mark key={i} className="bg-amazon-light/22 text-slate-600 rounded-sm px-0.5 py-0.5">
               {part}
             </mark>
           ) : (

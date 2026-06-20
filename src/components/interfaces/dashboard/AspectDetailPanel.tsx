@@ -112,9 +112,9 @@ function highlightTerms(
   } else if (HIGHLIGHT_MODE === 'textColor') {
     const textColor =
       sentiment === 'positive'
-        ? 'text-emerald-600'
+        ? 'text-green-600'
         : sentiment === 'negative'
-          ? 'text-rose-600'
+          ? 'text-red-600/80'
           : 'text-slate-600'
     highlightClass = `font-semibold ${textColor}`
   } else if (HIGHLIGHT_MODE === 'mark') {
@@ -311,7 +311,7 @@ function ReviewSnippet({
             {' '}
             <button
               onClick={() => setExpanded((prev) => !prev)}
-              className="text-[11px] text-slate-500 hover:underline font-medium inline"
+              className="text-[11px] text-slate-400 hover:underline font-medium inline"
             >
               {expanded ? 'Collapse ◂' : 'Read more ▸'}
             </button>
@@ -365,7 +365,7 @@ export function AspectDetailPanel({ stat, onCollapse }: AspectDetailPanelProps) 
         <span className="text-green-600">{stat.positive} positive</span>,{' '}
         <span className="text-red-500">{stat.negative} negative</span>
         {stat.neutral > 0 && (
-          <>, <span className="text-slate-400">{stat.neutral} neutral</span></>
+          <>, <span className="text-slate-600">{stat.neutral} neutral</span></>
         )}
       </p>
 
@@ -396,7 +396,7 @@ export function AspectDetailPanel({ stat, onCollapse }: AspectDetailPanelProps) 
               >
                 <button
                   onClick={handleShowMore}
-                  className="text-[12px] text-slate-600 hover:text-slate-800 font-medium transition-colors group"
+                  className="text-[12px] text-slate-500 hover:text-slate-800 font-medium transition-colors group"
                 >
                   <span className="group-hover:underline">Show more</span> <span>▾</span>
                 </button>

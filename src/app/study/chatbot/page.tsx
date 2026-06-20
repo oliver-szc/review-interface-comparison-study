@@ -91,7 +91,10 @@ export default function ChatbotPage() {
   ]
 
   return (
-    <StudyLayout task="Ask the AI assistant to help you identify the three most frequently mentioned positive aspects of this product.">
+    <StudyLayout 
+      task="Ask the AI assistant to help you identify the three most frequently mentioned positive aspects of this product."
+      conditionType="CHATBOT"
+    >
       <WebshopLayout
         productImage={<ProductImage productData={productData} />}
         topContent={<ProductDetails productData={productData} />}

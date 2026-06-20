@@ -40,6 +40,7 @@ export function ProductImage({ productData }: ProductPanelProps) {
         alt={title}
         width={500}
         height={500}
+        priority
         className={`w-100 h-100 rounded-lg object-contain transition-transform duration-300 ${isEarbuds ? 'scale-150' : ''}`}
       />
     </div>

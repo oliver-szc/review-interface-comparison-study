@@ -11,6 +11,7 @@ interface StudyLayoutProps {
   submitContent?: ReactNode
   helpContent?: ReactNode
   productId?: string
+  conditionType?: 'BASELINE' | 'DASHBOARD' | 'CHATBOT' | 'TUTORIAL';
 }
 
 export function StudyLayout({
@@ -21,6 +22,7 @@ export function StudyLayout({
   submitContent,
   helpContent,
   productId,
+  conditionType,
 }: StudyLayoutProps) {
   const handleHelp = onHelp || (() => console.log('Help clicked'))
   const handleSubmit = onSubmit || (() => console.log('Submit clicked'))
@@ -35,6 +37,7 @@ export function StudyLayout({
         submitContent={submitContent}
         helpContent={helpContent}
         productId={productId}
+        conditionType={conditionType}
       />
 
       {/* Main Content */}

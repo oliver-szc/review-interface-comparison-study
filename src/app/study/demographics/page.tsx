@@ -152,10 +152,10 @@ export default function DemographicsPage() {
             >
               <VerticalRadioGroup
                 options={[
-                  { value: 1, label: 'Beginner (Anfänger, A1/A2)' },
-                  { value: 2, label: 'Intermediate (Gut, B1/B2)' },
-                  { value: 3, label: 'Advanced (Sehr gut, C1)' },
-                  { value: 4, label: 'Native (Perfekt, C2)' },
+                  { value: 1, label: 'Beginner (Anfänger)' },
+                  { value: 2, label: 'Intermediate (Gut)' },
+                  { value: 3, label: 'Advanced (Sehr gut)' },
+                  { value: 4, label: 'Native (Perfekt)' },
                 ]}
 
                 registration={register('scr_english')}

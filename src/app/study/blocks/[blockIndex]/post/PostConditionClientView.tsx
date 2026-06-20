@@ -138,10 +138,12 @@ export default function PostConditionClientView({ blockIndex, conditionType, onT
                 Please evaluate your experience using <strong><i>{systemName}</i></strong> for the previous task.
               </p>
             </div>
-
             {/* --- NASA-TLX --- */}
             <div className="!mt-24">
               <h2 className="text-xl font-semibold text-slate-900">Task Load</h2>
+              <p className="text-slate-600 mt-3 text-sm leading-relaxed">
+                Please rate how it felt to work through the task you just completed.
+              </p>
             </div>
 
             {TLX_DIMENSIONS.map((dim) => (
@@ -263,7 +265,7 @@ export default function PostConditionClientView({ blockIndex, conditionType, onT
             {/* --- Attention Check (Only in block 2) --- */}
             {blockIndex === 2 && (
               <QuestionCard
-                question="For quality assurance purposes: Please select 'Sometimes'."
+                question="To ensure data quality, please select 'Sometimes' for this question."
                 error={errors.scr_attention}
                 required={false}
                 className="shadow-none border-none p-0 bg-transparent !mt-24"

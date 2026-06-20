@@ -45,20 +45,20 @@ export default async function AttentionScreeningOutPage() {
             We still greatly appreciate your participation and the time you’ve invested!
           </p>
 
-          <div className="bg--50 border border-sky-100 bg-sky-50 rounded-lg p-6 mt-8 text-center text--900">
+          <div className="bg-sky-50/50 border border-sky-100 rounded-lg p-6 mt-8 text-center text-slate-900">
             <h2 className="text-xl font-semibold text-slate-900 mb-4">Compensation for students of the University of Regensburg:</h2>
             <p className="mb-6 text-sm">
-              To receive your VP hours, please send a brief email including your personal completion code:
+              To receive your VP hours, please send a brief email including<br />your <span className="font-semibold">matriculation number</span> and your <span className="font-semibold">personal completion code</span>:
             </p>
 
-            <h4 className="font-bold text--950 mb-2">Your personal completion code:</h4>
+            <h4 className="font-bold text-slate-700 mb-2">Your personal completion code:</h4>
             <CompletionCodeButton code={code} />
 
-            <h4 className="font-bold text--950 mb-2 mt-8">Send the completion code to:</h4>
+            <h4 className="font-bold text-slate-700 mb-2 mt-8">Send the completion code to:</h4>
             <p className="mb-2">
               <a
                 href={`mailto:oliver.szczygiel@stud.uni-regensburg.de?subject=Study Completion Code: ${code}`}
-                className="font-mono bg-white hover:bg--50/50 border border--200 hover:border--300 rounded px-4 py-2 inline-block text--600 hover:text--800 transition-all shadow-sm"
+                className="font-mono bg-white hover:bg-white-50/50 border border-sky-100 hover:border-sky-300 rounded px-4 py-2 inline-block text-slate-600 hover:text-slate-800 transition-all shadow-sm"
               >
                 oliver.szczygiel@stud.uni-regensburg.de
               </a>

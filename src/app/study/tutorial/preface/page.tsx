@@ -40,7 +40,7 @@ export default function TutorialPrefacePage() {
             <div className="prose prose-slate max-w-none text-slate-700 text-lg leading-relaxed mb-6">
               <p>
                 <i>
-                  <strong>Scenario:</strong> You are interested in buying <span className="font-semibold">earbuds</span> and want to evaluate claims you have heard about the product.
+                  <strong>Scenario:</strong> You are interested in buying <span className="font-semibold">earbuds</span> and want to evaluate claims made about the product.
                 </i>
               </p>
               <div>
@@ -74,8 +74,7 @@ export default function TutorialPrefacePage() {
           <div>
             <h3 className="text-2xl font-bold text-slate-800 !mt-2">Tutorial</h3>
             <p className="text-slate-700 leading-relaxed text-base">
-              Welcome to the tutorial. This step-by-step guide shows you how to complete the tasks in this study.
-            </p>
+              Welcome to the tutorial. This step-by-step guide shows you how to use the assistances and complete the study tasks, before you do so on your own.            </p>
           </div>
         }
         onContinue={nextStep}

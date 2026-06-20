@@ -102,7 +102,7 @@ export default function ExperiencePage() {
             </QuestionCard>
 
             <QuestionCard
-              question="How often have you used chatbots or AI assistants (e.g., ChatGPT) to find information?"
+              question="How often have you used chatbots or AI assistants (e.g., ChatGPT, Google AI Search) to find and evaluate information?"
               error={errors.exp_chatbots}
               required={false}
               className="shadow-none border-none p-0 bg-transparent"

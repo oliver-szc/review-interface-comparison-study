@@ -31,40 +31,55 @@ export default function TutorialAlternativePage() {
     <StudyPageGrid>
       <div className="w-full bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200">
         <div className="mb-10">
-          <h1 className="text-2xl font-bold text-slate-900 mb-6">Alternative Explanation</h1>
+          <h1 className="text-3xl font-extrabold text-slate-900 mb-4">Another way to explain the tasks</h1>
 
-          <p className="text-lg font-bold text-slate-900 mb-4">
-            Let’s look at it from a more practical side:
+          <p className="text-lg font-semibold text-slate-800 mb-6">
+            Not sure how it works? Here's a simple overview.
           </p>
 
-          <p className="mb-4">
-            Imagine you are researching a product online and come across specific claims about its features (for example: “The camera is completely waterproof”). In each task, you will see three such claims pinned to your screen.
+          <p className="text-base text-slate-700 mb-8 leading-relaxed">
+            In this study, you will complete three tasks, one at a time. The task stays the same each round, but the tool changes.
           </p>
 
-          <p className="mb-4">
-            Your goal is to find out if the experiences of actual customers support or contradict these claims. To do this, you will use different systems to explore the reviews – such as an AI chatbot, an interactive data dashboard, or a classic review list. Please use the provided system to gather the facts.
-          </p>
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-xl font-bold text-slate-900 mb-2">Step 1: Read the task description</h2>
+              <p className="text-slate-700 leading-relaxed">
+                Before each task starts, you will see a short description of what to do. Read it, then continue to the task page.
+              </p>
+            </div>
 
-          <p className="mb-6">
-            Once you have verified the information, simply select whether each claim is True, False, or Cannot be determined based on the reviews, and then submit your answers.             </p>
-          <div className="prose prose-slate max-w-none mb-10 p-8 bg-slate-50 rounded-xl border border-slate-200 text-slate-700 leading-relaxed text-sm md:text-base">
-            <p className="text-base font-bold text-slate-900 mb-4">
-              The 3 Golden Rules for this study:
-            </p>
-            <ul className="list-disc pl-5 space-y-3">
-              <li>
-                <strong>Use the tools:</strong> Please interact with the chatbot or dashboard; do not just read reviews manually.
-              </li>
-              <li>
-                <strong>Stay focused:</strong> Do not switch browser tabs and do not take breaks while searching for the answer.
-              </li>
-              <li>
-                <strong>Take breaks later:</strong> You can take a short breather <i>between</i> tasks, while filling out the questionnaires.
-              </li>
-            </ul>
+            <div>
+              <h2 className="text-xl font-bold text-slate-900 mb-2">Step 2: Explore the reviews</h2>
+              <p className="text-slate-700 leading-relaxed mb-3">
+                On the task page, you will see a product page with customer reviews. You have <strong>three different tools</strong> to explore them:
+              </p>
+              <ul className="list-disc pl-6 space-y-2 text-slate-700">
+                <li><strong>Reviews:</strong> Browse, sort, and filter all reviews by keyword.</li>
+                <li><strong>Chatbot:</strong> Ask questions about the reviews and get direct answers.</li>
+                <li><strong>Dashboard:</strong> See reviews grouped by category, with highlighted opinions.</li>
+              </ul>
+            </div>
+
+            <div>
+              <h2 className="text-xl font-bold text-slate-900 mb-2">Step 3: Answer the claims</h2>
+              <p className="text-slate-700 leading-relaxed mb-3">
+                Click <strong>"Open Answer Form"</strong> to open the answer form. You will see a list of claims — mark each one as <strong>True</strong> or <strong>False</strong> based on what you found.
+              </p>
+              <p className="text-slate-700 leading-relaxed font-semibold">
+                You can open and close the form at any time. Your progress is saved automatically.
+              </p>
+            </div>
+
+            <div>
+              <h2 className="text-xl font-bold text-slate-900 mb-2">Step 4: Submit</h2>
+              <p className="text-slate-700 leading-relaxed">
+                Once all claims are answered, click <strong>"Submit Answers"</strong> to finish the task.
+              </p>
+            </div>
           </div>
 
-          <p className="text-lg font-medium text-slate-700 text-center">Are you ready to start the tasks now?</p>
+          <p className="text-lg font-medium text-slate-700 text-center mt-10">Are you ready to start the tasks now?</p>
         </div>
 
         <div className="flex flex-col sm:flex-row justify-between gap-4 w-full">

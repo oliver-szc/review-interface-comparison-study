@@ -91,7 +91,10 @@ export default function DashboardPage() {
   ]
 
   return (
-    <StudyLayout task="Using the dashboard insights, identify the three most frequently mentioned positive aspects of this product.">
+    <StudyLayout 
+      task="Using the dashboard insights, identify the three most frequently mentioned positive aspects of this product."
+      conditionType="DASHBOARD"
+    >
       <WebshopLayout
         productImage={<ProductImage productData={productData} />}
         topContent={<ProductDetails productData={productData} />}

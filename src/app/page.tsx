@@ -95,7 +95,7 @@ function LandingPageInner() {
                 <li><strong>Tutorial:</strong> Next, you will familiarize yourself with the web interface and the task format.</li>
                 <li><strong>Main section:</strong> You will complete three short tasks one after the other, each followed by a short questionnaire.</li>
                 <li><strong>Study completion:</strong> At the end of the study, you will fill out a final questionnaire.</li>
-                <li><strong>Estimated total duration:</strong> approx. 40 minutes.</li>
+                <li><strong>Estimated total duration:</strong> approx. 35 minutes.</li>
               </ul>
 
               <h2 className="text-xl font-semibold text-slate-900 mt-10 mb-3">Compensation for students of the University of Regensburg:</h2>

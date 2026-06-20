@@ -90,7 +90,10 @@ export default function UnassistedPage() {
   ]
 
   return (
-    <StudyLayout task="Based on the customer reviews, identify the three most frequently mentioned positive aspects of this product.">
+    <StudyLayout 
+      task="Based on the customer reviews, identify the three most frequently mentioned positive aspects of this product."
+      conditionType="BASELINE"
+    >
       <WebshopLayout
         productImage={<ProductImage productData={productData} />}
         topContent={<ProductDetails productData={productData} />}

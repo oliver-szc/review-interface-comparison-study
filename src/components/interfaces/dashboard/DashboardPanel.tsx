@@ -86,10 +86,10 @@ export function DashboardPanel({ aspectData, productId }: DashboardPanelProps) {
         What customers say
       </h2>
       {/* AI Summary */}
-      <p className="text-md text-slate-600">
+      <p className="text-sm text-slate-600">
         {summaryText}
       </p>
-      <p className="text-xs italic text-slate-500">
+      <p className="text-xs italic text-slate-500 !mt-[-0.5rem]">
         AI-generated from customer reviews
       </p>
       {/* Aspect Selection */}
