@@ -13,6 +13,7 @@
 :root {
   --background: #ffffff;
   --foreground: #0f172a;
+  --product-panel-width: 900px;
 }
 
 @theme inline {

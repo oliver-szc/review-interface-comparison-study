@@ -192,7 +192,7 @@ export function ChatbotPanel({ productId }: ChatbotPanelProps) {
   }
 
   return (
-    <div className="h-auto flex flex-col bg-sky-00 rounded-xl border-2 border-sky-400 shadow-sm mx-auto max-w-4xl w-full">
+    <div className="h-auto flex flex-col bg-sky-00 mt-10 rounded-xl border-2 border-sky-400 shadow-sm mx-auto max-w-4xl w-full">
       {/* Header */}
       <div className="px-4 py-4">
         <h2 className="text-xl font-bold text-slate-900">

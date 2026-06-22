@@ -7,14 +7,13 @@ import { z } from 'zod';
 import { StudyLayout } from '@/components/layouts/StudyLayout';
 import { WebshopLayout } from '@/components/layouts/WebshopLayout';
 import { AriaInvalidSync } from '@/components/forms/AriaInvalidSync';
-import { ProductImage, ProductDetails } from '@/components/ui/ProductPanel';
+import { ProductPanel } from '@/components/ui/ProductPanel';
 import { ReviewListPanel } from '@/components/ui/ReviewListPanel';
 import { ChatbotPanel } from '@/components/interfaces/chatbot/ChatbotPanel'; // Touch for final scroll timing rebuild
 import { DashboardPanel } from '@/components/interfaces/dashboard/DashboardPanel';
 import { useTutorial } from '@/lib/contexts/TutorialContext';
 import { TutorialHighlight } from '@/components/tutorial/TutorialHighlight';
 import type { AspectStat } from '@/lib/queries/absa';
-import earbudsImage from '@/app/earbuds.jpg';
 
 interface Claim {
   id: string;
@@ -145,7 +144,7 @@ export default function TaskClientView({ blockIndex, conditionType, productId, c
     ...productData,
     avgRating: calculatedAvgRating,
     totalReviews: calculatedTotalReviews,
-    image: productData.imageUrl || earbudsImage,
+    image: productData.imageUrl || '/earbuds.avif',
   };
   const conditionLabel =
     conditionType === 'TUTORIAL' ? 'Tutorial' :
@@ -313,13 +312,13 @@ export default function TaskClientView({ blockIndex, conditionType, productId, c
       productId={productId}
       conditionType={conditionType}
     >
+      <ProductPanel productData={uiProductData as any} />
       <WebshopLayout
         condition={conditionType === 'TUTORIAL' ? 'dashboard' : conditionType.toLowerCase() as 'unassisted' | 'dashboard' | 'chatbot'}
-        productImage={<ProductImage productData={uiProductData as any} />}
-        topContent={<ProductDetails productData={uiProductData as any} />}
+        topContent={null}
         leftContent={null}
         middleContent={
-          <div className="space-y-3">
+          <div>
             {/* For TUTORIAL condition, show dashboard -> chatbot -> reviews stacked */}
             {(conditionType === 'DASHBOARD' || (conditionType === 'TUTORIAL' && currentStep >= 5)) && (
               <div id="tutorial-dashboard">

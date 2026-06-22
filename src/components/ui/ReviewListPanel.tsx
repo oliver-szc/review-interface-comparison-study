@@ -110,7 +110,7 @@ export function ReviewListPanel({
   const progressPercent = totalInPool > 0 ? (currentlyShown / totalInPool) * 100 : 0
 
   return (
-    <div className="bg-white rounded-xl p-4 mx-auto max-w-4xl w-full">
+    <div className="bg-white rounded-xl p-4 pt-10 mx-auto max-w-4xl w-full">
       <h2 className="text-2xl font-bold text-slate-900">Customer reviews</h2>
 
       {/* Star Histogram */}
@@ -138,7 +138,7 @@ export function ReviewListPanel({
 
 
       {/* Sort / Filter Bar */}
-      <div className="mb-4 w-full">
+      <div className="mb-5 w-full">
         <ReviewSortFilterBar
           filters={filters}
           onChange={(f) => setFilters(f)}
@@ -148,7 +148,7 @@ export function ReviewListPanel({
       <hr className="border-slate-200 mb-4" />
 
       {/* Review Cards */}
-      <div className="space-y-3">
+      <div className="space-y-1">
         {totalInPool === 0 ? (
           <div className="py-8 px-4 text-center text-slate-500 border border-dashed border-slate-200 rounded-xl bg-white text-sm">
             No reviews match your selected filters. Try removing filters or adjusting your search term.

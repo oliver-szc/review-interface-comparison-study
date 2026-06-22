@@ -57,9 +57,9 @@ export function ReviewSortFilterBar({ filters, onChange }: ReviewSortFilterBarPr
 
       <div className="w-fit flex flex-col">
         {/* Row 1 — Search */}
-        <div>
+        <div className='py-1'>
           <TutorialHighlight active={waitingForAction === 'REVIEW_SEARCH' && !filters.search} roundedClass="rounded-lg">
-            <div className="flex gap-2 p-1">
+            <div className="flex gap-2">
               <div className="relative flex-1">
                 <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
                 <input

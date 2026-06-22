@@ -85,7 +85,7 @@ export function DashboardPanel({ aspectData, productId, conditionType }: Dashboa
   }
 
   return (
-    <div ref={containerRef} className="scroll-mt-[150px] bg-sky-00 rounded-xl rounded-xl border-2 border-sky-400 p-4 space-y-3 mx-auto max-w-4xl w-full">
+    <div ref={containerRef} className="scroll-mt-[150px] bg-sky-00 rounded-xl rounded-xl border-2 border-sky-400 mt-10 p-4 space-y-3 mx-auto max-w-4xl w-full">
       {/* Header */}
       <h2 className="text-xl font-bold text-slate-900">
         What customers say

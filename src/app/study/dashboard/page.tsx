@@ -2,16 +2,15 @@
 
 import { StudyLayout } from '@/components/layouts/StudyLayout'
 import { WebshopLayout } from '@/components/layouts/WebshopLayout'
-import { ProductImage, ProductDetails } from '@/components/ui/ProductPanel'
+import { ProductPanel } from '@/components/ui/ProductPanel'
 import { ReviewListPanel } from '@/components/ui/ReviewListPanel'
 import { DashboardPanel } from '@/components/interfaces/dashboard/DashboardPanel'
-import earbudsImage from '@/app/earbuds.jpg'
 
 export default function DashboardPage() {
   // Mock data - same as unassisted
   const productData = {
     title: 'Premium Wireless Earbuds with Active Noise Cancellation',
-    image: earbudsImage,
+    image: '/earbuds.avif',
     avgRating: 4.3,
     totalReviews: 2847,
     bullets: [
@@ -95,9 +94,9 @@ export default function DashboardPage() {
       task="Using the dashboard insights, identify the three most frequently mentioned positive aspects of this product."
       conditionType="DASHBOARD"
     >
+      <ProductPanel productData={productData} />
       <WebshopLayout
-        productImage={<ProductImage productData={productData} />}
-        topContent={<ProductDetails productData={productData} />}
+        topContent={null}
         leftContent={null}
         middleContent={
           <>
