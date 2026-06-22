@@ -12,6 +12,7 @@ import { AspectDetailPanel } from './AspectDetailPanel'
 interface DashboardPanelProps {
   aspectData: AspectStat[]
   productId?: string
+  conditionType?: string
 }
 
 const PRODUCT_SUMMARIES: Record<string, string> = {
@@ -20,7 +21,7 @@ const PRODUCT_SUMMARIES: Record<string, string> = {
   SWEATSHIRT: "Customers like the comfort, price, and warmth of the sweatshirt. They mention feeling very cozy wearing it and getting an excellent deal for the cost. Customers also appreciate the durable material quality and nice colors. However, some customers disagree on the overall fit and sizing."
 }
 
-export function DashboardPanel({ aspectData, productId }: DashboardPanelProps) {
+export function DashboardPanel({ aspectData, productId, conditionType }: DashboardPanelProps) {
   const { waitingForAction, dispatchTutorialAction } = useTutorial()
   const { activeAspect, setActiveAspect } = useDashboardFilterStore()
   const containerRef = useRef<HTMLDivElement>(null)
@@ -36,7 +37,11 @@ export function DashboardPanel({ aspectData, productId }: DashboardPanelProps) {
   // Sort aspects: first positive, then mixed, then negative. Keep original order within tiers.
   const sortedAspectData = useMemo(() => {
     const order = { positive: 0, mixed: 1, negative: 2 }
-    return [...aspectData].sort((a, b) => {
+    let filtered = [...aspectData]
+    if (conditionType === 'TUTORIAL') {
+      filtered = filtered.filter((a) => a.total >= 6)
+    }
+    return filtered.sort((a, b) => {
       const tierA = getSentimentTier(a.positive, a.negative, a.neutral)
       const tierB = getSentimentTier(b.positive, b.negative, b.neutral)
       if (tierA !== tierB) {
@@ -44,7 +49,7 @@ export function DashboardPanel({ aspectData, productId }: DashboardPanelProps) {
       }
       return aspectData.indexOf(a) - aspectData.indexOf(b)
     })
-  }, [aspectData])
+  }, [aspectData, conditionType])
 
   // Default to the first category in sorted order on mount
   useEffect(() => {

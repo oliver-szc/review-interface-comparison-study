@@ -5,7 +5,7 @@ import { getAspectData } from '@/lib/queries/absa';
 import TutorialConditionClient from './TutorialConditionClient';
 
 export default async function TutorialConditionPage() {
-  const productId = 'EARBUDS';
+  const productId = 'TUTORIAL';
 
   // Fetch claims for TUTORIAL
   const rawClaims = await db

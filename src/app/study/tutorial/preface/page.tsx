@@ -40,7 +40,7 @@ export default function TutorialPrefacePage() {
             <div className="prose prose-slate max-w-none text-slate-700 text-lg leading-relaxed mb-6">
               <p>
                 <i>
-                  <strong>Scenario:</strong> You are interested in buying <span className="font-semibold">earbuds</span> and want to evaluate claims made about the product.
+                  <strong>Scenario:</strong> You are interested in buying a <span className="font-semibold">Samsung Galaxy SmartTag Bluetooth Tracker</span> and want to evaluate claims made about the product.
                 </i>
               </p>
               <div>

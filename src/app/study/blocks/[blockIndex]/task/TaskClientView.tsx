@@ -25,7 +25,7 @@ interface Claim {
 interface TaskClientViewProps {
   blockIndex: number;
   conditionType: 'BASELINE' | 'DASHBOARD' | 'CHATBOT' | 'TUTORIAL';
-  productId: 'EARBUDS' | 'KETTLE' | 'SWEATSHIRT';
+  productId: 'EARBUDS' | 'KETTLE' | 'SWEATSHIRT' | 'TUTORIAL';
   claims: Claim[];
   productData: any;
   reviews: any[];
@@ -323,7 +323,7 @@ export default function TaskClientView({ blockIndex, conditionType, productId, c
             {/* For TUTORIAL condition, show dashboard -> chatbot -> reviews stacked */}
             {(conditionType === 'DASHBOARD' || (conditionType === 'TUTORIAL' && currentStep >= 5)) && (
               <div id="tutorial-dashboard">
-                <DashboardPanel aspectData={aspectData} productId={productId} />
+                <DashboardPanel aspectData={aspectData} productId={productId} conditionType={conditionType} />
               </div>
             )}
             {(conditionType === 'CHATBOT' || (conditionType === 'TUTORIAL' && currentStep >= 3 && currentStep < 5)) && (

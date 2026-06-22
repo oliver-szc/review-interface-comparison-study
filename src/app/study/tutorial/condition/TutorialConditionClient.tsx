@@ -251,7 +251,7 @@ export default function TutorialConditionClient({
         <TaskClientView
           blockIndex={0}
           conditionType="TUTORIAL"
-          productId="EARBUDS"
+          productId="TUTORIAL"
           claims={claims}
           productData={productData}
           reviews={reviews}

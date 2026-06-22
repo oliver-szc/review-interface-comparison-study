@@ -5,7 +5,7 @@ import { sql } from '@vercel/postgres';
 export const runtime = 'edge';
 
 // Valid product IDs that match the database enum
-const VALID_PRODUCT_IDS = ['EARBUDS', 'KETTLE', 'SWEATSHIRT'] as const;
+const VALID_PRODUCT_IDS = ['EARBUDS', 'KETTLE', 'SWEATSHIRT', 'TUTORIAL'] as const;
 type ProductId = (typeof VALID_PRODUCT_IDS)[number];
 
 // Minimum query length to avoid trivial / accidental submissions

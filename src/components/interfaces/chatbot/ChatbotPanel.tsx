@@ -35,6 +35,11 @@ const SUGGESTED_QUESTIONS: Record<string, string[]> = {
     'Is it easy to use?',
     'How long does it take to boil?',
   ],
+  TUTORIAL: [
+    'How well does the tracking work?',
+    'Is the battery life good?',
+    'Is the tracker easy to set up?',
+  ],
 }
 
 export function ChatbotPanel({ productId }: ChatbotPanelProps) {
