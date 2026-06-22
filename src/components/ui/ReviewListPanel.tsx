@@ -115,7 +115,7 @@ export function ReviewListPanel({
 
       {/* Star Histogram */}
       <div className="mb-4">
-        <div className="w-full max-w-[320px]">
+        <div className="w-full max-w-[252px]">
           <StarHistogram
             averageRating={averageRating}
             totalCount={totalCount}

@@ -27,21 +27,30 @@ interface ProductPanelProps {
 export function ProductImage({ productData }: ProductPanelProps) {
   const { title, image } = productData
 
-  // Check if this product is the earbuds by title or image string
+  // Check if this product is the earbuds by title or image string to apply upscale
   const isEarbuds =
     title.toLowerCase().includes('earbud') ||
     (typeof image === 'string' && image.toLowerCase().includes('earbud')) ||
     (image && typeof image === 'object' && 'src' in image && typeof image.src === 'string' && image.src.toLowerCase().includes('earbud'));
 
+  // Check if this product is the smarttag by title or image string to apply downscale
+  const isSmartTag =
+    title.toLowerCase().includes('smarttag') ||
+    title.toLowerCase().includes('smart tag') ||
+    (typeof image === 'string' && (image.toLowerCase().includes('smarttag') || image.toLowerCase().includes('smart_tag'))) ||
+    (image && typeof image === 'object' && 'src' in image && typeof image.src === 'string' && (image.src.toLowerCase().includes('smarttag') || image.src.toLowerCase().includes('smart_tag')));
+
+  const scaleClass = isEarbuds ? 'scale-150' : isSmartTag ? 'scale-55' : '';
+
   return (
-    <div className="bg-white rounded-xl flex items-center justify-center w-full h-full overflow-hidden">
+    <div className="bg-white rounded-xl p-5 flex items-center justify-center w-full h-full overflow-hidden">
       <Image
         src={image}
         alt={title}
         width={500}
         height={500}
         priority
-        className={`w-100 h-100 rounded-lg object-contain transition-transform duration-300 ${isEarbuds ? 'scale-150' : ''}`}
+        className={`w-full h-full rounded-lg object-contain transition-transform duration-300 ${scaleClass}`}
       />
     </div>
   )
@@ -116,7 +125,7 @@ export function ProductPanel({ productData }: ProductPanelProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-5 gap-x-4 gap-y-4 items-start w-full px-3 md:px-4">
       <div className="lg:col-span-1 lg:self-stretch h-full flex justify-end">
-        <div className="w-full">
+        <div className="w-full h-full">
           <ProductImage productData={productData} />
         </div>
       </div>

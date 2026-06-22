@@ -33,7 +33,7 @@ export function StarHistogram({
           <li key={star}>
             <button
               onClick={() => onStarFilter?.(star)}
-              className={`w-full flex items-center gap-2 group rounded-md px-1 py-0.5 transition
+              className={`w-full flex items-center gap-2 group rounded-md px-0.5 -ml-0.5 py-0.5 transition
                 ${activeFilter === star ? 'ring-1 ring-amazon' : 'hover:bg-slate-50'}`}
               aria-label={`${percentage}% of reviews have ${star} stars`}
             >
@@ -51,7 +51,7 @@ export function StarHistogram({
               </div>
 
               {/* Percentage */}
-              <span className="text-xs text-amazon w-8 text-right shrink-0">
+              <span className="text-xs text-amazon w-6 text-right shrink-0">
                 {percentage}%
               </span>
             </button>

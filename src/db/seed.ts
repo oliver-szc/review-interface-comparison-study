@@ -60,7 +60,7 @@ async function seed() {
         id: 'earbuds_claim_1',
         productId: 'EARBUDS',
         claimOrder: 1,
-        claimText: 'The earbuds are notably good when it comes to bass.',
+        claimText: "The earbuds' bass is really good.",
         correctOption: 1, // True
         sourceVersion: 'v2.0'
       },
@@ -68,7 +68,7 @@ async function seed() {
         id: 'earbuds_claim_2',
         productId: 'EARBUDS',
         claimOrder: 2,
-        claimText: 'The earbuds connect quickly to Bluetooth devices.',
+        claimText: "The earbuds connect pretty fast.",
         correctOption: 1, // True
         sourceVersion: 'v2.0'
       },
@@ -76,7 +76,7 @@ async function seed() {
         id: 'earbuds_claim_3',
         productId: 'EARBUDS',
         claimOrder: 3,
-        claimText: "The earbuds' voice control typically works just fine.",
+        claimText: "The earbuds' voice control is very reliable.",
         correctOption: 3, // Not mentioned
         sourceVersion: 'v2.0'
       },
@@ -86,7 +86,7 @@ async function seed() {
         id: 'kettle_claim_1',
         productId: 'KETTLE',
         claimOrder: 1,
-        claimText: 'The kettle offers poor value relative to its actual cost.',
+        claimText: "The kettle's value for money is truly poor.",
         correctOption: 2, // False
         sourceVersion: 'v2.0'
       },
@@ -94,7 +94,7 @@ async function seed() {
         id: 'kettle_claim_2',
         productId: 'KETTLE',
         claimOrder: 2,
-        claimText: "The kettle's auto shutoff sensor withstands mineral buildup.",
+        claimText: "The kettle's auto shutoff timing is very adjustable.",
         correctOption: 3, // Not mentioned
         sourceVersion: 'v2.0'
       },
@@ -102,7 +102,7 @@ async function seed() {
         id: 'kettle_claim_3',
         productId: 'KETTLE',
         claimOrder: 3,
-        claimText: 'The kettle generally operates at a quiet noise level.',
+        claimText: "The kettle is really quiet when boiling.",
         correctOption: 2, // False
         sourceVersion: 'v2.0'
       },
@@ -112,7 +112,7 @@ async function seed() {
         id: 'sweatshirt_claim_1',
         productId: 'SWEATSHIRT',
         claimOrder: 1,
-        claimText: "The sweatshirt's minimalist look makes it ideal for streetwear.",
+        claimText: "The sweatshirt's look is really perfect for streetwear.",
         correctOption: 3, // Not mentioned
         sourceVersion: 'v2.0'
       },
@@ -120,7 +120,7 @@ async function seed() {
         id: 'sweatshirt_claim_2',
         productId: 'SWEATSHIRT',
         claimOrder: 2,
-        claimText: "The sweatshirt fully delivers on its 'heavyweight' label.",
+        claimText: "The sweatshirt is truly as heavy as advertised.",
         correctOption: 2, // False
         sourceVersion: 'v2.0'
       },
@@ -128,7 +128,7 @@ async function seed() {
         id: 'sweatshirt_claim_3',
         productId: 'SWEATSHIRT',
         claimOrder: 3,
-        claimText: 'The sweatshirt offers surprising quality for its low price.',
+        claimText: "The sweatshirt's quality is genuinely good for its price.",
         correctOption: 1, // True
         sourceVersion: 'v2.0'
       },
