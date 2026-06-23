@@ -1,0 +1,24 @@
+name: Neon DB Daily Backup
+
+on:
+  schedule:
+    # Runs daily at 02:00 UTC (04:00 AM CEST / Berlin summer time)
+    - cron: '0 2 * * *'
+  workflow_dispatch: # Allows manual trigger from the GitHub Actions UI
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install Neon CLI
+        run: npm install -g neonctl
+
+      - name: Reset backup branch to current main
+        run: |
+          neonctl branches reset backup/daily \
+            --project-id ${{ secrets.NEON_PROJECT_ID }} \
+            --api-key ${{ secrets.NEON_API_KEY }} \
+            --parent
+        # The --parent flag resets the 'backup/daily' branch to the current state of its parent branch (default: main).
+        # This overwrites the branch rather than creating a new one, keeping your free-tier branch limit at +1.

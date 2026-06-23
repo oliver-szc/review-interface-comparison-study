@@ -6,20 +6,21 @@ export function proxy(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('x-current-path', request.nextUrl.pathname);
 
-  // Allow the consent page and the api route for consent
-  if (
-    request.nextUrl.pathname === '/study/consent' ||
-    request.nextUrl.pathname === '/api/study/consent'
-  ) {
+  // Debug mode bypass: if the debugMode cookie is set, skip all auth and routing checks
+  const debugMode = request.cookies.get('debugMode');
+  if (debugMode?.value === 'true') {
+    requestHeaders.set('x-debug-mode', 'true');
     return NextResponse.next({
       request: { headers: requestHeaders },
     });
   }
 
-  // Debug mode bypass: if the debugMode cookie is set, skip all auth and routing checks
-  const debugMode = request.cookies.get('debugMode');
-  if (debugMode?.value === 'true') {
-    requestHeaders.set('x-debug-mode', 'true');
+  // Allow the consent page, the api route for consent, and the mobile screening page
+  if (
+    request.nextUrl.pathname === '/study/consent' ||
+    request.nextUrl.pathname === '/api/study/consent' ||
+    request.nextUrl.pathname === '/screening/mobile'
+  ) {
     return NextResponse.next({
       request: { headers: requestHeaders },
     });

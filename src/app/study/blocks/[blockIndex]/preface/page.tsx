@@ -45,7 +45,7 @@ export default async function BlockPrefacePage({ params }: { params: Promise<{ b
         <div className="prose prose-slate max-w-none text-slate-700 text-lg leading-relaxed mb-6">
           <p>
             <i>
-              <strong>Scenario:</strong> You are interested in buying <span className="font-semibold">{prefixedProduct}</span> and want to evaluate claims you have heard about the product.
+              <strong>Scenario:</strong> You are interested in buying <span className="font-semibold">{prefixedProduct}</span> and want to evaluate claims made about the product.
             </i>
           </p>
           <div>
@@ -58,7 +58,7 @@ export default async function BlockPrefacePage({ params }: { params: Promise<{ b
             <ul className="list-disc">
               <li><span className="font-semibold">True </span>(the majority of reviewers clearly rate this aspect as such)</li>
               <li><span className="font-semibold">False </span>(the aspect is mentioned, but the majority rate it the opposite way)</li>
-              <li><span className="font-semibold">Not mentioned </span>(the aspect simply does not appear in the reviews)</li>
+              <li><span className="font-semibold">Not mentioned </span>(cannot be determined because the reviews do not address this aspect)</li>
             </ul>
           </div>
         </div>

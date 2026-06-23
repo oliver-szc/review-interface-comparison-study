@@ -1,7 +1,7 @@
 import { pgTable, uuid, varchar, text, decimal, integer, timestamp, vector, boolean, json, index, uniqueIndex, pgEnum } from 'drizzle-orm/pg-core';
 
 export const conditionTypeEnum = pgEnum('condition_type', ['BASELINE', 'DASHBOARD', 'CHATBOT']);
-export const productIdEnum = pgEnum('product_id', ['EARBUDS', 'KETTLE', 'SWEATSHIRT']);
+export const productIdEnum = pgEnum('product_id', ['EARBUDS', 'KETTLE', 'SWEATSHIRT', 'TUTORIAL']);
 
 // Products table
 export const products = pgTable('products', {
@@ -93,6 +93,8 @@ export const participants = pgTable('participants', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
   completedAt: timestamp('completed_at'),
+  lastHeartbeatAt: timestamp('last_heartbeat_at'),
+  connectionDrops: integer('connection_drops').default(0),
   demoAge: integer('demo_age'),
   demoGender: integer('demo_gender'),
   demoStudyStatus: integer('demo_studystatus'),
@@ -146,9 +148,7 @@ export const blockSubmissions = pgTable('block_submissions', {
   taskEndTime: timestamp('task_end_time'),
   timeOnTaskMs: integer('time_on_task_ms'),
   tlx_mental_demand: integer('tlx_mental_demand'),
-  tlx_physical_demand: integer('tlx_physical_demand'),
   tlx_temporal_demand: integer('tlx_temporal_demand'),
-  tlx_performance: integer('tlx_performance'),
   tlx_effort: integer('tlx_effort'),
   tlx_frustration: integer('tlx_frustration'),
   pu1: integer('pu_1'),

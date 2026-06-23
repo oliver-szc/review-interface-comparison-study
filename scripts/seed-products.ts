@@ -71,6 +71,27 @@ const seedProducts: NewProduct[] = [
       "MULTI-MODE NOISE CANCELLATION: Choose the right mode from transport, outdoor and indoor and immerse yourself in the ultimate sound experience.",
       "FIRST CLASS CALL QUALITY: Your earbuds are equipped with 6 microphones, which, thanks to smart noise cancellation, provide isolated background noise and thus crystal clear phone calls."
     ]
+  },
+  {
+    productId: 'TUTORIAL',
+    domain: 'Electronics',
+    asin: 'B08F9V49K9',
+    title: 'Samsung Galaxy SmartTag Bluetooth Tracker',
+    price: '30.99',
+    priceSource: 'Mediamarkt.de',
+    imageUrl: '/smarttag.jpg',
+    bulletPointsSource: 'Amazon.com',
+    bulletPoints: [
+      { label: 'Brand', value: 'Samsung' },
+      { label: 'Colour', value: 'Oatmeal' },
+      { label: 'Material', value: 'Plastic' }
+    ],
+    aboutItemSource: 'Amazon.com',
+    aboutItem: [
+      'TAG: Need to keep an eye on something? Attach a Galaxy SmartTag to these precious things in life.',
+      'FIND IT: If you lost your stuff, just launch the app and see where it was last. Pulling back your steps is easy.',
+      'TAKE IT EASY: there it is! With Galaxy SmartTags, finding lost items is smart and easy.'
+    ]
   }
 ];
 
@@ -97,7 +118,7 @@ async function seed() {
         }
       });
   }
-  console.log('✅ Seeded 3 products');
+  console.log(`✅ Seeded ${seedProducts.length} products`);
 }
 
 seed();

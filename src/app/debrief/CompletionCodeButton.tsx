@@ -29,7 +29,7 @@ export function CompletionCodeButton({ code }: CompletionCodeButtonProps) {
         {code}
       </button>
       <p className={`text-xs mt-2 italic transition-colors duration-200 ${copied ? 'text-green-600 font-semibold' : 'text--600'}`}>
-        {copied ? '✓ Copied to clipboard' : 'Click to copy the code'}
+        {copied ? '✓ Copied to clipboard' : 'Click on the code to copy it'}
       </p>
     </div>
   );

@@ -1,9 +1,11 @@
 'use client'
 
 import { useState, useRef, useCallback } from 'react'
+import { useTutorial } from '@/lib/contexts/TutorialContext'
 import { ChatMessage } from './ChatMessage'
 import { ChatInput } from './ChatInput'
 import { SuggestedQuestions } from './SuggestedQuestions'
+
 
 interface Message {
   role: 'user' | 'bot'
@@ -33,15 +35,22 @@ const SUGGESTED_QUESTIONS: Record<string, string[]> = {
     'Is it easy to use?',
     'How long does it take to boil?',
   ],
+  TUTORIAL: [
+    'How well does the tracking work?',
+    'Is the battery life good?',
+    'Is the tracker easy to set up?',
+  ],
 }
 
 export function ChatbotPanel({ productId }: ChatbotPanelProps) {
+  const { waitingForAction, dispatchTutorialAction } = useTutorial()
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
 
   // Abort controller ref so we can cancel in-flight requests
   const abortControllerRef = useRef<AbortController | null>(null)
+  const isTutorialChatTriggered = useRef(false)
 
   const questionsKey = productId.toUpperCase()
   const suggestedQuestions = SUGGESTED_QUESTIONS[questionsKey] || SUGGESTED_QUESTIONS.EARBUDS
@@ -58,6 +67,10 @@ export function ChatbotPanel({ productId }: ChatbotPanelProps) {
 
     const abortController = new AbortController()
     abortControllerRef.current = abortController
+
+    if (waitingForAction === 'CHATBOT_SUGGESTION_CLICK') {
+      isTutorialChatTriggered.current = true
+    }
 
     // Record the time the query was sent (for tracking latency)
     const querySentAt = Date.now()
@@ -90,6 +103,7 @@ export function ChatbotPanel({ productId }: ChatbotPanelProps) {
 
         setMessages([userMessage, { role: 'bot', text: errorMessage, isError: true }])
         setIsLoading(false)
+        isTutorialChatTriggered.current = false
         return
       }
 
@@ -101,6 +115,7 @@ export function ChatbotPanel({ productId }: ChatbotPanelProps) {
           { role: 'bot', text: 'Failed to read the response stream.', isError: true },
         ])
         setIsLoading(false)
+        isTutorialChatTriggered.current = false
         return
       }
 
@@ -128,6 +143,11 @@ export function ChatbotPanel({ productId }: ChatbotPanelProps) {
       // Stream complete
       setIsStreaming(false)
       setIsLoading(false)
+
+      if (isTutorialChatTriggered.current) {
+        isTutorialChatTriggered.current = false
+        dispatchTutorialAction('CHATBOT_SUGGESTION_CLICK')
+      }
 
       // Fire-and-forget: Log CHAT_RESPONSE_RECEIVED tracking event
       const latencyMs = Date.now() - querySentAt
@@ -163,15 +183,16 @@ export function ChatbotPanel({ productId }: ChatbotPanelProps) {
       ])
       setIsStreaming(false)
       setIsLoading(false)
+      isTutorialChatTriggered.current = false
     }
-  }, [productId])
+  }, [productId, waitingForAction, dispatchTutorialAction])
 
   const handleQuestionClick = (question: string) => {
     handleSend(question)
   }
 
   return (
-    <div className="h-auto flex flex-col bg-sky-00 rounded-xl border-2 border-sky-400 shadow-sm mx-auto max-w-4xl w-full">
+    <div className="h-auto flex flex-col bg-sky-00 mt-10 rounded-xl border-2 border-sky-400 shadow-sm mx-auto max-w-4xl w-full">
       {/* Header */}
       <div className="px-4 py-4">
         <h2 className="text-xl font-bold text-slate-900">
@@ -203,7 +224,7 @@ export function ChatbotPanel({ productId }: ChatbotPanelProps) {
           />
         ))}
       </div>
-      <p className="text-xs italic text-slate-500 pt-1 pb-4 px-5">
+      <p className="text-xs italic text-slate-500 pt-0 pb-4 px-5">
         Powered by AI
       </p>
     </div>

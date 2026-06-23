@@ -24,7 +24,7 @@ export function ReviewCard({ name, stars, date, text, title: propTitle, searchQu
       <>
         {parts.map((part, i) =>
           part.toLowerCase() === query.toLowerCase() ? (
-            <mark key={i} className="bg-amber-100 text-slate-600 rounded-sm px-0.5 py-0.5">
+            <mark key={i} className="bg-amazon-light/22 text-slate-600 rounded-sm px-0.5 py-0.5">
               {part}
             </mark>
           ) : (
@@ -36,7 +36,7 @@ export function ReviewCard({ name, stars, date, text, title: propTitle, searchQu
   };
 
   return (
-    <div className="bg-white rounded-xl p-4 space-y-2">
+    <div className="bg-white rounded-xl p-4 space-y-1">
       <div className="flex items-center gap-2">
         <div className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-500">
           {name[0]}
@@ -65,7 +65,7 @@ export function ReviewCard({ name, stars, date, text, title: propTitle, searchQu
           return `${count} ${count === 1 ? 'person' : 'people'} found this helpful`
         })()}
       </div> */}
-      <hr className="border-slate-100 mt-9" />
+      <hr className="border-slate-100 mt-7.5" />
     </div>
   )
 }

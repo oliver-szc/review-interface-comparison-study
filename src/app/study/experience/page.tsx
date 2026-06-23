@@ -102,7 +102,7 @@ export default function ExperiencePage() {
             </QuestionCard>
 
             <QuestionCard
-              question="How often have you used chatbots or AI assistants (e.g., ChatGPT) to find information?"
+              question="How often have you used chatbots or AI assistants (e.g., ChatGPT, Google AI Search) to find and evaluate information?"
               error={errors.exp_chatbots}
               required={false}
               className="shadow-none border-none p-0 bg-transparent"
@@ -142,7 +142,7 @@ export default function ExperiencePage() {
                 <thead>
                   <tr className="border-b border-slate-200 bg-slate-50 text-xs font-semibold text-slate-500 uppercase tracking-wide">
                     <th scope="col" className="p-5 font-semibold text-slate-500 leading-relaxed normal-case tracking-normal">
-                      Please indicate the degree to which you agree/disagree<br />with the following statements.
+                      Please indicate the degree to which you agree/disagree with the following statements.
                     </th>
                     {ATI_LABELS.map((opt) => {
                       const firstWord = opt.label.split(' ')[0];
@@ -159,11 +159,11 @@ export default function ExperiencePage() {
                     })}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 bg-white whitespace-pre-line">
+                <tbody className="divide-y divide-slate-100 bg-white">
                   {[
                     { name: 'ati_1', text: 'I like to occupy myself in greater detail with technical systems.' },
                     { name: 'ati_2', text: 'I like testing the functions of new technical systems.' },
-                    { name: 'ati_3', text: 'It is enough for me that a technical system works;\n I don’t care how or why.' },
+                    { name: 'ati_3', text: 'It is enough for me that a technical system works; I don’t care how or why.' },
                     { name: 'ati_4', text: 'It is enough for me to know the basic functions of a technical system.' },
                   ].map((item) => {
                     const hasError = !!errors[item.name as keyof typeof errors];

@@ -1,6 +1,7 @@
 import { db } from '@/db/client';
 import { participants, sequencePool } from '@/db/schema';
 import { eq } from 'drizzle-orm';
+import { cookies } from 'next/headers';
 
 export type ConditionType = 'BASELINE' | 'DASHBOARD' | 'CHATBOT';
 export type ProductId = 'EARBUDS' | 'KETTLE' | 'SWEATSHIRT';
@@ -39,7 +40,24 @@ const DEBUG_SEQUENCE: BlockContext[] = [
 export async function getBlockContext(participantId: string, blockIndex: 1 | 2 | 3): Promise<BlockContext> {
   // Debug mode: return static mock data without hitting the database
   if (participantId === 'debug-participant') {
-    return DEBUG_SEQUENCE[blockIndex - 1];
+    let productOrder = 'E,K,S'; // default
+    try {
+      const cookieStore = await cookies();
+      const customProductOrder = cookieStore.get('debugProductSequence')?.value;
+      if (customProductOrder) {
+        productOrder = customProductOrder;
+      }
+    } catch (e) {
+      // ignore
+    }
+
+    const productArray = productOrder.split(',');
+    const assistArray = ['BASELINE', 'DASHBOARD', 'CHATBOT'] as const;
+
+    return {
+      conditionType: assistArray[blockIndex - 1],
+      productId: mapProduct(productArray[blockIndex - 1]),
+    };
   }
 
   const p = await db.select({

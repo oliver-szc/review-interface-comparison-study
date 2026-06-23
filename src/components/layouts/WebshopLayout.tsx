@@ -54,19 +54,10 @@ export function WebshopLayout({
   // ─── Core 4-column grid ───────────────────────────────────────────────────
   // Identical for all conditions.
   const grid = (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-4 gap-y-4 items-start w-full">
-      {/* Row 1 — Product image (Col 1) + Product details (Cols 2–3) + spacer (Col 4) */}
-      <div className="lg:col-span-1 lg:self-stretch h-full">
-        {productImage}
-      </div>
-      <div className="lg:col-span-2">
-        {topContent}
-      </div>
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-4 items-start w-full">
+      {/* Row 1 — Empty (Col 1) + Middle content (Cols 2–3) + spacer (Col 4) */}
       <div className="hidden lg:block lg:col-span-1" />
-
-      {/* Row 2 — Empty (Col 1) + Middle content (Cols 2–3) + spacer (Col 4) */}
-      <div className="hidden lg:block lg:col-span-1" />
-      <div className="lg:col-span-2 space-y-4">
+      <div className="lg:col-span-2 space-y-0">
         {middleContent}
       </div>
       <div className="hidden lg:block lg:col-span-1" />

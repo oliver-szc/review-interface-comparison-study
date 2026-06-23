@@ -7,6 +7,7 @@ export async function POST() {
   
   cookieStore.delete('debugMode');
   cookieStore.delete('participantId');
+  cookieStore.delete('debugProductSequence');
 
   return NextResponse.json({ success: true });
 }

@@ -2,9 +2,13 @@
 
 import { useState } from 'react';
 import { StudyPageGrid } from '@/components/layouts/StudyPageGrid';
+import { TutorialProvider } from '@/lib/contexts/TutorialContext';
+import { TutorialOverlay } from '@/components/tutorial/TutorialOverlay';
+import PostConditionClientView from '../../blocks/[blockIndex]/post/PostConditionClientView';
 
 export default function TutorialCheckPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [visibleStep, setVisibleStep] = useState(0);
 
   const handleSelection = async (value: number) => {
     setIsSubmitting(true);
@@ -27,12 +31,39 @@ export default function TutorialCheckPage() {
       setIsSubmitting(false);
     }
   };
+
+  if (visibleStep === 0) {
+    return (
+      <TutorialProvider currentStep={0} onAction={() => { }}>
+        <div className="relative min-h-screen">
+          <PostConditionClientView
+            blockIndex={0 as any}
+            conditionType="BASELINE"
+            onTutorialSubmit={() => setVisibleStep(1)}
+          />
+          <TutorialOverlay
+            isVisible={true}
+            content={
+              <div>
+                <h3 className="text-2xl font-bold text-slate-800 !mt-2">Post-task Questionnaire</h3>
+                <p className="text-slate-700 leading-relaxed text-base">
+                  After each task you will answer a short questionnaire about your experience.
+                </p>
+              </div>
+            }
+            onContinue={() => setVisibleStep(1)}
+          />
+        </div>
+      </TutorialProvider>
+    );
+  }
+
   return (
     <StudyPageGrid>
       <div className="w-full bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200">
         <div className="mb-10 text-center">
           <h1 className="text-2xl font-bold text-slate-900 mb-4">Tutorial completed</h1>
-          <h2 className="text-xl font-semibold text-slate-900">Are you ready for the upcoming tasks?</h2>
+          <p className="text-lg font-medium text-slate-700">Are you ready for the upcoming tasks?</p>
         </div>
 
         <div className="flex flex-col sm:flex-row justify-between gap-4 w-full">

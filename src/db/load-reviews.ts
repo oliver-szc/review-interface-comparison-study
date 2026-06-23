@@ -13,6 +13,7 @@ const FILES = [
   { path: 'earbuds_asqp_embed.jsonl', productId: 'EARBUDS' as const },
   { path: 'kettle_asqp_embed.jsonl', productId: 'KETTLE' as const },
   { path: 'sweatshirt_asqp_embed.jsonl', productId: 'SWEATSHIRT' as const },
+  { path: 'smarttag_asqp_embed.jsonl', productId: 'TUTORIAL' as const },
 ];
 
 async function ensureProducts() {
@@ -20,6 +21,7 @@ async function ensureProducts() {
     { productId: 'EARBUDS' as const, domain: 'Electronics', asin: 'earbuds_asin', title: 'Earbuds' },
     { productId: 'KETTLE' as const, domain: 'Home', asin: 'kettle_asin', title: 'Kettle' },
     { productId: 'SWEATSHIRT' as const, domain: 'Clothing', asin: 'sweatshirt_asin', title: 'Sweatshirt' },
+    { productId: 'TUTORIAL' as const, domain: 'Electronics', asin: 'smarttag_asin', title: 'Samsung Galaxy SmartTag Bluetooth Tracker' },
   ];
 
   for (const pd of productData) {

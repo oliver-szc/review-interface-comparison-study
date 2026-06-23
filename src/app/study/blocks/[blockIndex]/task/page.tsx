@@ -5,7 +5,7 @@ import { claimSeeds, reviews } from '@/db/schema';
 import { eq, asc, desc } from 'drizzle-orm';
 import { getBlockContext } from '@/lib/utils/blockContext';
 import { getAspectData } from '@/lib/queries/absa';
-import TaskClientView from './TaskClientView';
+import TaskClientView from './TaskClientView'; // Touch for final scroll timing rebuild
 
 export default async function BlockTaskPage({ params }: { params: Promise<{ blockIndex: string }> }) {
   const resolvedParams = await params;

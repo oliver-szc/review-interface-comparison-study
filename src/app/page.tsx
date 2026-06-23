@@ -80,10 +80,10 @@ function LandingPageInner() {
           <>
             <div className="space-y-5 text-slate-700 text-base leading-relaxed">
               <p>
-                Thank you for your interest in participating! In this study, we investigate how different types of user assistance influence the experience of exploring online product reviews. You will complete a series of short tasks using these tools and share your impressions along the way.
+                Thank you for your interest in participating! In this study, we investigate how different types of user assistance influence the experience of exploring online product reviews.
               </p>
 
-              <div className="bg-slate-50 border border-slate-200 p-4 rounded-lg text-slate-900 text-sm">
+              <div className="bg-slate-50 border border-slate-200 p-4 mt-7 rounded-lg text-slate-900 text-sm">
                 <p>
                   <strong>Note:</strong> The study will be conducted entirely in English. A basic knowledge of English is required to complete the tasks. The study includes quality assurance measures to ensure the integrity of the collected data.
                 </p>
@@ -94,13 +94,13 @@ function LandingPageInner() {
                 <li><strong>Demographics:</strong> First, you will answer a few questions about yourself.</li>
                 <li><strong>Tutorial:</strong> Next, you will familiarize yourself with the web interface and the task format.</li>
                 <li><strong>Main section:</strong> You will complete three short tasks one after the other, each followed by a short questionnaire.</li>
-                <li><strong>Conclusion:</strong> At the end of the study, you will fill out a final questionnaire.</li>
-                <li><strong>Estimated total duration:</strong> approx. 40 minutes</li>
+                <li><strong>Study completion:</strong> At the end of the study, you will fill out a final questionnaire.</li>
+                <li><strong>Estimated total duration:</strong> approx. 35 minutes.</li>
               </ul>
 
-              <h2 className="text-xl font-semibold text-slate-900 mt-10 mb-3">VP (Versuchspersonenstunden) for UR-students:</h2>
+              <h2 className="text-xl font-semibold text-slate-900 mt-10 mb-3">Compensation for students of the University of Regensburg:</h2>
               <p>
-                You will receive <strong>1 VP</strong> for your participation. After completing the study, a personal code will be displayed. Please send this code informally via email to receive your VP.
+                As an UR-student, ou will receive <strong>1 VP</strong> for your participation. After completing the study, a personal code will be displayed. Please send this code informally via email to receive your VP.
               </p>
 
               <div className="bg-amber-50 border border-amber-200 p-4 rounded-lg text-amber-800 text-sm font-medium mt-10">

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 // Quick-jump navigation destinations visible in the debug console
 const JUMP_ROUTES = [
@@ -13,15 +13,15 @@ const JUMP_ROUTES = [
   { label: 'Page 6: Tutorial Condition', path: '/study/tutorial/condition' },
   { label: 'Page 7: Tutorial Check (S2)', path: '/study/tutorial/check' },
   { label: 'Page 7.1: Tutorial Alternative Explanation', path: '/study/tutorial/alternative' },
-  { label: 'Block 1: Preface', path: '/study/blocks/1/preface' },
-  { label: 'Block 1: Task', path: '/study/blocks/1/task' },
-  { label: 'Block 1: Post', path: '/study/blocks/1/post' },
-  { label: 'Block 2: Preface', path: '/study/blocks/2/preface' },
-  { label: 'Block 2: Task', path: '/study/blocks/2/task' },
-  { label: 'Block 2: Post', path: '/study/blocks/2/post' },
-  { label: 'Block 3: Preface', path: '/study/blocks/3/preface' },
-  { label: 'Block 3: Task', path: '/study/blocks/3/task' },
-  { label: 'Block 3: Post', path: '/study/blocks/3/post' },
+  { label: 'Block 1 / Reviews Only: Preface', path: '/study/blocks/1/preface' },
+  { label: 'Block 1 / Reviews Only: Task', path: '/study/blocks/1/task' },
+  { label: 'Block 1 / Reviews Only: Post', path: '/study/blocks/1/post' },
+  { label: 'Block 2 / Dashboard:    Preface', path: '/study/blocks/2/preface' },
+  { label: 'Block 2 / Dashboard:    Task', path: '/study/blocks/2/task' },
+  { label: 'Block 2 / Dashboard:    Post', path: '/study/blocks/2/post' },
+  { label: 'Block 3 / Chatbot:      Preface', path: '/study/blocks/3/preface' },
+  { label: 'Block 3 / Chatbot:      Task', path: '/study/blocks/3/task' },
+  { label: 'Block 3 / Chatbot:      Post', path: '/study/blocks/3/post' },
   { label: 'Page 18: Preferences', path: '/study/preferences' },
   { label: 'Page 19: Debrief', path: '/debrief' },
   // --- Screening Out Sites ---
@@ -35,10 +35,29 @@ const JUMP_ROUTES = [
   { label: 'Interactive: Data Dashboard Reviews', path: '/study/dashboard' },
 ];
 
+const PRODUCT_SEQUENCES = [
+  { label: 'E, K, S (Earbuds, Kettle, Sweatshirt)', value: 'E,K,S' },
+  { label: 'E, S, K (Earbuds, Sweatshirt, Kettle)', value: 'E,S,K' },
+  { label: 'K, E, S (Kettle, Earbuds, Sweatshirt)', value: 'K,E,S' },
+  { label: 'K, S, E (Kettle, Sweatshirt, Earbuds)', value: 'K,S,E' },
+  { label: 'S, E, K (Sweatshirt, Earbuds, Kettle)', value: 'S,E,K' },
+  { label: 'S, K, E (Sweatshirt, Kettle, Earbuds)', value: 'S,K,E' },
+];
+
+function getCookie(name: string): string | null {
+  if (typeof document === 'undefined') return null;
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
+  return null;
+}
+
 export function DebugConsole() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isDebugMode, setIsDebugMode] = useState(false);
   const [currentPath, setCurrentPath] = useState('');
+  const [productSequence, setProductSequence] = useState('E,K,S');
   const consoleRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -55,6 +74,10 @@ export function DebugConsole() {
     const flag = localStorage.getItem('STUDY_DEBUG_MODE');
     setIsDebugMode(flag === 'true');
     setCurrentPath(window.location.pathname);
+
+    // Read initial product sequence
+    const savedSeq = localStorage.getItem('debugProductSequence') || getCookie('debugProductSequence') || 'E,K,S';
+    setProductSequence(savedSeq);
   }, [pathname]);
 
   useEffect(() => {
@@ -88,12 +111,21 @@ export function DebugConsole() {
   if (!isDebugMode) return null;
 
   const handleJump = (path: string) => {
-    // Use hard navigation to avoid fighting with NavigationBlocker's history.pushState
-    window.location.href = path;
+    // Use soft navigation since NavigationBlocker is disabled in debug mode
+    router.push(path);
+  };
+
+  const handleProductSequenceChange = (newSeq: string) => {
+    setProductSequence(newSeq);
+    localStorage.setItem('debugProductSequence', newSeq);
+    document.cookie = `debugProductSequence=${newSeq}; path=/; max-age=${60 * 60 * 8}`;
+    window.location.reload();
   };
 
   const handleExitDebug = () => {
     localStorage.removeItem('STUDY_DEBUG_MODE');
+    localStorage.removeItem('debugProductSequence');
+    document.cookie = 'debugProductSequence=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     // Also tell the server to clear the debug cookie
     fetch('/api/debug/exit', { method: 'POST' }).finally(() => {
       window.location.href = '/';
@@ -116,7 +148,10 @@ export function DebugConsole() {
             VP: <span className="text-green-400">debug-participant (static)</span>
           </span>
           <span className="text-slate-400">
-            Sequence: <span className="text-yellow-300">B1=BASELINE/E · B2=DASHBOARD/K · B3=CHATBOT/S</span>
+            Sequence:{' '}
+            <span className="text-yellow-300">
+              B1=BASELINE/{productSequence.split(',')[0]} · B2=DASHBOARD/{productSequence.split(',')[1]} · B3=CHATBOT/{productSequence.split(',')[2]}
+            </span>
           </span>
           <span className="text-slate-400">
             DB Writes: <span className="text-orange-400 font-bold">MOCKED</span>
@@ -125,12 +160,12 @@ export function DebugConsole() {
         <span className="text-slate-500">path: {currentPath}</span>
       </div>
 
-      {/* Bottom row: quick-jump router + exit button */}
+      {/* Bottom row: quick-jump router + sequence changer + exit button */}
       <div className="flex items-center gap-3 px-4 py-1.5">
         <span className="text-slate-400 shrink-0">Quick Jump:</span>
         <select
           id="debug-quick-jump"
-          className="flex-1 bg-slate-800 border border-slate-600 rounded px-2 py-0.5 text-white focus:outline-none focus:ring-1 focus:ring--500"
+          className="flex-1 bg-slate-800 border border-slate-600 rounded px-2 py-0.5 text-white focus:outline-none focus:ring-1 focus:ring-sky-500"
           onChange={(e) => { if (e.target.value) handleJump(e.target.value); }}
           value=""
         >
@@ -139,6 +174,19 @@ export function DebugConsole() {
             <option key={r.path} value={r.path}>{r.label}</option>
           ))}
         </select>
+
+        <span className="text-slate-400 shrink-0 ml-2">Product Sequence:</span>
+        <select
+          id="debug-product-sequence"
+          className="bg-slate-800 border border-slate-600 rounded px-2 py-0.5 text-white focus:outline-none focus:ring-1 focus:ring-sky-500"
+          value={productSequence}
+          onChange={(e) => handleProductSequenceChange(e.target.value)}
+        >
+          {PRODUCT_SEQUENCES.map((s) => (
+            <option key={s.value} value={s.value}>{s.label}</option>
+          ))}
+        </select>
+
         <button
           onClick={handleExitDebug}
           className="shrink-0 bg-red-600 hover:bg-red-700 px-3 py-1 rounded font-semibold transition-colors"
