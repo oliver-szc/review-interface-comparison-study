@@ -17,6 +17,8 @@ interface Message {
 interface ChatbotPanelProps {
   /** The product ID for the current study block (e.g. 'EARBUDS') */
   productId: string
+  /** Optional callback to sync the full transcript to the parent */
+  onTranscriptUpdate?: (transcript: { role: 'user' | 'bot'; text: string }[]) => void
 }
 
 const SUGGESTED_QUESTIONS: Record<string, string[]> = {
@@ -42,7 +44,7 @@ const SUGGESTED_QUESTIONS: Record<string, string[]> = {
   ],
 }
 
-export function ChatbotPanel({ productId }: ChatbotPanelProps) {
+export function ChatbotPanel({ productId, onTranscriptUpdate }: ChatbotPanelProps) {
   const { waitingForAction, dispatchTutorialAction } = useTutorial()
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -51,6 +53,7 @@ export function ChatbotPanel({ productId }: ChatbotPanelProps) {
   // Abort controller ref so we can cancel in-flight requests
   const abortControllerRef = useRef<AbortController | null>(null)
   const isTutorialChatTriggered = useRef(false)
+  const fullTranscriptRef = useRef<{ role: 'user' | 'bot'; text: string }[]>([])
 
   const questionsKey = productId.toUpperCase()
   const suggestedQuestions = SUGGESTED_QUESTIONS[questionsKey] || SUGGESTED_QUESTIONS.EARBUDS
@@ -104,6 +107,11 @@ export function ChatbotPanel({ productId }: ChatbotPanelProps) {
         setMessages([userMessage, { role: 'bot', text: errorMessage, isError: true }])
         setIsLoading(false)
         isTutorialChatTriggered.current = false
+        
+        fullTranscriptRef.current.push({ role: 'user', text })
+        fullTranscriptRef.current.push({ role: 'bot', text: errorMessage })
+        if (onTranscriptUpdate) onTranscriptUpdate(fullTranscriptRef.current)
+        
         return
       }
 
@@ -116,6 +124,11 @@ export function ChatbotPanel({ productId }: ChatbotPanelProps) {
         ])
         setIsLoading(false)
         isTutorialChatTriggered.current = false
+        
+        fullTranscriptRef.current.push({ role: 'user', text })
+        fullTranscriptRef.current.push({ role: 'bot', text: 'Failed to read the response stream.' })
+        if (onTranscriptUpdate) onTranscriptUpdate(fullTranscriptRef.current)
+        
         return
       }
 
@@ -143,6 +156,10 @@ export function ChatbotPanel({ productId }: ChatbotPanelProps) {
       // Stream complete
       setIsStreaming(false)
       setIsLoading(false)
+
+      fullTranscriptRef.current.push({ role: 'user', text })
+      fullTranscriptRef.current.push({ role: 'bot', text: accumulatedText })
+      if (onTranscriptUpdate) onTranscriptUpdate(fullTranscriptRef.current)
 
       if (isTutorialChatTriggered.current) {
         isTutorialChatTriggered.current = false
@@ -184,6 +201,10 @@ export function ChatbotPanel({ productId }: ChatbotPanelProps) {
       setIsStreaming(false)
       setIsLoading(false)
       isTutorialChatTriggered.current = false
+      
+      fullTranscriptRef.current.push({ role: 'user', text })
+      fullTranscriptRef.current.push({ role: 'bot', text: 'Connection lost. Please check your internet and try again.' })
+      if (onTranscriptUpdate) onTranscriptUpdate(fullTranscriptRef.current)
     }
   }, [productId, waitingForAction, dispatchTutorialAction])
 

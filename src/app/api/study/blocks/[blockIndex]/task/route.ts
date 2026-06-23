@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { db } from '@/db/client';
-import { participants, claimSeeds, blockSubmissions, taskAnswers } from '@/db/schema';
+import { participants, claimSeeds, blockSubmissions, taskAnswers, chatbotLogs } from '@/db/schema';
 import { eq, inArray } from 'drizzle-orm';
 
 export async function POST(
@@ -23,7 +23,7 @@ export async function POST(
     if (!participantId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await req.json();
-    const { answers, timeOnTaskMs, taskStartTime, taskEndTime, conditionType, productId } = body;
+    const { answers, timeOnTaskMs, taskStartTime, taskEndTime, conditionType, productId, transcript } = body;
 
     // Fetch ground truth claims for this product to score the answers
     const claimIds = Object.keys(answers);
@@ -87,7 +87,15 @@ export async function POST(
 
       await tx.insert(taskAnswers).values(taskAnswersToInsert);
 
-      // 3. Update Participant State
+      // 3. Insert Chatbot Transcript if present
+      if (transcript && Array.isArray(transcript) && transcript.length > 0) {
+        await tx.insert(chatbotLogs).values({
+          blockSubmissionId: submission.id,
+          transcript: transcript,
+        });
+      }
+
+      // 4. Update Participant State
       await tx.update(participants)
         .set({
           currentPage: nextRoute,

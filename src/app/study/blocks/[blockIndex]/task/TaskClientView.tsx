@@ -53,6 +53,7 @@ function formatClaimText(text: string) {
 export default function TaskClientView({ blockIndex, conditionType, productId, claims, productData, reviews, starDistribution, aspectData = [], onTutorialSubmit }: TaskClientViewProps) {
   const { currentStep, waitingForAction, dispatchTutorialAction } = useTutorial();
   const [startTime, setStartTime] = useState<number | null>(null);
+  const [transcript, setTranscript] = useState<{ role: 'user' | 'bot'; text: string }[]>([]);
 
   useEffect(() => {
     setStartTime(performance.now());
@@ -110,6 +111,7 @@ export default function TaskClientView({ blockIndex, conditionType, productId, c
         taskEndTime: Date.now(),
         conditionType,
         productId,
+        transcript,
       };
 
       const response = await fetch(`/api/study/blocks/${blockIndex}/task`, {
@@ -327,7 +329,7 @@ export default function TaskClientView({ blockIndex, conditionType, productId, c
             )}
             {(conditionType === 'CHATBOT' || (conditionType === 'TUTORIAL' && currentStep >= 3 && currentStep < 5)) && (
               <div id="tutorial-chatbot">
-                <ChatbotPanel productId={productId} />
+                <ChatbotPanel productId={productId} onTranscriptUpdate={setTranscript} />
               </div>
             )}
 
