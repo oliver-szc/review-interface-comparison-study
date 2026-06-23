@@ -1,7 +1,6 @@
 import { db, sql } from './client';
 import { trackingEvents, type NewTrackingEvent, reviews, type Review, products, type Product, participants, sequencePool, type Participant } from './schema';
-import { and, eq, inArray, desc, asc, lt } from 'drizzle-orm';
-
+import { and, eq, inArray, desc, asc, lt, or, isNotNull } from 'drizzle-orm';
 // Function to insert a test record into the test_connection table
 export async function insertTestRecord(message: string) {
   const result = await sql`
@@ -109,6 +108,13 @@ export async function testTrackingEventInsert(participantId: string) {
 
 // Transaction: Assign next available sequence to a new participant
 export async function createParticipantWithSequence(externalId?: string): Promise<Participant | null> {
+  // 0. Garbage collect stale sequences (runs every time a new session starts)
+  try {
+    await releaseStaleSequences(2); // Release anything older than 2 hours
+  } catch (e) {
+    console.error('Error auto-releasing stale sequences:', e);
+  }
+
   return await db.transaction(async (tx) => {
     // 1. Find the first available sequence and lock it
     const availableSequence = await tx
@@ -217,7 +223,10 @@ export async function releaseStaleSequences(hoursThreshold: number): Promise<num
         and(
           eq(sequencePool.isAvailable, false),
           lt(sequencePool.reservedAt, thresholdDate),
-          eq(participants.studyCompleted, false)
+          or(
+            eq(participants.studyCompleted, false),
+            isNotNull(participants.screenedOutReason)
+          )
         )
       )
       .for('update');
