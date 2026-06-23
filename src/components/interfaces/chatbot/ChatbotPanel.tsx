@@ -63,7 +63,6 @@ export function ChatbotPanel({ productId, onTranscriptUpdate }: ChatbotPanelProp
    * token-by-token into the message display.
    */
   const handleSend = useCallback(async (text: string) => {
-    // Cancel any in-flight request
     if (abortControllerRef.current) {
       abortControllerRef.current.abort()
     }
@@ -75,14 +74,18 @@ export function ChatbotPanel({ productId, onTranscriptUpdate }: ChatbotPanelProp
       isTutorialChatTriggered.current = true
     }
 
-    // Record the time the query was sent (for tracking latency)
     const querySentAt = Date.now()
 
-    // Show user message and clear previous bot response
+    // Log the user's query immediately so it's not lost if they submit right away
+    fullTranscriptRef.current.push({ role: 'user', text })
+    if (onTranscriptUpdate) onTranscriptUpdate([...fullTranscriptRef.current])
+
     const userMessage: Message = { role: 'user', text }
     setMessages([userMessage])
     setIsLoading(true)
     setIsStreaming(false)
+
+    let accumulatedText = ''
 
     try {
       const response = await fetch('/api/study/chat', {
@@ -92,7 +95,6 @@ export function ChatbotPanel({ productId, onTranscriptUpdate }: ChatbotPanelProp
         signal: abortController.signal,
       })
 
-      // Handle error responses (structured JSON)
       if (!response.ok) {
         let errorMessage = 'Something went wrong. Please try again.'
         try {
@@ -100,22 +102,17 @@ export function ChatbotPanel({ productId, onTranscriptUpdate }: ChatbotPanelProp
           if (errorBody.error) {
             errorMessage = errorBody.error
           }
-        } catch {
-          // Response body wasn't JSON — use default message
-        }
+        } catch {}
 
         setMessages([userMessage, { role: 'bot', text: errorMessage, isError: true }])
         setIsLoading(false)
         isTutorialChatTriggered.current = false
         
-        fullTranscriptRef.current.push({ role: 'user', text })
         fullTranscriptRef.current.push({ role: 'bot', text: errorMessage })
-        if (onTranscriptUpdate) onTranscriptUpdate(fullTranscriptRef.current)
-        
+        if (onTranscriptUpdate) onTranscriptUpdate([...fullTranscriptRef.current])
         return
       }
 
-      // Begin streaming the response
       const reader = response.body?.getReader()
       if (!reader) {
         setMessages([
@@ -125,17 +122,12 @@ export function ChatbotPanel({ productId, onTranscriptUpdate }: ChatbotPanelProp
         setIsLoading(false)
         isTutorialChatTriggered.current = false
         
-        fullTranscriptRef.current.push({ role: 'user', text })
         fullTranscriptRef.current.push({ role: 'bot', text: 'Failed to read the response stream.' })
-        if (onTranscriptUpdate) onTranscriptUpdate(fullTranscriptRef.current)
-        
+        if (onTranscriptUpdate) onTranscriptUpdate([...fullTranscriptRef.current])
         return
       }
 
       const decoder = new TextDecoder()
-      let accumulatedText = ''
-
-      // Add an empty bot message that we'll update as tokens arrive
       setMessages([userMessage, { role: 'bot', text: '' }])
       setIsStreaming(true)
 
@@ -144,29 +136,21 @@ export function ChatbotPanel({ productId, onTranscriptUpdate }: ChatbotPanelProp
 
         if (done) break
 
-        // Decode the chunk and append to accumulated text
-        const chunk = decoder.decode(value, { stream: true })
-        accumulatedText += chunk
-
-        // Update the bot message with accumulated text
-        const currentText = accumulatedText
-        setMessages([userMessage, { role: 'bot', text: currentText }])
+        accumulatedText += decoder.decode(value, { stream: true })
+        setMessages([userMessage, { role: 'bot', text: accumulatedText }])
       }
 
-      // Stream complete
       setIsStreaming(false)
       setIsLoading(false)
 
-      fullTranscriptRef.current.push({ role: 'user', text })
       fullTranscriptRef.current.push({ role: 'bot', text: accumulatedText })
-      if (onTranscriptUpdate) onTranscriptUpdate(fullTranscriptRef.current)
+      if (onTranscriptUpdate) onTranscriptUpdate([...fullTranscriptRef.current])
 
       if (isTutorialChatTriggered.current) {
         isTutorialChatTriggered.current = false
         dispatchTutorialAction('CHATBOT_SUGGESTION_CLICK')
       }
 
-      // Fire-and-forget: Log CHAT_RESPONSE_RECEIVED tracking event
       const latencyMs = Date.now() - querySentAt
       fetch('/api/study/chat/track', {
         method: 'POST',
@@ -180,12 +164,12 @@ export function ChatbotPanel({ productId, onTranscriptUpdate }: ChatbotPanelProp
             productId,
           },
         }),
-      }).catch(() => {
-        // Tracking failure is non-critical — silently ignore
-      })
+      }).catch(() => {})
     } catch (error: unknown) {
-      // Handle abort (user sent a new query before this one finished)
       if (error instanceof Error && error.name === 'AbortError') {
+        // Log whatever we had before aborting
+        fullTranscriptRef.current.push({ role: 'bot', text: accumulatedText ? (accumulatedText + ' (aborted)') : '(aborted)' })
+        if (onTranscriptUpdate) onTranscriptUpdate([...fullTranscriptRef.current])
         return
       }
 
@@ -202,9 +186,8 @@ export function ChatbotPanel({ productId, onTranscriptUpdate }: ChatbotPanelProp
       setIsLoading(false)
       isTutorialChatTriggered.current = false
       
-      fullTranscriptRef.current.push({ role: 'user', text })
       fullTranscriptRef.current.push({ role: 'bot', text: 'Connection lost. Please check your internet and try again.' })
-      if (onTranscriptUpdate) onTranscriptUpdate(fullTranscriptRef.current)
+      if (onTranscriptUpdate) onTranscriptUpdate([...fullTranscriptRef.current])
     }
   }, [productId, waitingForAction, dispatchTutorialAction])
 
