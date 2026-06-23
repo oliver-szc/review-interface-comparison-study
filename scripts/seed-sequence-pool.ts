@@ -41,8 +41,16 @@ const sequences = [
 ];
 
 async function seed() {
-  await db.insert(sequencePool).values(sequences).onConflictDoNothing();
-  console.log(`✅ Seeded ${sequences.length} sequence_pool rows`);
+  try {
+    console.log('Clearing existing sequence pool...');
+    await db.delete(sequencePool);
+    await db.insert(sequencePool).values(sequences);
+    console.log(`✅ Seeded ${sequences.length} sequence_pool rows`);
+    process.exit(0);
+  } catch (error) {
+    console.error('❌ Failed to seed sequence pool:', error);
+    process.exit(1);
+  }
 }
 
 seed();
