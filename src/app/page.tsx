@@ -100,7 +100,7 @@ function LandingPageInner() {
 
               <h2 className="text-xl font-semibold text-slate-900 mt-10 mb-3">Compensation for students of the University of Regensburg:</h2>
               <p>
-                As an UR-student, ou will receive <strong>1 VP</strong> for your participation. After completing the study, a personal code will be displayed. Please send this code informally via email to receive your VP.
+                As an UR-student, ou will receive <strong>0,75 VP</strong> for your participation. After completing the study, a personal code will be displayed. Please send this code informally via email to receive your VP.
               </p>
 
               <div className="bg-amber-50 border border-amber-200 p-4 rounded-lg text-amber-800 text-sm font-medium mt-10">
