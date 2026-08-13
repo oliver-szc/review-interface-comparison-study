@@ -18,11 +18,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-screen overflow-hidden">
+    <html lang="en" className="h-screen overflow-hidden" suppressHydrationWarning>
       <head>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
       </head>
-      <body className={`${inter.className} bg-white text-slate-950 selection:bg-indigo-100 h-full flex flex-col overflow-hidden`}>
+      <body className={`${inter.className} bg-white text-slate-950 selection:bg-indigo-100 h-full flex flex-col overflow-hidden`} suppressHydrationWarning>
         <div className="flex-1 overflow-y-auto min-h-0 relative">
           {children}
         </div>

@@ -239,7 +239,7 @@ export async function releaseStaleSequences(hoursThreshold: number): Promise<num
 
     // 2. Update participants: clear vpId, set screenedOutReason
     const participantIds = staleSequences.map(s => s.participantId).filter((id): id is string => id !== null);
-    
+
     if (participantIds.length > 0) {
       await tx
         .update(participants)

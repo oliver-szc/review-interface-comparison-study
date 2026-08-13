@@ -3,8 +3,8 @@
 import { useEffect, useState, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 
-// Quick-jump navigation destinations visible in the debug console
-const JUMP_ROUTES = [
+// Static Jump Routes (Blocks are generated dynamically in the component)
+const STATIC_JUMP_ROUTES_TOP = [
   { label: 'Page 1: Landing', path: '/' },
   { label: 'Page 2: Consent', path: '/study/consent' },
   { label: 'Page 3: Demographics', path: '/study/demographics' },
@@ -13,15 +13,9 @@ const JUMP_ROUTES = [
   { label: 'Page 6: Tutorial Condition', path: '/study/tutorial/condition' },
   { label: 'Page 7: Tutorial Check (S2)', path: '/study/tutorial/check' },
   { label: 'Page 7.1: Tutorial Alternative Explanation', path: '/study/tutorial/alternative' },
-  { label: 'Block 1 / Reviews Only: Preface', path: '/study/blocks/1/preface' },
-  { label: 'Block 1 / Reviews Only: Task', path: '/study/blocks/1/task' },
-  { label: 'Block 1 / Reviews Only: Post', path: '/study/blocks/1/post' },
-  { label: 'Block 2 / Dashboard:    Preface', path: '/study/blocks/2/preface' },
-  { label: 'Block 2 / Dashboard:    Task', path: '/study/blocks/2/task' },
-  { label: 'Block 2 / Dashboard:    Post', path: '/study/blocks/2/post' },
-  { label: 'Block 3 / Chatbot:      Preface', path: '/study/blocks/3/preface' },
-  { label: 'Block 3 / Chatbot:      Task', path: '/study/blocks/3/task' },
-  { label: 'Block 3 / Chatbot:      Post', path: '/study/blocks/3/post' },
+];
+
+const STATIC_JUMP_ROUTES_BOTTOM = [
   { label: 'Page 18: Preferences', path: '/study/preferences' },
   { label: 'Page 19: Debrief', path: '/debrief' },
   // --- Screening Out Sites ---
@@ -44,6 +38,22 @@ const PRODUCT_SEQUENCES = [
   { label: 'S, K, E (Sweatshirt, Kettle, Earbuds)', value: 'S,K,E' },
 ];
 
+// Condition (assistance) order permutations — B=Baseline, D=Dashboard, C=Chatbot
+const CONDITION_SEQUENCES = [
+  { label: 'B, D, C (Baseline → Dashboard → Chatbot)', value: 'B,D,C' },
+  { label: 'B, C, D (Baseline → Chatbot → Dashboard)', value: 'B,C,D' },
+  { label: 'D, B, C (Dashboard → Baseline → Chatbot)', value: 'D,B,C' },
+  { label: 'D, C, B (Dashboard → Chatbot → Baseline)', value: 'D,C,B' },
+  { label: 'C, B, D (Chatbot → Baseline → Dashboard)', value: 'C,B,D' },
+  { label: 'C, D, B (Chatbot → Dashboard → Baseline)', value: 'C,D,B' },
+];
+
+const CONDITION_LABELS: Record<string, string> = {
+  B: 'Baseline',
+  D: 'Dashboard',
+  C: 'Chatbot',
+};
+
 function getCookie(name: string): string | null {
   if (typeof document === 'undefined') return null;
   const value = `; ${document.cookie}`;
@@ -58,6 +68,7 @@ export function DebugConsole() {
   const [isDebugMode, setIsDebugMode] = useState(false);
   const [currentPath, setCurrentPath] = useState('');
   const [productSequence, setProductSequence] = useState('E,K,S');
+  const [assistanceOrder, setAssistanceOrder] = useState('B,D,C');
   const consoleRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -69,6 +80,8 @@ export function DebugConsole() {
     } else if (params.get('debug') === 'false') {
       localStorage.removeItem('STUDY_DEBUG_MODE');
       fetch('/api/debug/exit', { method: 'POST' }).catch(console.error);
+    } else if (localStorage.getItem('STUDY_DEBUG_MODE') === 'true') {
+      fetch('/api/debug/activate', { method: 'POST' }).catch(console.error);
     }
     // Re-read localStorage on every client-side navigation
     const flag = localStorage.getItem('STUDY_DEBUG_MODE');
@@ -78,6 +91,12 @@ export function DebugConsole() {
     // Read initial product sequence
     const savedSeq = localStorage.getItem('debugProductSequence') || getCookie('debugProductSequence') || 'E,K,S';
     setProductSequence(savedSeq);
+    document.cookie = `debugProductSequence=${savedSeq}; path=/; max-age=${60 * 60 * 8}`;
+
+    // Read initial assistance/condition order
+    const savedAssist = localStorage.getItem('debugAssistanceOrder') || getCookie('debugAssistanceOrder') || 'B,D,C';
+    setAssistanceOrder(savedAssist);
+    document.cookie = `debugAssistanceOrder=${savedAssist}; path=/; max-age=${60 * 60 * 8}`;
   }, [pathname]);
 
   useEffect(() => {
@@ -111,8 +130,8 @@ export function DebugConsole() {
   if (!isDebugMode) return null;
 
   const handleJump = (path: string) => {
-    // Use soft navigation since NavigationBlocker is disabled in debug mode
-    router.push(path);
+    // Use hard navigation to bypass Next.js client cache and ensure fresh data
+    window.location.href = path;
   };
 
   const handleProductSequenceChange = (newSeq: string) => {
@@ -122,15 +141,39 @@ export function DebugConsole() {
     window.location.reload();
   };
 
+  const handleAssistanceOrderChange = (newOrder: string) => {
+    setAssistanceOrder(newOrder);
+    localStorage.setItem('debugAssistanceOrder', newOrder);
+    document.cookie = `debugAssistanceOrder=${newOrder}; path=/; max-age=${60 * 60 * 8}`;
+    window.location.reload();
+  };
+
   const handleExitDebug = () => {
     localStorage.removeItem('STUDY_DEBUG_MODE');
     localStorage.removeItem('debugProductSequence');
+    localStorage.removeItem('debugAssistanceOrder');
     document.cookie = 'debugProductSequence=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    document.cookie = 'debugAssistanceOrder=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     // Also tell the server to clear the debug cookie
     fetch('/api/debug/exit', { method: 'POST' }).finally(() => {
       window.location.href = '/';
     });
   };
+
+  const jumpRoutes = [
+    ...STATIC_JUMP_ROUTES_TOP,
+    ...assistanceOrder.split(',').flatMap((c, i) => {
+      const rawName = CONDITION_LABELS[c] || c;
+      const conditionName = rawName === 'Baseline' ? 'Reviews Only' : rawName;
+      const blockNum = i + 1;
+      return [
+        { label: `Block ${blockNum} / ${conditionName}: Preface`, path: `/study/blocks/${blockNum}/preface` },
+        { label: `Block ${blockNum} / ${conditionName}: Task`, path: `/study/blocks/${blockNum}/task` },
+        { label: `Block ${blockNum} / ${conditionName}: Post`, path: `/study/blocks/${blockNum}/post` },
+      ];
+    }),
+    ...STATIC_JUMP_ROUTES_BOTTOM,
+  ];
 
   return (
     // Static bottom bar, beneath the study layout
@@ -150,7 +193,10 @@ export function DebugConsole() {
           <span className="text-slate-400">
             Sequence:{' '}
             <span className="text-yellow-300">
-              B1=BASELINE/{productSequence.split(',')[0]} · B2=DASHBOARD/{productSequence.split(',')[1]} · B3=CHATBOT/{productSequence.split(',')[2]}
+              {assistanceOrder.split(',').map((c, i) => {
+                const prod = productSequence.split(',')[i] ?? '?';
+                return `B${i + 1}=${CONDITION_LABELS[c] ?? c}/${prod}`;
+              }).join(' · ')}
             </span>
           </span>
           <span className="text-slate-400">
@@ -170,12 +216,12 @@ export function DebugConsole() {
           value=""
         >
           <option value="" disabled>Select a page...</option>
-          {JUMP_ROUTES.map((r) => (
+          {jumpRoutes.map((r) => (
             <option key={r.path} value={r.path}>{r.label}</option>
           ))}
         </select>
 
-        <span className="text-slate-400 shrink-0 ml-2">Product Sequence:</span>
+        <span className="text-slate-400 shrink-0 ml-2">Product Order:</span>
         <select
           id="debug-product-sequence"
           className="bg-slate-800 border border-slate-600 rounded px-2 py-0.5 text-white focus:outline-none focus:ring-1 focus:ring-sky-500"
@@ -183,6 +229,18 @@ export function DebugConsole() {
           onChange={(e) => handleProductSequenceChange(e.target.value)}
         >
           {PRODUCT_SEQUENCES.map((s) => (
+            <option key={s.value} value={s.value}>{s.label}</option>
+          ))}
+        </select>
+
+        <span className="text-slate-400 shrink-0 ml-2">Condition Order:</span>
+        <select
+          id="debug-condition-sequence"
+          className="bg-slate-800 border border-slate-600 rounded px-2 py-0.5 text-white focus:outline-none focus:ring-1 focus:ring-sky-500"
+          value={assistanceOrder}
+          onChange={(e) => handleAssistanceOrderChange(e.target.value)}
+        >
+          {CONDITION_SEQUENCES.map((s) => (
             <option key={s.value} value={s.value}>{s.label}</option>
           ))}
         </select>

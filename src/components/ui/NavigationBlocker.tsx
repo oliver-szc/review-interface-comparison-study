@@ -1,11 +1,10 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { usePathname, useSearchParams, useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 export function NavigationBlocker() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const router = useRouter();
 
   // Stable ref — router is a new object on every render in Next.js App Router
@@ -19,8 +18,7 @@ export function NavigationBlocker() {
       return;
     }
 
-    const search = searchParams.toString();
-    const lockedUrl = search ? `${pathname}?${search}` : pathname;
+    const lockedUrl = window.location.pathname + window.location.search;
     const state = window.history.state;
 
     const handlePopState = () => {
@@ -37,7 +35,7 @@ export function NavigationBlocker() {
     return () => {
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [pathname, searchParams]);
+  }, [pathname]);
 
   return null;
 }

@@ -24,6 +24,9 @@ function LandingPageInner() {
     } else if (debugParam === 'false') {
       localStorage.removeItem('STUDY_DEBUG_MODE');
       fetch('/api/debug/exit', { method: 'POST' }).catch(console.error);
+    } else if (localStorage.getItem('STUDY_DEBUG_MODE') === 'true') {
+      // Sync cookie to server in case it expired or was lost
+      fetch('/api/debug/activate', { method: 'POST' }).catch(console.error);
     }
 
     // Level 1 multiple-participation protection: check localStorage flag, bypassed in debug mode

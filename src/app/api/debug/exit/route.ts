@@ -8,6 +8,7 @@ export async function POST() {
   cookieStore.delete('debugMode');
   cookieStore.delete('participantId');
   cookieStore.delete('debugProductSequence');
+  cookieStore.delete('debugAssistanceOrder');
 
   return NextResponse.json({ success: true });
 }

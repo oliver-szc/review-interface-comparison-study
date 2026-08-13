@@ -38,27 +38,41 @@ const DEBUG_SEQUENCE: BlockContext[] = [
 ];
 
 export async function getBlockContext(participantId: string, blockIndex: 1 | 2 | 3): Promise<BlockContext> {
+  let isDebugMode = false;
+  try {
+    const cookieStore = await cookies();
+    isDebugMode = cookieStore.get('debugMode')?.value === 'true';
+  } catch (e) {
+    // ignore
+  }
+
   // Debug mode: return static mock data without hitting the database
-  if (participantId === 'debug-participant') {
+  if (participantId === 'debug-participant' || isDebugMode) {
     let productOrder = 'E,K,S'; // default
+    let assistanceOrder = 'B,D,C'; // default: Block1=BASELINE, Block2=DASHBOARD, Block3=CHATBOT
     try {
       const cookieStore = await cookies();
       const customProductOrder = cookieStore.get('debugProductSequence')?.value;
       if (customProductOrder) {
         productOrder = customProductOrder;
       }
+      const customAssistOrder = cookieStore.get('debugAssistanceOrder')?.value;
+      if (customAssistOrder) {
+        assistanceOrder = customAssistOrder;
+      }
     } catch (e) {
       // ignore
     }
 
     const productArray = productOrder.split(',');
-    const assistArray = ['BASELINE', 'DASHBOARD', 'CHATBOT'] as const;
+    const assistArray = assistanceOrder.split(',');
 
     return {
-      conditionType: assistArray[blockIndex - 1],
+      conditionType: mapAssistance(assistArray[blockIndex - 1]),
       productId: mapProduct(productArray[blockIndex - 1]),
     };
   }
+
 
   const p = await db.select({
       sequenceId: sequencePool.sequenceId,
